@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Simulyn Docker Deployment & Debugging</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #00010a; --panel: #02040f; --wire-1: #080e20; --wire-2: #0c1430;
+      --accent: #00b4ff; --accent2: #0090d4; --purple: #9b59f5; --green: #25d076;
+      --amber: #ffb547; --red: #e8002d; --text: #c8e4ff; --muted: #6090b8;
+      --font-mono: "JetBrains Mono", ui-monospace, monospace;
+      --font-display: "Syne", sans-serif;
+      --font-body: "DM Sans", system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.6; overflow-x: hidden; cursor: none; }
+    body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px); pointer-events: none; z-index: 9000; }
+    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    .cur-dot { position: fixed; z-index: 9999; pointer-events: none; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); transform: translate(-50%,-50%); box-shadow: 0 0 8px var(--accent); transition: transform .1s; }
+    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(0,180,255,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 500; height: 40px; background: rgba(2,4,15,.94); border-bottom: 1px solid var(--wire-2); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); backdrop-filter: blur(12px); }
+    .topbar::after { content: ''; position: absolute; bottom: -2px; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); animation: sweep 4s ease-in-out infinite; }
+    @keyframes sweep { 0%,100%{ width: 20%; opacity: .7; } 50%{ width: 55%; opacity: 1; } }
+    .tb-left { display: flex; gap: 14px; align-items: center; }
+    .tb-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{ opacity:1; box-shadow: 0 0 5px var(--accent); } 50%{ opacity:.2; box-shadow: none; } }
+    .tb-right { display: flex; gap: 22px; }
+    .tb-link { color: var(--muted); text-decoration: none; letter-spacing: .12em; text-transform: uppercase; font-size: 10px; position: relative; transition: color .2s; }
+    .tb-link::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:1px; background:var(--accent); transform:scaleX(0); transition:transform .2s; transform-origin:left; }
+    .tb-link:hover { color: var(--accent); }
+    .tb-link:hover::after { transform: scaleX(1); }
+    .tb-link.back { color: var(--accent); border: 1px solid rgba(0,180,255,.25); padding: 2px 10px; font-size: 9px; }
+    .tb-link.back:hover { background: rgba(0,180,255,.08); }
+    .tb-link.back::after { display: none; }
+    .page-wrap { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 100px 40px 80px; }
+    .intro-line { font-family: var(--font-mono); font-size: 10px; color: var(--accent); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .intro-line::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--accent); opacity: .5; }
+    .page-title { font-family: var(--font-display); font-size: clamp(40px, 7vw, 84px); font-weight: 900; line-height: .95; letter-spacing: -.02em; text-transform: uppercase; margin-bottom: 28px; color: var(--text); }
+    .page-title span { -webkit-text-stroke: 1px rgba(0,180,255,.35); -webkit-text-fill-color: transparent; display: block; }
+    .framing { font-family: var(--font-body); font-size: 15px; color: var(--muted); font-weight: 300; max-width: 560px; line-height: 1.75; margin-bottom: 64px; padding-left: 20px; border-left: 2px solid rgba(0,180,255,.25); font-style: italic; }
+    .section-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; margin-top: 56px; display: flex; align-items: center; gap: 14px; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--wire-2); }
+    .section-label:first-of-type { margin-top: 0; }
+    .block { margin-bottom: 36px; }
+    .block p { font-size: 14.5px; color: #8aabcc; font-weight: 300; line-height: 1.8; max-width: 700px; margin-bottom: 14px; }
+    .block ul { margin: 12px 0 14px 20px; color: #8aabcc; font-size: 14.5px; font-weight: 300; line-height: 1.8; max-width: 700px; }
+    .block ul li { margin-bottom: 6px; }
+    code { font-family: var(--font-mono); font-size: 12.5px; color: var(--accent); background: rgba(0,180,255,.06); border: 1px solid var(--wire-2); padding: 2px 7px; border-radius: 2px; }
+
+    .flowchain { display: flex; flex-direction: column; align-items: flex-start; gap: 0; margin: 24px 0 32px; padding: 28px 32px; background: var(--panel); border: 1px solid var(--wire-2); border-radius: 2px; max-width: 460px; }
+    .flow-step { font-family: var(--font-mono); font-size: 12.5px; letter-spacing: .06em; padding: 7px 14px; border: 1px solid var(--wire-2); border-radius: 2px; color: var(--text); background: rgba(0,180,255,.03); }
+    .flow-step.fail { color: var(--red); border-color: rgba(232,0,45,.3); background: rgba(232,0,45,.05); }
+    .flow-step.invest { color: var(--amber); border-color: rgba(255,181,71,.3); background: rgba(255,181,71,.05); }
+    .flow-step.ok { color: var(--green); border-color: rgba(37,208,118,.3); background: rgba(37,208,118,.05); }
+    .flow-arrow { font-family: var(--font-mono); color: var(--muted); font-size: 12px; padding: 4px 0 4px 19px; opacity: .6; }
+
+    .tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--wire-1); }
+    .tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--wire-2); color: var(--muted); border-radius: 2px; }
+
+    .conclusion-box { margin-top: 56px; padding: 32px 36px; background: rgba(155,89,245,.05); border: 1px solid rgba(155,89,245,.3); border-left: 3px solid var(--purple); border-radius: 2px; max-width: 760px; box-shadow: 0 12px 40px rgba(155,89,245,.08); }
+    .conclusion-title { font-family: var(--font-display); font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--purple); margin-bottom: 16px; }
+    .conclusion-box p { color: #b9c8e0; font-size: 14.5px; font-weight: 300; line-height: 1.85; margin-bottom: 12px; }
+    .conclusion-box p:last-child { margin-bottom: 0; }
+
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    footer { position: relative; z-index: 1; border-top: 1px solid var(--wire-1); padding: 16px 40px; max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .1em; }
+    footer a { color: var(--muted); text-decoration: none; transition: color .2s; }
+    footer a:hover { color: var(--accent); }
+    .foot-accent { color: var(--accent); }
+    @media (max-width: 700px) { .page-wrap { padding: 80px 20px 60px; } footer { padding: 16px 20px; flex-direction: column; gap: 6px; text-align: center; } }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div class="cur-dot" id="curDot"></div>
+<div class="cur-ring" id="curRing"></div>
+
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-dot"></span>
+    <span id="clock">--:--:--</span>
+  </div>
+  <div class="tb-right">
+    <a href="./systems.html" class="tb-link back">← back to systems</a>
+    <a href="./index.html#research" class="tb-link">Research</a>
+    <a href="./index.html#projects" class="tb-link">Projects</a>
+    <a href="./index.html#contact" class="tb-link">Contact</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <div class="reveal">
+    <div class="intro-line">deployment & debugging</div>
+    <h1 class="page-title">Simulyn<span>Docker Deployment</span></h1>
+    <p class="framing">
+      A containerized deployment that fought back at every networking layer before coming up clean.
+    </p>
+  </div>
+
+  <div class="section-label reveal">Overview</div>
+  <div class="block reveal">
+    <p>Simulyn is a virtual engineering laboratory platform meant to run as a containerized service, with a login flow, a student dashboard, and a coding workspace served from inside Docker. Getting it running on an Arch Linux host should have been the boring part of the project. It was not. The deployment surfaced a chain of networking failures that had nothing to do with the application itself, and clearing that chain became the actual work.</p>
+  </div>
+
+  <div class="section-label reveal">Setup</div>
+  <div class="block reveal">
+    <p>Docker was not present on the host. Package mirrors were refreshed, Docker and Docker Compose were installed, and the daemon was enabled and started through systemd. User permissions were adjusted so the daemon socket could be reached without elevated privileges on every command. Before moving further, the daemon's running state was checked directly rather than assumed, since a service that enables cleanly does not always mean it started cleanly.</p>
+  </div>
+
+  <div class="section-label reveal">Investigation Flow</div>
+  <div class="block reveal">
+    <p>The path from a fresh install to a working container did not move in a straight line. It moved through a sequence of suspects, most of which were eliminated rather than confirmed.</p>
+    <div class="flowchain">
+      <div class="flow-step">Deployment Attempt</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step fail">Image Pull Failures</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step invest">TLS Investigation</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step invest">DNS Investigation</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step invest">IPv6 Investigation</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step invest">Runtime &amp; Permission Checks</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step ok">Successful Image Pull</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step ok">Container Build</div>
+      <div class="flow-arrow">↓</div>
+      <div class="flow-step ok">Application Verification</div>
+    </div>
+  </div>
+
+  <div class="section-label reveal">Networking Failure Chain</div>
+  <div class="block reveal">
+    <p>Image pulls failed immediately, and the first instinct was to treat it as a single problem. It was not. The first symptom was repeated TLS handshake timeouts during image downloads, which pointed toward Docker Hub connectivity rather than anything local. Reachability was tested directly with <code>curl</code> against Docker Hub to confirm the network path itself was the suspect, not a certificate or proxy issue on the host.</p>
+    <p>That led to an IPv6 routing fault: certain image layers stalled mid-transfer in a pattern consistent with the daemon attempting IPv6 first and failing silently before falling back. Disabling the problematic IPv6 behavior cleared that stall.</p>
+    <p>DNS resolution inside the daemon needed explicit configuration once routing was no longer the variable. The default resolver behavior had been masking a separate misconfiguration the whole time.</p>
+    <p>Socket permission errors surfaced last, traced to group membership not having been correctly applied for the active session.</p>
+    <p>Each of these was verified in isolation before being marked resolved. The daemon's overall health was confirmed with the standard <code>hello-world</code> image only once DNS, routing, and socket access were all working at the same time, not just individually.</p>
+  </div>
+
+  <div class="section-label reveal">Container Build & Verification</div>
+  <div class="block reveal">
+    <p>With the networking layer cleared, the Simulyn image built successfully from the project's own Dockerfile. Docker Compose handled both image creation and container startup in a single pass. Port mapping between host and container was checked explicitly rather than assumed to be correct, and the application became reachable on <code>localhost:3000</code> shortly after.</p>
+  </div>
+
+  <div class="section-label reveal">Validation Checkpoints</div>
+  <div class="block reveal">
+    <p>Once the container was running, a short set of checks confirmed it was actually serving the application rather than just exposing an open port. The demo account autofill and role-based login redirect were tested and behaved as expected, and the core frontend files, including the login page, the student dashboard, and their supporting scripts, were confirmed to load correctly through the browser. Both checks passed without further intervention.</p>
+  </div>
+
+  <div class="section-label reveal">Forward Work</div>
+  <div class="block reveal">
+    <p>The debugging process surfaced a couple of interface gaps worth noting for later: the dashboard lacks visual hierarchy and the coding workspace has no data structure visualizations. No further scope was defined beyond that observation.</p>
+  </div>
+
+  <div class="conclusion-box reveal">
+    <div class="conclusion-title">Key Takeaway</div>
+    <p>This investigation was never really about Simulyn. The application built and ran without incident once it had a working network path to pull from, which means the actual engineering problem was four stacked failures in the host's networking stack: a TLS layer that looked broken but wasn't the root cause, an IPv6 path that failed quietly instead of loudly, a DNS resolver hiding behind both of them, and a socket permission gap that only became visible once everything above it was already fixed.</p>
+    <p>What mattered was the order of elimination. Fixing TLS first did not fix the deployment, and neither did fixing DNS in isolation. Progress only happened once each layer was tested independently and ruled in or out before moving to the next, rather than assuming the first plausible cause was the real one.</p>
+    <p>The result is a deployment that now starts cleanly and a clearer mental model of how this host's networking stack behaves under Docker, which is the part of this work likely to be reused the next time something fails to pull an image for no obvious reason.</p>
+  </div>
+
+  <div class="tags-row reveal">
+    <span class="tag">Docker</span>
+    <span class="tag">Docker Compose</span>
+    <span class="tag">DNS</span>
+    <span class="tag">TLS</span>
+    <span class="tag">IPv6</span>
+    <span class="tag">Socket Permissions</span>
+    <span class="tag">Containers</span>
+    <span class="tag">Arch Linux</span>
+  </div>
+
+</div>
+
+<footer>
+  <span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
+  <a href="./systems.html">back to systems ↗</a>
+  <a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
+</footer>
+
+<script>
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+const mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+const WORLD_H = 3800, NODE_COUNT = 220, CONNECT_DIST = 160;
+const nodes = Array.from({length: NODE_COUNT}, () => ({
+  x: Math.random() * window.innerWidth, y: Math.random() * WORLD_H,
+  vx: (Math.random()-.5)*.6, vy: (Math.random()-.5)*.6,
+  r: Math.random()*2.2+1.1,
+  color: Math.random()>.5 ? '#00b4ff' : Math.random()>.7 ? '#9b59f5' : '#0090d4',
+  pulse: Math.random()*Math.PI*2, pulseSpeed: .02+Math.random()*.025
+}));
+
+const LABELS = ['DNS','TLS','IPv6','SOCKET','DAEMON','COMPOSE','BRIDGE','PORT','PULL','BUILD'];
+const floaters = Array.from({length:12},(_,i)=>({
+  text: LABELS[i%LABELS.length], x: Math.random()*window.innerWidth, y: Math.random()*WORLD_H,
+  vy: -(Math.random()*.2+.07), opacity: Math.random()*.18+.05
+}));
+
+function draw() {
+  const sy = window.scrollY;
+  ctx.clearRect(0,0,W,H);
+  const mg = ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,200);
+  mg.addColorStop(0,'rgba(0,180,255,0.06)'); mg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=mg; ctx.fillRect(0,0,W,H);
+  ctx.save(); ctx.translate(0,-sy);
+  const wxm=mouse.x, wym=mouse.y+sy;
+  for(const n of nodes){
+    n.pulse+=n.pulseSpeed;
+    const dx=n.x-wxm,dy=n.y-wym,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<170&&dist>0){const f=(170-dist)/170*1.1;n.vx+=(dx/dist)*f;n.vy+=(dy/dist)*f;}
+    const spd=Math.sqrt(n.vx*n.vx+n.vy*n.vy);
+    if(spd>2.2){n.vx*=2.2/spd;n.vy*=2.2/spd;}
+    n.vx*=.993;n.vy*=.993;n.x+=n.vx;n.y+=n.vy;
+    if(n.x<0){n.x=0;n.vx*=-1;} if(n.x>W){n.x=W;n.vx*=-1;}
+    if(n.y<0){n.y=0;n.vy*=-1;} if(n.y>WORLD_H){n.y=WORLD_H;n.vy*=-1;}
+    if(n.y<sy-160||n.y>sy+H+160)continue;
+    for(const m of nodes){
+      if(m===n)continue;
+      if(m.y<sy-160||m.y>sy+H+160)continue;
+      const ex=n.x-m.x,ey=n.y-m.y,ed=Math.sqrt(ex*ex+ey*ey);
+      if(ed<CONNECT_DIST){
+        const alpha=(1-ed/CONNECT_DIST)*.45;
+        const isPurp = n.color==='#9b59f5'||m.color==='#9b59f5';
+        ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);
+        ctx.strokeStyle=isPurp?`rgba(155,89,245,${alpha*.9})`:`rgba(0,180,255,${alpha})`;
+        ctx.lineWidth=.7;ctx.stroke();
+      }
+    }
+    const pa=.6+Math.sin(n.pulse)*.35, pr=n.r+Math.sin(n.pulse)*.6;
+    ctx.beginPath();ctx.arc(n.x,n.y,pr,0,Math.PI*2);
+    ctx.fillStyle=n.color==='#9b59f5'?`rgba(155,89,245,${pa})`:n.color==='#0090d4'?`rgba(0,144,212,${pa})`:`rgba(0,180,255,${pa})`;
+    ctx.fill();
+  }
+  ctx.font='9px JetBrains Mono,monospace';
+  for(const f of floaters){
+    f.y+=f.vy;
+    if(f.y<0){f.y=WORLD_H;f.x=Math.random()*W;}
+    if(f.y<sy-20||f.y>sy+H+20)continue;
+    ctx.fillStyle=`rgba(0,180,255,${f.opacity})`;
+    ctx.fillText(f.text,f.x,f.y);
+  }
+  ctx.restore();
+  requestAnimationFrame(draw);
+}
+draw();
+
+const dot = document.getElementById('curDot');
+const ring = document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+(function animCursor(){
+  rx+=(mx-rx)*.15; ry+=(my-ry)*.15;
+  dot.style.transform=`translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+  ring.style.transform=`translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+  requestAnimationFrame(animCursor);
+})();
+
+function updateClock(){
+  const now=new Date();
+  document.getElementById('clock').textContent=now.toTimeString().slice(0,8);
+}
+updateClock(); setInterval(updateClock,1000);
+
+const revealObs = new IntersectionObserver(entries => {
+  let delay = 0;
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('in'), delay);
+      delay += 60;
+      revealObs.unobserve(e.target);
+    }
+  });
+},{threshold:.06});
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+</script>
+</body>
+</html>

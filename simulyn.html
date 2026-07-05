@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Simulyn · Publications</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<style>
+    :root {
+      --black: #00010a; --panel: #02040f; --wire-1: #080e20; --wire-2: #0c1430;
+      --accent: #00b4ff; --accent2: #0090d4; --purple: #9b59f5;
+      --text: #c8e4ff; --muted: #6090b8;
+      --font-mono: "JetBrains Mono", ui-monospace, monospace;
+      --font-display: "Syne", sans-serif;
+      --font-body: "DM Sans", system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.6; overflow-x: hidden; cursor: none; }
+    body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px); pointer-events: none; z-index: 9000; }
+    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    .cur-dot { position: fixed; z-index: 9999; pointer-events: none; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); transform: translate(-50%,-50%); box-shadow: 0 0 8px var(--accent); }
+    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(0,180,255,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 500; height: 40px; background: rgba(2,4,15,.94); border-bottom: 1px solid var(--wire-2); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); backdrop-filter: blur(12px); }
+    .topbar::after { content: ''; position: absolute; bottom: -2px; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); animation: sweep 4s ease-in-out infinite; }
+    @keyframes sweep { 0%,100%{ width: 20%; opacity: .7; } 50%{ width: 55%; opacity: 1; } }
+    .tb-left { display: flex; gap: 14px; align-items: center; }
+    .tb-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{ opacity:1; box-shadow: 0 0 5px var(--accent); } 50%{ opacity:.2; box-shadow: none; } }
+    .tb-right { display: flex; gap: 22px; align-items: center; }
+    .tb-link { color: var(--muted); text-decoration: none; letter-spacing: .12em; text-transform: uppercase; font-size: 10px; position: relative; transition: color .2s; }
+    .tb-link::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:1px; background:var(--accent); transform:scaleX(0); transition:transform .2s; transform-origin:left; }
+    .tb-link:hover { color: var(--accent); }
+    .tb-link:hover::after { transform: scaleX(1); }
+    .tb-link.back { color: var(--accent); border: 1px solid rgba(0,180,255,.25); padding: 2px 10px; font-size: 9px; }
+    .tb-link.back:hover { background: rgba(0,180,255,.08); }
+    .tb-link.back::after { display: none; }
+    .page-wrap { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 100px 40px 80px; }
+    .breadcrumb { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .12em; margin-bottom: 28px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .breadcrumb a { color: var(--muted); text-decoration: none; transition: color .2s; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb span { color: var(--wire-2); }
+    .breadcrumb .current { color: var(--accent); }
+    .intro-line { font-family: var(--font-mono); font-size: 10px; color: var(--accent); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .intro-line::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--accent); opacity: .5; }
+    .page-title { font-family: var(--font-display); font-size: clamp(40px, 6vw, 72px); font-weight: 900; line-height: .95; letter-spacing: -.02em; text-transform: uppercase; margin-bottom: 28px; color: var(--text); }
+    .page-title span { -webkit-text-stroke: 1px rgba(0,180,255,.35); -webkit-text-fill-color: transparent; display: block; }
+    .wu-card { background: var(--panel); border: 1px solid var(--wire-2); border-radius: 2px; padding: 48px 44px; margin-bottom: 28px; position: relative; overflow: hidden; transition: border-color .3s, box-shadow .3s; transform-style: preserve-3d; background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.038) 2px, rgba(255,255,255,0.038) 3px), repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 3px); }
+    .wu-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0; transition: opacity .4s; }
+    .wu-card::after { content: attr(data-num); position: absolute; top: 32px; right: 36px; font-family: var(--font-display); font-size: 80px; font-weight: 900; -webkit-text-stroke: 1px rgba(0,180,255,.08); -webkit-text-fill-color: transparent; line-height: 1; pointer-events: none; }
+    .wu-card:hover { border-color: rgba(0,180,255,.3); box-shadow: 0 0 40px rgba(0,180,255,.04); }
+    .wu-card:hover::before { opacity: .7; }
+    a.wu-card { display: block; text-decoration: none; color: inherit; }
+    .wu-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
+    .wu-badge { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; padding: 4px 10px; border: 1px solid rgba(0,180,255,.3); color: var(--accent); background: rgba(0,180,255,.05); border-radius: 2px; }
+    .wu-badge.amber { border-color: rgba(255,181,71,.3); color: #ffb547; background: rgba(255,181,71,.05); }
+    .wu-year { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .15em; }
+    .wu-title { font-family: var(--font-display); font-size: clamp(26px, 3.5vw, 40px); font-weight: 800; line-height: 1.05; text-transform: uppercase; letter-spacing: .01em; margin-bottom: 28px; }
+    .wu-body { font-family: var(--font-body); font-size: 15px; line-height: 1.82; color: #b0d0ee; font-weight: 300; }
+    .wu-body p { margin-bottom: 18px; }
+    .wu-body p:last-child { margin-bottom: 0; }
+    .wu-body code { font-family: var(--font-mono); font-size: 12.5px; background: rgba(0,180,255,.07); border: 1px solid rgba(0,180,255,.22); padding: 1px 7px; border-radius: 2px; color: var(--accent); white-space: nowrap; }
+    .wu-h3 { font-family: var(--font-mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--purple); margin: 28px 0 10px; }
+    .wu-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--wire-1); }
+    .wu-tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--wire-2); color: var(--muted); border-radius: 2px; transition: border-color .2s, color .2s; position: relative; overflow: hidden; }
+    .wu-tag::before { content: ''; position: absolute; inset: 0; background: rgba(0,180,255,.08); transform: scaleX(0); transform-origin: left; transition: transform .25s; }
+    .wu-tag:hover { border-color: rgba(0,180,255,.45); color: var(--accent); }
+    .wu-tag:hover::before { transform: scaleX(1); }
+    .status-bar { margin-top: 22px; display: flex; gap: 6px; flex-wrap: wrap; }
+    .status-pill { font-family: var(--font-mono); font-size: 10px; padding: 4px 10px; border-radius: 2px; letter-spacing: .1em; text-transform: uppercase; }
+    .sp-done { border: 1px solid rgba(0,180,255,.3); color: var(--accent); background: rgba(0,180,255,.05); }
+    .sp-wip { border: 1px solid rgba(255,181,71,.3); color: #ffb547; background: rgba(255,181,71,.05); }
+    .kv-grid { display: grid; grid-template-columns: 170px 1fr; border: 1px solid var(--wire-2); border-radius: 2px; margin: 18px 0 28px; overflow: hidden; }
+    .kv-k { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 11px 14px; border-bottom: 1px solid var(--wire-1); background: rgba(255,255,255,.02); }
+    .kv-v { font-size: 13.5px; color: #b0d0ee; padding: 11px 14px; border-bottom: 1px solid var(--wire-1); font-weight: 300; line-height: 1.6; }
+    .kv-grid > div:nth-last-child(-n+2) { border-bottom: none; }
+    .timeline { border-left: 1px solid var(--wire-2); margin: 18px 0 28px; padding-left: 22px; display: flex; flex-direction: column; gap: 16px; }
+    .tl-item { position: relative; }
+    .tl-item::before { content: ''; position: absolute; left: -27px; top: 4px; width: 7px; height: 7px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 6px var(--accent); }
+    .tl-date { font-family: var(--font-mono); font-size: 10px; color: var(--accent); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 3px; }
+    .tl-text { font-size: 13.5px; color: #b0d0ee; font-weight: 300; line-height: 1.7; }
+    .attck-table { width: 100%; border-collapse: collapse; margin: 18px 0 28px; font-size: 12.5px; }
+    .attck-table th { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--purple); text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--wire-2); white-space: nowrap; }
+    .attck-table td { padding: 9px 10px; border-bottom: 1px solid var(--wire-1); color: #b0d0ee; font-weight: 300; }
+    .table-scroll { overflow-x: auto; }
+    .note-box { margin-top: 28px; background: rgba(155,89,245,.03); border: 1px solid rgba(155,89,245,.15); border-left: 3px solid var(--purple); border-radius: 2px; padding: 20px 22px; }
+    .note-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: var(--purple); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+    .note-label::before { content: '//'; color: var(--muted); }
+    .src-list { display: flex; flex-direction: column; gap: 7px; margin-top: 10px; }
+    .src-list a { font-family: var(--font-mono); font-size: 11px; color: var(--muted); text-decoration: none; word-break: break-all; }
+    .src-list a:hover { color: var(--accent); }
+    .reveal { opacity: 0; transform: translateY(24px); transition: opacity .8s cubic-bezier(.2,.7,.2,1), transform .8s cubic-bezier(.2,.7,.2,1); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    footer { position: relative; z-index: 1; border-top: 1px solid var(--wire-1); padding: 16px 40px; max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .1em; }
+    footer a { color: var(--muted); text-decoration: none; transition: color .2s; }
+    footer a:hover { color: var(--accent); }
+    .foot-accent { color: var(--accent); }
+    @media (max-width: 700px) { .page-wrap { padding: 80px 20px 60px; } .wu-card { padding: 26px 22px; } footer { padding: 16px 20px; flex-direction: column; gap: 6px; text-align: center; } .kv-grid { grid-template-columns: 130px 1fr; } }
+</style>
+</head>
+<body>
+<canvas id="bg-canvas"></canvas>
+<div class="cur-dot" id="curDot"></div>
+<div class="cur-ring" id="curRing"></div>
+
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-dot"></span>
+    <span id="clock">--:--:--</span>
+  </div>
+  <div class="tb-right">
+    <a href="./index.html" class="tb-link back">← publications</a>
+    <a href="../index.html#contact" class="tb-link">Contact</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+  <div class="reveal">
+    <div class="breadcrumb">
+      <a href="../index.html">Home</a>
+      <span>/</span>
+      <a href="./index.html">Publications</a>
+      <span>/</span>
+      <span class="current">Simulyn</span>
+    </div>
+    <div class="intro-line">research summary · in development</div>
+    <h1 class="page-title">Simulyn<span>AI-Assisted Virtual Engineering Labs</span></h1>
+  </div>
+
+  <div class="wu-card reveal" data-num="02">
+    <div class="wu-meta">
+      <span class="wu-badge">Research Paper</span>
+      <span class="wu-year">2026</span>
+    </div>
+    <h2 class="wu-title">Overview</h2>
+    <div class="wu-body">
+      <p>Simulyn is a virtual engineering lab platform trying to do three things in one architecture instead of stitching together three separate tools: run student code, watch for cheating without a webcam strapped to anyone's face, and keep students engaged enough to actually finish the lab. Prototype's validated, paper's drafted, still actively getting built out.</p>
+      <p>This page is the summary, not the paper. No full architecture diagrams or evaluation tables here, that's for the actual submission.</p>
+    </div>
+
+    <div class="wu-h3">Problem Statement</div>
+    <div class="wu-body">
+      <p>India has 10,000+ AICTE-affiliated engineering colleges and wildly uneven lab access between them. Online labs solved the access problem and then mostly stopped there. No adaptive feedback, no real proctoring without bolting on a third-party tool that breaks integration constantly, and no real signal on whether the student actually learned anything. Three separate problems, but they all show up the moment nobody's watching the student work.</p>
+    </div>
+
+    <div class="wu-h3">Approach</div>
+    <div class="wu-body">
+      <p>One shared architecture instead of four duct-taped systems: a sandboxed code runner, a hint engine, a browser-side proctoring layer that watches tab switches and clipboard activity without needing a webcam or installed software, and a gamification layer so it doesn't feel purely like homework. All four components talk over one telemetry bus instead of writing to four logs nobody cross-references.</p>
+      <p>The proctoring side is the part I find most interesting, honestly. It runs entirely in the browser, no kernel driver, no extension, just a state machine watching for tab switches, focus loss, and clipboard activity, with weighted violations that escalate toward a forced submission instead of an instant ban for one accidental alt-tab.</p>
+    </div>
+
+    <div class="wu-h3">Current Progress</div>
+    <div class="wu-body">
+      <p>Working in prototype: the Python sandbox, the grading pipeline, a rule-based hint system, and a proctoring state machine that's been exercised with synthetic violations across multi-tab and multi-window setups. Electronics simulation with KVL/KCL circuit checking is built. The LLM-based assistance layer isn't, it's currently a well-defined interface waiting for a model behind it. The cloud backend is, generously, a browser pretending to be one via localStorage.</p>
+    </div>
+
+    <div class="wu-h3">Challenges</div>
+    <div class="wu-body">
+      <p>Biggest one: browser-level proctoring genuinely cannot see a second phone sitting next to the laptop. That's a hardware problem, no amount of clever DOM-event logic gets around it, so I've been upfront that this covers opportunistic cheating, not a determined cheater with backup hardware.</p>
+      <p>Second one: tuning violation weights without a real student cohort to test against is basically guessing responsibly. The numbers I picked are conservative on purpose, but "conservative and untested" is still untested.</p>
+    </div>
+
+    <div class="wu-h3">Future Directions</div>
+    <div class="wu-body">
+      <p>Swap the rule-based hints for an actual LLM layer, run this against a real cohort instead of synthetic violation injection, and move it onto something resembling real cloud infrastructure instead of a browser's local storage doing its best Firestore impression. C and Java support for the code sandbox is also on the list, since that's most of what Indian engineering curricula actually run on.</p>
+    </div>
+
+    <div class="wu-h3">Status</div>
+    <div class="wu-body">
+      <p>In development. Architecture and prototype hold up under functional testing. The parts that need real students, real load, and real cheating attempts haven't happened yet, and that's the honest gap between "this works" and "this is ready."</p>
+    </div>
+
+    <div class="wu-tags">
+      <span class="wu-tag">EdTech</span>
+      <span class="wu-tag">Browser Proctoring</span>
+      <span class="wu-tag">Virtual Labs</span>
+      <span class="wu-tag">Sandboxed Execution</span>
+      <span class="wu-tag">State Machine Design</span>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
+  <a href="./index.html">← publications index</a>
+  <a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
+</footer>
+
+<script>
+const canvas=document.getElementById('bg-canvas'),ctx=canvas.getContext('2d');
+let W,H;const mouse={x:window.innerWidth/2,y:window.innerHeight/2};
+function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
+resize();window.addEventListener('resize',resize);
+document.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
+const WORLD_H=3000,NODE_COUNT=200,CONNECT_DIST=140;
+const nodes=Array.from({length:NODE_COUNT},()=>({x:Math.random()*window.innerWidth,y:Math.random()*WORLD_H,vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5,r:Math.random()*2+1,color:Math.random()>.5?'#00b4ff':Math.random()>.7?'#9b59f5':'#0090d4',pulse:Math.random()*Math.PI*2,pulseSpeed:.02+Math.random()*.02}));
+const LABELS=['proctoring','telemetry','sandbox','gamification','XP','DOM events','prototype','KVL/KCL'];
+const floaters=Array.from({length:10},(_,i)=>({text:LABELS[i%LABELS.length],x:Math.random()*window.innerWidth,y:Math.random()*WORLD_H,vy:-(Math.random()*.18+.05),opacity:Math.random()*.14+.04}));
+function draw(){
+  const sy=window.scrollY;ctx.clearRect(0,0,W,H);
+  const mg=ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,200);
+  mg.addColorStop(0,'rgba(0,180,255,0.06)');mg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=mg;ctx.fillRect(0,0,W,H);ctx.save();ctx.translate(0,-sy);
+  for(const n of nodes){
+    n.pulse+=n.pulseSpeed;
+    const dx=n.x-mouse.x,dy=n.y-(mouse.y+sy),dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<160&&dist>0){const f=(160-dist)/160*.9;n.vx+=(dx/dist)*f;n.vy+=(dy/dist)*f;}
+    const spd=Math.sqrt(n.vx*n.vx+n.vy*n.vy);if(spd>2){n.vx*=2/spd;n.vy*=2/spd;}
+    n.vx*=.993;n.vy*=.993;n.x+=n.vx;n.y+=n.vy;
+    if(n.x<0){n.x=0;n.vx*=-1;}if(n.x>W){n.x=W;n.vx*=-1;}if(n.y<0){n.y=0;n.vy*=-1;}if(n.y>WORLD_H){n.y=WORLD_H;n.vy*=-1;}
+    if(n.y<sy-120||n.y>sy+H+120)continue;
+    for(const m of nodes){if(m===n)continue;if(m.y<sy-120||m.y>sy+H+120)continue;const ex=n.x-m.x,ey=n.y-m.y,ed=Math.sqrt(ex*ex+ey*ey);if(ed<CONNECT_DIST){const a=(1-ed/CONNECT_DIST)*.4;ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);ctx.strokeStyle=n.color==='#9b59f5'||m.color==='#9b59f5'?`rgba(155,89,245,${a*.9})`:`rgba(0,180,255,${a})`;ctx.lineWidth=.65;ctx.stroke();}}
+    const pa=.6+Math.sin(n.pulse)*.3,pr=n.r+Math.sin(n.pulse)*.5;
+    ctx.beginPath();ctx.arc(n.x,n.y,pr,0,Math.PI*2);ctx.fillStyle=n.color==='#9b59f5'?`rgba(155,89,245,${pa})`:n.color==='#0090d4'?`rgba(0,144,212,${pa})`:`rgba(0,180,255,${pa})`;ctx.fill();
+  }
+  ctx.font='9px JetBrains Mono,monospace';
+  for(const f of floaters){f.y+=f.vy;if(f.y<0){f.y=WORLD_H;f.x=Math.random()*W;}if(f.y<sy-20||f.y>sy+H+20)continue;ctx.fillStyle=`rgba(0,180,255,${f.opacity})`;ctx.fillText(f.text,f.x,f.y);}
+  ctx.restore();requestAnimationFrame(draw);
+}
+draw();
+const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
+let rx=0,ry=0,mx=0,my=0;
+document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
+(function animCursor(){rx+=(mx-rx)*.15;ry+=(my-ry)*.15;dot.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;ring.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(animCursor);})();
+function updateClock(){document.getElementById('clock').textContent=new Date().toTimeString().slice(0,8);}
+updateClock();setInterval(updateClock,1000);
+const obs=new IntersectionObserver(entries=>{let d=0;entries.forEach(e=>{if(e.isIntersecting){setTimeout(()=>e.target.classList.add('in'),d);d+=80;obs.unobserve(e.target);}});},{threshold:.06});
+document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
+document.querySelectorAll('.wu-card').forEach(card=>{
+  card.addEventListener('mousemove',e=>{const r=card.getBoundingClientRect(),cx=r.width/2,cy=r.height/2,mx=e.clientX-r.left,my=e.clientY-r.top;card.style.transform=`perspective(1200px) rotateX(${-((my-cy)/cy)*3}deg) rotateY(${((mx-cx)/cx)*3}deg) scale3d(1.01,1.01,1.01)`;});
+  card.addEventListener('mouseleave',()=>{card.style.transform='perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';});
+});
+</script>
+</body>
+</html>

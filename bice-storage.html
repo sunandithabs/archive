@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>BICE Storage & Dataset Investigation</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #00010a; --panel: #02040f; --wire-1: #080e20; --wire-2: #0c1430;
+      --accent: #00b4ff; --accent2: #0090d4; --purple: #9b59f5; --green: #25d076;
+      --amber: #ffb547; --red: #e8002d; --text: #c8e4ff; --muted: #6090b8;
+      --font-mono: "JetBrains Mono", ui-monospace, monospace;
+      --font-display: "Syne", sans-serif;
+      --font-body: "DM Sans", system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.6; overflow-x: hidden; cursor: none; }
+    body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px); pointer-events: none; z-index: 9000; }
+    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    .cur-dot { position: fixed; z-index: 9999; pointer-events: none; width: 6px; height: 6px; border-radius: 50%; background: var(--purple); transform: translate(-50%,-50%); box-shadow: 0 0 8px var(--purple); transition: transform .1s; }
+    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(155,89,245,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 500; height: 40px; background: rgba(2,4,15,.94); border-bottom: 1px solid var(--wire-2); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); backdrop-filter: blur(12px); }
+    .topbar::after { content: ''; position: absolute; bottom: -2px; left: 0; height: 2px; background: linear-gradient(90deg, var(--purple), transparent); animation: sweep 4s ease-in-out infinite; }
+    @keyframes sweep { 0%,100%{ width: 20%; opacity: .7; } 50%{ width: 55%; opacity: 1; } }
+    .tb-left { display: flex; gap: 14px; align-items: center; }
+    .tb-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--purple); animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{ opacity:1; box-shadow: 0 0 5px var(--purple); } 50%{ opacity:.2; box-shadow: none; } }
+    .tb-right { display: flex; gap: 22px; }
+    .tb-link { color: var(--muted); text-decoration: none; letter-spacing: .12em; text-transform: uppercase; font-size: 10px; position: relative; transition: color .2s; }
+    .tb-link::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:1px; background:var(--purple); transform:scaleX(0); transition:transform .2s; transform-origin:left; }
+    .tb-link:hover { color: var(--purple); }
+    .tb-link:hover::after { transform: scaleX(1); }
+    .tb-link.back { color: var(--purple); border: 1px solid rgba(155,89,245,.25); padding: 2px 10px; font-size: 9px; }
+    .tb-link.back:hover { background: rgba(155,89,245,.08); }
+    .tb-link.back::after { display: none; }
+    .page-wrap { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 100px 40px 80px; }
+    .intro-line { font-family: var(--font-mono); font-size: 10px; color: var(--purple); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .intro-line::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--purple); opacity: .5; }
+    .page-title { font-family: var(--font-display); font-size: clamp(36px, 6vw, 72px); font-weight: 900; line-height: .95; letter-spacing: -.02em; text-transform: uppercase; margin-bottom: 28px; color: var(--text); }
+    .page-title span { -webkit-text-stroke: 1px rgba(155,89,245,.35); -webkit-text-fill-color: transparent; display: block; }
+    .framing { font-family: var(--font-body); font-size: 15px; color: var(--muted); font-weight: 300; max-width: 560px; line-height: 1.75; margin-bottom: 56px; padding-left: 20px; border-left: 2px solid rgba(155,89,245,.25); font-style: italic; }
+    .section-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; margin-top: 44px; display: flex; align-items: center; gap: 14px; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--wire-2); }
+    .section-label:first-of-type { margin-top: 0; }
+    .block { margin-bottom: 28px; }
+    .block p { font-size: 14.5px; color: #8aabcc; font-weight: 300; line-height: 1.8; max-width: 700px; margin-bottom: 12px; }
+
+    .storage-bars { margin: 20px 0 8px; padding: 26px 30px; background: var(--panel); border: 1px solid var(--wire-2); border-radius: 2px; max-width: 560px; }
+    .bar-row { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .bar-row:last-child { margin-bottom: 0; }
+    .bar-label { font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .04em; width: 150px; flex-shrink: 0; }
+    .bar-track { flex: 1; height: 8px; background: var(--wire-1); border-radius: 2px; overflow: hidden; }
+    .bar-fill { height: 100%; border-radius: 2px; background: var(--purple); }
+    .bar-fill.alt { background: var(--accent); }
+    .bar-fill.dim { background: var(--muted); }
+
+    .tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--wire-1); }
+    .tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--wire-2); color: var(--muted); border-radius: 2px; }
+
+    .conclusion-box { margin-top: 44px; padding: 28px 32px; background: rgba(155,89,245,.05); border: 1px solid rgba(155,89,245,.3); border-left: 3px solid var(--purple); border-radius: 2px; max-width: 760px; box-shadow: 0 12px 40px rgba(155,89,245,.08); }
+    .conclusion-title { font-family: var(--font-display); font-size: 17px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--purple); margin-bottom: 14px; }
+    .conclusion-box p { color: #b9c8e0; font-size: 14.5px; font-weight: 300; line-height: 1.85; margin-bottom: 10px; }
+    .conclusion-box p:last-child { margin-bottom: 0; }
+
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    footer { position: relative; z-index: 1; border-top: 1px solid var(--wire-1); padding: 16px 40px; max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .1em; }
+    footer a { color: var(--muted); text-decoration: none; transition: color .2s; }
+    footer a:hover { color: var(--purple); }
+    .foot-accent { color: var(--purple); }
+    @media (max-width: 700px) { .page-wrap { padding: 80px 20px 60px; } footer { padding: 16px 20px; flex-direction: column; gap: 6px; text-align: center; } .bar-label { width: 110px; font-size: 10px; } }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div class="cur-dot" id="curDot"></div>
+<div class="cur-ring" id="curRing"></div>
+
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-dot"></span>
+    <span id="clock">--:--:--</span>
+  </div>
+  <div class="tb-right">
+    <a href="./systems.html" class="tb-link back">← back to systems</a>
+    <a href="./index.html#research" class="tb-link">Research</a>
+    <a href="./index.html#projects" class="tb-link">Projects</a>
+    <a href="./index.html#contact" class="tb-link">Contact</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <div class="reveal">
+    <div class="intro-line">engineering note</div>
+    <h1 class="page-title">BICE<span>Storage Investigation</span></h1>
+    <p class="framing">
+      A routine filesystem check that turned up a research project quietly outgrowing its own footprint.
+    </p>
+  </div>
+
+  <div class="section-label reveal">Overview</div>
+  <div class="block reveal">
+    <p>A storage audit was run as routine maintenance, not in response to any pressure on disk space. The goal was simply to understand where space was going and whether anything could be reclaimed. It turned into a short investigation into how a single research project, BICE, had accumulated a disproportionate share of total usage.</p>
+  </div>
+
+  <div class="section-label reveal">Discovery</div>
+  <div class="block reveal">
+    <p>A top-level home directory scan showed one project directory standing far above everything else. Drilling into it pointed at a single subproject as the dominant consumer, with the rest of the workspace contributing comparatively little. The imbalance was the signal worth following, not the absolute numbers.</p>
+  </div>
+
+  <div class="section-label reveal">Analysis</div>
+  <div class="block reveal">
+    <p>Inside the subproject, most of the space was split between a generated database file, a research dataset directory, and a compressed archive. The dataset itself consisted of labeled network traffic captures used for IoT malware analysis, including botnet attack traffic and benign baseline traffic, the kind of files that grow large quickly and tend to get copied rather than referenced.</p>
+    <p>A closer look at related directories elsewhere on the system showed the same dataset files duplicated across multiple archive folders. Different extraction passes had each left their own full copy behind instead of being cleaned up afterward.</p>
+    <div class="storage-bars">
+      <div class="bar-row">
+        <span class="bar-label">Research Datasets</span>
+        <div class="bar-track"><div class="bar-fill" style="width: 92%;"></div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Generated Artifacts</span>
+        <div class="bar-track"><div class="bar-fill alt" style="width: 58%;"></div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">Archives</span>
+        <div class="bar-track"><div class="bar-fill alt" style="width: 44%;"></div></div>
+      </div>
+      <div class="bar-row">
+        <span class="bar-label">System Files</span>
+        <div class="bar-track"><div class="bar-fill dim" style="width: 12%;"></div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label reveal">Cleanup Strategy</div>
+  <div class="block reveal">
+    <p>Rather than deleting anything immediately, the approach was to verify before removing. Folder sizes were compared, and duplicate archive directories were diffed against each other to confirm they held identical content before any of them were cleared. Once confirmed, redundant copies were removed and the remaining dataset was moved into a dedicated research data location instead of living alongside temporary downloads. Routine cache and package cleanup was run alongside this work and recovered a modest amount of additional space on its own.</p>
+  </div>
+
+  <div class="conclusion-box reveal">
+    <div class="conclusion-title">Key Takeaway</div>
+    <p>The system was never at risk. What this audit actually found was a dataset management problem dressed up as a storage problem: large research files copied across multiple working folders with no single owner keeping track of which copy was current.</p>
+    <p>The fix was procedural, not technical. Verify before deleting, give datasets one canonical location instead of letting them spread, and treat duplication as the default outcome of repeated extraction unless something actively prevents it.</p>
+  </div>
+
+  <div class="tags-row reveal">
+    <span class="tag">Storage Audit</span>
+    <span class="tag">Filesystem Analysis</span>
+    <span class="tag">Dataset Management</span>
+    <span class="tag">Deduplication</span>
+    <span class="tag">Arch Linux</span>
+  </div>
+
+</div>
+
+<footer>
+  <span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
+  <a href="./systems.html">back to systems ↗</a>
+  <a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
+</footer>
+
+<script>
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+const mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+const WORLD_H = 2600, NODE_COUNT = 180, CONNECT_DIST = 160;
+const nodes = Array.from({length: NODE_COUNT}, () => ({
+  x: Math.random() * window.innerWidth, y: Math.random() * WORLD_H,
+  vx: (Math.random()-.5)*.6, vy: (Math.random()-.5)*.6,
+  r: Math.random()*2.2+1.1,
+  color: Math.random()>.5 ? '#9b59f5' : Math.random()>.7 ? '#00b4ff' : '#7c4dd9',
+  pulse: Math.random()*Math.PI*2, pulseSpeed: .02+Math.random()*.025
+}));
+
+const LABELS = ['DATASET','DUPLICATE','ARCHIVE','du/df','CLEANUP','VERIFY'];
+const floaters = Array.from({length:10},(_,i)=>({
+  text: LABELS[i%LABELS.length], x: Math.random()*window.innerWidth, y: Math.random()*WORLD_H,
+  vy: -(Math.random()*.2+.07), opacity: Math.random()*.18+.05
+}));
+
+function draw() {
+  const sy = window.scrollY;
+  ctx.clearRect(0,0,W,H);
+  const mg = ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,200);
+  mg.addColorStop(0,'rgba(155,89,245,0.06)'); mg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=mg; ctx.fillRect(0,0,W,H);
+  ctx.save(); ctx.translate(0,-sy);
+  const wxm=mouse.x, wym=mouse.y+sy;
+  for(const n of nodes){
+    n.pulse+=n.pulseSpeed;
+    const dx=n.x-wxm,dy=n.y-wym,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<170&&dist>0){const f=(170-dist)/170*1.1;n.vx+=(dx/dist)*f;n.vy+=(dy/dist)*f;}
+    const spd=Math.sqrt(n.vx*n.vx+n.vy*n.vy);
+    if(spd>2.2){n.vx*=2.2/spd;n.vy*=2.2/spd;}
+    n.vx*=.993;n.vy*=.993;n.x+=n.vx;n.y+=n.vy;
+    if(n.x<0){n.x=0;n.vx*=-1;} if(n.x>W){n.x=W;n.vx*=-1;}
+    if(n.y<0){n.y=0;n.vy*=-1;} if(n.y>WORLD_H){n.y=WORLD_H;n.vy*=-1;}
+    if(n.y<sy-160||n.y>sy+H+160)continue;
+    for(const m of nodes){
+      if(m===n)continue;
+      if(m.y<sy-160||m.y>sy+H+160)continue;
+      const ex=n.x-m.x,ey=n.y-m.y,ed=Math.sqrt(ex*ex+ey*ey);
+      if(ed<CONNECT_DIST){
+        const alpha=(1-ed/CONNECT_DIST)*.45;
+        ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);
+        ctx.strokeStyle=`rgba(155,89,245,${alpha*.85})`;
+        ctx.lineWidth=.7;ctx.stroke();
+      }
+    }
+    const pa=.6+Math.sin(n.pulse)*.35, pr=n.r+Math.sin(n.pulse)*.6;
+    ctx.beginPath();ctx.arc(n.x,n.y,pr,0,Math.PI*2);
+    ctx.fillStyle=`rgba(155,89,245,${pa})`;
+    ctx.fill();
+  }
+  ctx.font='9px JetBrains Mono,monospace';
+  for(const f of floaters){
+    f.y+=f.vy;
+    if(f.y<0){f.y=WORLD_H;f.x=Math.random()*W;}
+    if(f.y<sy-20||f.y>sy+H+20)continue;
+    ctx.fillStyle=`rgba(155,89,245,${f.opacity})`;
+    ctx.fillText(f.text,f.x,f.y);
+  }
+  ctx.restore();
+  requestAnimationFrame(draw);
+}
+draw();
+
+const dot = document.getElementById('curDot');
+const ring = document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+(function animCursor(){
+  rx+=(mx-rx)*.15; ry+=(my-ry)*.15;
+  dot.style.transform=`translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+  ring.style.transform=`translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+  requestAnimationFrame(animCursor);
+})();
+
+function updateClock(){
+  const now=new Date();
+  document.getElementById('clock').textContent=now.toTimeString().slice(0,8);
+}
+updateClock(); setInterval(updateClock,1000);
+
+const revealObs = new IntersectionObserver(entries => {
+  let delay = 0;
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('in'), delay);
+      delay += 60;
+      revealObs.unobserve(e.target);
+    }
+  });
+},{threshold:.06});
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+</script>
+</body>
+</html>

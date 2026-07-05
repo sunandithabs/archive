@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Desktop Engineering Log</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #00010a; --panel: #02040f; --wire-1: #080e20; --wire-2: #0c1430;
+      --accent: #00b4ff; --accent2: #0090d4; --purple: #9b59f5; --green: #25d076;
+      --amber: #ffb547; --red: #e8002d; --text: #c8e4ff; --muted: #6090b8;
+      --font-mono: "JetBrains Mono", ui-monospace, monospace;
+      --font-display: "Syne", sans-serif;
+      --font-body: "DM Sans", system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { background: var(--black); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.6; overflow-x: hidden; cursor: none; }
+    body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px); pointer-events: none; z-index: 9000; }
+    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    .cur-dot { position: fixed; z-index: 9999; pointer-events: none; width: 6px; height: 6px; border-radius: 50%; background: var(--purple); transform: translate(-50%,-50%); box-shadow: 0 0 8px var(--purple); transition: transform .1s; }
+    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(155,89,245,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
+    .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 500; height: 40px; background: rgba(2,4,15,.94); border-bottom: 1px solid var(--wire-2); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); backdrop-filter: blur(12px); }
+    .topbar::after { content: ''; position: absolute; bottom: -2px; left: 0; height: 2px; background: linear-gradient(90deg, var(--purple), transparent); animation: sweep 4s ease-in-out infinite; }
+    @keyframes sweep { 0%,100%{ width: 20%; opacity: .7; } 50%{ width: 55%; opacity: 1; } }
+    .tb-left { display: flex; gap: 14px; align-items: center; }
+    .tb-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--purple); animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{ opacity:1; box-shadow: 0 0 5px var(--purple); } 50%{ opacity:.2; box-shadow: none; } }
+    .tb-right { display: flex; gap: 22px; }
+    .tb-link { color: var(--muted); text-decoration: none; letter-spacing: .12em; text-transform: uppercase; font-size: 10px; position: relative; transition: color .2s; }
+    .tb-link::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:1px; background:var(--purple); transform:scaleX(0); transition:transform .2s; transform-origin:left; }
+    .tb-link:hover { color: var(--purple); }
+    .tb-link:hover::after { transform: scaleX(1); }
+    .tb-link.back { color: var(--purple); border: 1px solid rgba(155,89,245,.25); padding: 2px 10px; font-size: 9px; }
+    .tb-link.back:hover { background: rgba(155,89,245,.08); }
+    .tb-link.back::after { display: none; }
+    .page-wrap { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 100px 40px 80px; }
+    .intro-line { font-family: var(--font-mono); font-size: 10px; color: var(--purple); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+    .intro-line::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--purple); opacity: .5; }
+    .page-title { font-family: var(--font-display); font-size: clamp(40px, 7vw, 84px); font-weight: 900; line-height: .95; letter-spacing: -.02em; text-transform: uppercase; margin-bottom: 28px; color: var(--text); }
+    .page-title span { -webkit-text-stroke: 1px rgba(155,89,245,.35); -webkit-text-fill-color: transparent; display: block; }
+    .framing { font-family: var(--font-body); font-size: 15px; color: var(--muted); font-weight: 300; max-width: 560px; line-height: 1.75; margin-bottom: 64px; padding-left: 20px; border-left: 2px solid rgba(155,89,245,.25); font-style: italic; }
+    .section-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; margin-top: 56px; display: flex; align-items: center; gap: 14px; }
+    .section-label::after { content: ''; flex: 1; height: 1px; background: var(--wire-2); }
+    .section-label:first-of-type { margin-top: 0; }
+    .block { margin-bottom: 36px; }
+    .block p { font-size: 14.5px; color: #8aabcc; font-weight: 300; line-height: 1.8; max-width: 700px; margin-bottom: 14px; }
+    .block ul { margin: 12px 0 14px 20px; color: #8aabcc; font-size: 14.5px; font-weight: 300; line-height: 1.8; max-width: 700px; }
+    .block ul li { margin-bottom: 6px; }
+
+    /* MAINTENANCE LOOP DIAGRAM */
+    .loop-diagram { display: flex; flex-wrap: wrap; align-items: center; gap: 0; margin: 24px 0 32px; padding: 28px 32px; background: var(--panel); border: 1px solid var(--wire-2); border-radius: 2px; max-width: 720px; }
+    .loop-step { font-family: var(--font-mono); font-size: 12px; letter-spacing: .05em; padding: 7px 13px; border: 1px solid rgba(155,89,245,.3); border-radius: 2px; color: var(--text); background: rgba(155,89,245,.04); white-space: nowrap; }
+    .loop-arrow { font-family: var(--font-mono); color: var(--muted); font-size: 13px; padding: 0 10px; opacity: .65; }
+    .loop-return { width: 100%; text-align: right; font-family: var(--font-mono); color: var(--purple); font-size: 11px; letter-spacing: .1em; margin-top: 14px; opacity: .8; }
+
+    .tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 56px; padding-top: 20px; border-top: 1px solid var(--wire-1); }
+    .tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--wire-2); color: var(--muted); border-radius: 2px; }
+
+    .conclusion-box { margin-top: 56px; padding: 32px 36px; background: rgba(155,89,245,.05); border: 1px solid rgba(155,89,245,.3); border-left: 3px solid var(--purple); border-radius: 2px; max-width: 760px; box-shadow: 0 12px 40px rgba(155,89,245,.08); }
+    .conclusion-title { font-family: var(--font-display); font-size: 18px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--purple); margin-bottom: 16px; }
+    .conclusion-box p { color: #b9c8e0; font-size: 14.5px; font-weight: 300; line-height: 1.85; margin-bottom: 12px; }
+    .conclusion-box p:last-child { margin-bottom: 0; }
+
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+    footer { position: relative; z-index: 1; border-top: 1px solid var(--wire-1); padding: 16px 40px; max-width: 960px; margin: 0 auto; display: flex; justify-content: space-between; align-items: center; font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .1em; }
+    footer a { color: var(--muted); text-decoration: none; transition: color .2s; }
+    footer a:hover { color: var(--purple); }
+    .foot-accent { color: var(--purple); }
+    @media (max-width: 700px) { .page-wrap { padding: 80px 20px 60px; } footer { padding: 16px 20px; flex-direction: column; gap: 6px; text-align: center; } }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div class="cur-dot" id="curDot"></div>
+<div class="cur-ring" id="curRing"></div>
+
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-dot"></span>
+    <span id="clock">--:--:--</span>
+  </div>
+  <div class="tb-right">
+    <a href="./systems.html" class="tb-link back">← back to systems</a>
+    <a href="./index.html#research" class="tb-link">Research</a>
+    <a href="./index.html#projects" class="tb-link">Projects</a>
+    <a href="./index.html#contact" class="tb-link">Contact</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <div class="reveal">
+    <div class="intro-line">engineering journal</div>
+    <h1 class="page-title">Desktop<span>Engineering Log</span></h1>
+    <p class="framing">
+      A running record of keeping a Linux desktop livable, one small correction at a time.
+    </p>
+  </div>
+
+  <div class="section-label reveal">Overview</div>
+  <div class="block reveal">
+    <p>This is a journal, not an incident report. There was no single outage that justified it and no dramatic rebuild behind it. The workstation runs Arch Linux with a Wayland compositor and a heavily customized shell layer, and like any setup of that kind it drifts. Audio profiles slip, layout assumptions break when something else changes size, startup sequencing gets confused by one too many shells fighting for the same job. None of it is exciting on its own. Logged together, it tells a more honest story than any single fix would: the system got better because it was maintained, not because it was rescued.</p>
+  </div>
+
+  <div class="section-label reveal">Building a Daily Driver</div>
+  <div class="block reveal">
+    <p>The starting point was a system that looked finished and behaved like a demo. Every visual element worked in isolation, but the whole thing felt like a showroom floor rather than a desk. The first engineering decision, and arguably the most important one, was to stop adding and start subtracting. Widgets that existed because they could were removed if they did not serve a task. The instinct to keep tweaking had to be deliberately overridden more than once, including a moment of pulling out a core piece of the interface entirely just to confirm it actually mattered. It did. It went back in immediately, and stayed.</p>
+    <p>That single experiment set the maintenance philosophy for everything after it: keep the structural pieces, cut the decoration, and treat restraint as a real design decision rather than a failure to customize.</p>
+  </div>
+
+  <div class="section-label reveal">Environment Stability</div>
+  <div class="block reveal">
+    <p>Stability work on a system like this rarely means fixing something broken. More often it means correcting an assumption that quietly stopped being true. A media device that connects but sounds wrong is usually not a hardware fault, it is a negotiated profile picking the wrong mode. A resource indicator that stops lining up with its popup is rarely a bug in the popup, it is leftover math from a layout that has since changed. A logo that renders the wrong color on one terminal but not another is not a theming failure, it is two startup processes racing each other.</p>
+    <p>The same loop applied across nearly every stability issue logged here: notice the symptom, find which layer actually owns the behavior, isolate it from everything downstream, correct the assumption at the source, and confirm the fix holds before moving on.</p>
+    <div class="loop-diagram">
+      <div class="loop-step">Observation</div><div class="loop-arrow">→</div>
+      <div class="loop-step">Assumption Identified</div><div class="loop-arrow">→</div>
+      <div class="loop-step">Layer Isolated</div><div class="loop-arrow">→</div>
+      <div class="loop-step">Correction Applied</div><div class="loop-arrow">→</div>
+      <div class="loop-step">Re-Verified</div>
+      <div class="loop-return">↺ repeats on the next drift</div>
+    </div>
+    <p>That discipline is slower in the moment than patching the symptom one layer up, and considerably cheaper over time.</p>
+  </div>
+
+  <div class="section-label reveal">Interface & Workflow Refinement</div>
+  <div class="block reveal">
+    <p>Visual changes were judged by whether they reduced friction, not by whether they looked impressive in a screenshot. Reducing the height of the top interface bar improved the overall balance of the screen immediately, and just as immediately broke every popup that depended on the old dimensions. Fixing that meant recalibrating positioning logic that had quietly hardcoded the previous size, which is a normal cost of changing a layout and not a setback worth dwelling on.</p>
+    <p>Some proposed improvements were tested and deliberately abandoned. A dock redesign considered several modern interaction patterns and, after review, the existing dock was judged stable enough that the added complexity was not worth the marginal gain. Saying no to a change is still an engineering decision, and often the more disciplined one.</p>
+    <ul>
+      <li>Layout changes were treated as changes to a contract, not just to appearance.</li>
+      <li>Anything that broke after a resize was corrected at the source of the assumption.</li>
+      <li>Features were added when they reduced effort, not when they were merely possible.</li>
+    </ul>
+  </div>
+
+  <div class="section-label reveal">Operational Lessons</div>
+  <div class="block reveal">
+    <p>Routine maintenance turned out to matter as much as any individual correction. Periodic package and cache audits kept storage and clutter from accumulating quietly in the background, and confirmed more than once that the system was healthy and simply needed tidying rather than rescuing. Competing startup mechanisms across multiple shells were a recurring source of confusion, a reminder that redundant automation is not safety, it is just more places for the same job to go wrong.</p>
+    <p>The clearest lesson, repeated across nearly every entry in this log, is that the desktop improved most whenever something was removed rather than added. Customization is easy. Knowing when to stop is the actual skill, and it took longer to learn than any single configuration file.</p>
+  </div>
+
+  <div class="conclusion-box reveal">
+    <div class="conclusion-title">Key Takeaway</div>
+    <p>This log tracks the slow conversion of a heavily customized Hyprland setup from an impressive demo into a system that gets out of the way during actual work. None of the individual entries were significant on their own: a Bluetooth profile correction, a recalibrated popup, a removed startup script. What mattered was the pattern across all of them.</p>
+    <p>Most of what looked like bugs turned out to be stale assumptions left over from an earlier configuration, not genuine defects in the underlying tools. The fix was rarely complicated once the right layer was identified, which is itself the lesson: debugging effort goes into finding where an assumption broke, not into the size of the change required to correct it.</p>
+    <p>The system is more stable today not because anything dramatic was rebuilt, but because the same maintenance loop, observe, isolate, correct, verify, was applied consistently and restraint was treated as seriously as any feature.</p>
+  </div>
+
+  <div class="tags-row reveal">
+    <span class="tag">Arch Linux</span>
+    <span class="tag">Wayland</span>
+    <span class="tag">Desktop Engineering</span>
+    <span class="tag">Workflow Design</span>
+    <span class="tag">System Maintenance</span>
+    <span class="tag">Debugging Methodology</span>
+  </div>
+
+</div>
+
+<footer>
+  <span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
+  <a href="./systems.html">back to systems ↗</a>
+  <a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
+</footer>
+
+<script>
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+const mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+const WORLD_H = 3600, NODE_COUNT = 220, CONNECT_DIST = 160;
+const nodes = Array.from({length: NODE_COUNT}, () => ({
+  x: Math.random() * window.innerWidth, y: Math.random() * WORLD_H,
+  vx: (Math.random()-.5)*.6, vy: (Math.random()-.5)*.6,
+  r: Math.random()*2.2+1.1,
+  color: Math.random()>.5 ? '#9b59f5' : Math.random()>.7 ? '#00b4ff' : '#7c4dd9',
+  pulse: Math.random()*Math.PI*2, pulseSpeed: .02+Math.random()*.025
+}));
+
+const LABELS = ['PROFILE','LAYOUT','STARTUP','CACHE','POPUP','RESIZE','SHELL','AUDIO','THEME','RESTRAINT'];
+const floaters = Array.from({length:12},(_,i)=>({
+  text: LABELS[i%LABELS.length], x: Math.random()*window.innerWidth, y: Math.random()*WORLD_H,
+  vy: -(Math.random()*.2+.07), opacity: Math.random()*.18+.05
+}));
+
+function draw() {
+  const sy = window.scrollY;
+  ctx.clearRect(0,0,W,H);
+  const mg = ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,200);
+  mg.addColorStop(0,'rgba(155,89,245,0.06)'); mg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=mg; ctx.fillRect(0,0,W,H);
+  ctx.save(); ctx.translate(0,-sy);
+  const wxm=mouse.x, wym=mouse.y+sy;
+  for(const n of nodes){
+    n.pulse+=n.pulseSpeed;
+    const dx=n.x-wxm,dy=n.y-wym,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<170&&dist>0){const f=(170-dist)/170*1.1;n.vx+=(dx/dist)*f;n.vy+=(dy/dist)*f;}
+    const spd=Math.sqrt(n.vx*n.vx+n.vy*n.vy);
+    if(spd>2.2){n.vx*=2.2/spd;n.vy*=2.2/spd;}
+    n.vx*=.993;n.vy*=.993;n.x+=n.vx;n.y+=n.vy;
+    if(n.x<0){n.x=0;n.vx*=-1;} if(n.x>W){n.x=W;n.vx*=-1;}
+    if(n.y<0){n.y=0;n.vy*=-1;} if(n.y>WORLD_H){n.y=WORLD_H;n.vy*=-1;}
+    if(n.y<sy-160||n.y>sy+H+160)continue;
+    for(const m of nodes){
+      if(m===n)continue;
+      if(m.y<sy-160||m.y>sy+H+160)continue;
+      const ex=n.x-m.x,ey=n.y-m.y,ed=Math.sqrt(ex*ex+ey*ey);
+      if(ed<CONNECT_DIST){
+        const alpha=(1-ed/CONNECT_DIST)*.45;
+        ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);
+        ctx.strokeStyle=`rgba(155,89,245,${alpha*.85})`;
+        ctx.lineWidth=.7;ctx.stroke();
+      }
+    }
+    const pa=.6+Math.sin(n.pulse)*.35, pr=n.r+Math.sin(n.pulse)*.6;
+    ctx.beginPath();ctx.arc(n.x,n.y,pr,0,Math.PI*2);
+    ctx.fillStyle=`rgba(155,89,245,${pa})`;
+    ctx.fill();
+  }
+  ctx.font='9px JetBrains Mono,monospace';
+  for(const f of floaters){
+    f.y+=f.vy;
+    if(f.y<0){f.y=WORLD_H;f.x=Math.random()*W;}
+    if(f.y<sy-20||f.y>sy+H+20)continue;
+    ctx.fillStyle=`rgba(155,89,245,${f.opacity})`;
+    ctx.fillText(f.text,f.x,f.y);
+  }
+  ctx.restore();
+  requestAnimationFrame(draw);
+}
+draw();
+
+const dot = document.getElementById('curDot');
+const ring = document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+(function animCursor(){
+  rx+=(mx-rx)*.15; ry+=(my-ry)*.15;
+  dot.style.transform=`translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+  ring.style.transform=`translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+  requestAnimationFrame(animCursor);
+})();
+
+function updateClock(){
+  const now=new Date();
+  document.getElementById('clock').textContent=now.toTimeString().slice(0,8);
+}
+updateClock(); setInterval(updateClock,1000);
+
+const revealObs = new IntersectionObserver(entries => {
+  let delay = 0;
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('in'), delay);
+      delay += 60;
+      revealObs.unobserve(e.target);
+    }
+  });
+},{threshold:.06});
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+</script>
+</body>
+</html>
