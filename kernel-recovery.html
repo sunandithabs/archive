@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Kernel Reconstruction & Linux Recovery — Systems Research</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --black: #00010a;
+      --panel: #02040f;
+      --wire-1: #080e20;
+      --wire-2: #0c1430;
+      --accent: #00b4ff;
+      --accent2: #0090d4;
+      --purple: #9b59f5;
+      --green: #25d076;
+      --amber: #ffb547;
+      --red: #e8002d;
+      --text: #c8e4ff;
+      --muted: #6090b8;
+      --font-mono: "JetBrains Mono", ui-monospace, monospace;
+      --font-display: "Syne", sans-serif;
+      --font-body: "DM Sans", system-ui, sans-serif;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--black);
+      color: var(--text);
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.6;
+      overflow-x: hidden;
+      cursor: none;
+    }
+
+    body::after {
+      content: '';
+      position: fixed; inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px);
+      pointer-events: none; z-index: 9000;
+    }
+
+    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+
+    .cur-dot { position: fixed; z-index: 9999; pointer-events: none; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); transform: translate(-50%,-50%); box-shadow: 0 0 8px var(--accent); transition: transform .1s; }
+    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(0,180,255,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
+
+    /* TOPBAR */
+    .topbar {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 500;
+      height: 40px; background: rgba(2,4,15,.94);
+      border-bottom: 1px solid var(--wire-2);
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 0 32px;
+      font-family: var(--font-mono); font-size: 11px; color: var(--muted);
+      backdrop-filter: blur(12px);
+    }
+    .topbar::after {
+      content: ''; position: absolute; bottom: -2px; left: 0;
+      height: 2px; background: linear-gradient(90deg, var(--accent), transparent);
+      animation: sweep 4s ease-in-out infinite;
+    }
+    @keyframes sweep { 0%,100%{ width: 20%; opacity: .7; } 50%{ width: 55%; opacity: 1; } }
+    .tb-left { display: flex; gap: 14px; align-items: center; }
+    .tb-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 2s ease-in-out infinite; }
+    @keyframes blink { 0%,100%{ opacity:1; box-shadow: 0 0 5px var(--accent); } 50%{ opacity:.2; box-shadow: none; } }
+    .tb-right { display: flex; gap: 22px; }
+    .tb-link {
+      color: var(--muted); text-decoration: none; letter-spacing: .12em;
+      text-transform: uppercase; font-size: 10px; position: relative;
+      transition: color .2s;
+    }
+    .tb-link::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:1px; background:var(--accent); transform:scaleX(0); transition:transform .2s; transform-origin:left; }
+    .tb-link:hover { color: var(--accent); }
+    .tb-link:hover::after { transform: scaleX(1); }
+    .tb-link.back { color: var(--accent); border: 1px solid rgba(0,180,255,.25); padding: 2px 10px; font-size: 9px; }
+    .tb-link.back:hover { background: rgba(0,180,255,.08); }
+    .tb-link.back::after { display: none; }
+
+    /* PAGE */
+    .page-wrap {
+      position: relative; z-index: 1;
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 108px 40px 96px;
+    }
+
+    /* HEADER BLOCK */
+    .intro-line {
+      font-family: var(--font-mono); font-size: 10px;
+      color: var(--accent); letter-spacing: .22em; text-transform: uppercase;
+      margin-bottom: 16px;
+      display: flex; align-items: center; gap: 10px;
+    }
+    .intro-line::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--accent); opacity: .5; }
+
+    .page-title {
+      font-family: var(--font-display);
+      font-size: clamp(36px, 5.5vw, 68px);
+      font-weight: 900;
+      line-height: .95;
+      letter-spacing: -.02em;
+      text-transform: uppercase;
+      margin-bottom: 32px;
+      color: var(--text);
+    }
+    .page-title span {
+      -webkit-text-stroke: 1px rgba(0,180,255,.35);
+      -webkit-text-fill-color: transparent;
+      display: block;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+    }
+    .meta-badge {
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: .18em; text-transform: uppercase;
+      padding: 4px 10px;
+      border: 1px solid rgba(0,180,255,.3);
+      color: var(--accent);
+      background: rgba(0,180,255,.05);
+      border-radius: 2px;
+    }
+    .meta-year {
+      font-family: var(--font-mono); font-size: 10px;
+      color: var(--muted); letter-spacing: .15em;
+    }
+
+    /* BODY CONTENT */
+    .body-section {
+      margin-bottom: 52px;
+    }
+
+    .body-section h2 {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      letter-spacing: .22em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 20px;
+      padding-bottom: 10px;
+      border-bottom: 1px solid var(--wire-2);
+    }
+
+    .body-section p {
+      font-family: var(--font-body);
+      font-size: 15px;
+      line-height: 1.85;
+      color: #aac8e8;
+      font-weight: 300;
+      margin-bottom: 18px;
+    }
+    .body-section p:last-child { margin-bottom: 0; }
+
+    code {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      background: rgba(0,180,255,.07);
+      border: 1px solid rgba(0,180,255,.22);
+      padding: 1px 7px;
+      border-radius: 2px;
+      color: var(--accent);
+      white-space: nowrap;
+    }
+
+    /* INCIDENT DIVIDER */
+    .incident-label {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: .2em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin: 36px 0 18px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+    .incident-label::before {
+      content: '';
+      display: inline-block;
+      width: 20px;
+      height: 1px;
+      background: var(--muted);
+      opacity: .4;
+    }
+
+    /* ELI5 BOX */
+    .tldr-box {
+      margin-top: 52px;
+      background: rgba(0,180,255,.03);
+      border: 1px solid rgba(0,180,255,.15);
+      border-left: 3px solid var(--accent);
+      border-radius: 2px;
+      padding: 22px 26px;
+    }
+    .tldr-label {
+      font-family: var(--font-mono); font-size: 9px;
+      letter-spacing: .22em; text-transform: uppercase;
+      color: var(--accent); margin-bottom: 14px;
+      display: flex; align-items: center; gap: 8px;
+    }
+    .tldr-label::before { content: '//'; color: var(--muted); }
+    .tldr-steps { display: flex; flex-direction: column; gap: 10px; }
+    .tldr-step {
+      display: flex; align-items: flex-start; gap: 14px;
+      font-family: var(--font-body); font-size: 13.5px;
+      color: var(--text); font-weight: 400; line-height: 1.6;
+    }
+    .tldr-num {
+      font-family: var(--font-mono); font-size: 10px;
+      color: var(--accent); min-width: 20px; padding-top: 2px; opacity: .7;
+    }
+
+    /* TAGS */
+    .tags-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 6px;
+      margin-top: 52px;
+      padding-top: 24px;
+      border-top: 1px solid var(--wire-1);
+    }
+    .tag {
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: .12em; text-transform: uppercase;
+      padding: 4px 10px;
+      border: 1px solid var(--wire-2);
+      color: var(--muted);
+      border-radius: 2px;
+      transition: border-color .2s, color .2s;
+    }
+    .tag:hover { border-color: rgba(0,180,255,.3); color: var(--accent); }
+
+    /* NAV BETWEEN PAGES */
+    .page-nav {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 64px;
+      padding-top: 24px;
+      border-top: 1px solid var(--wire-1);
+      font-family: var(--font-mono);
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+    }
+    .page-nav a {
+      color: var(--muted);
+      text-decoration: none;
+      transition: color .2s;
+    }
+    .page-nav a:hover { color: var(--accent); }
+    .page-nav .next { color: var(--accent); }
+
+    /* SCROLL REVEAL */
+    .reveal { opacity: 0; transform: translateY(20px); transition: opacity .7s cubic-bezier(.2,.7,.2,1), transform .7s cubic-bezier(.2,.7,.2,1); }
+    .reveal.in { opacity: 1; transform: translateY(0); }
+
+    /* FOOTER */
+    footer {
+      position: relative; z-index: 1;
+      border-top: 1px solid var(--wire-1);
+      padding: 16px 40px;
+      max-width: 760px; margin: 0 auto;
+      display: flex; justify-content: space-between; align-items: center;
+      font-family: var(--font-mono); font-size: 11px; color: var(--muted);
+      letter-spacing: .1em;
+    }
+    footer a { color: var(--muted); text-decoration: none; transition: color .2s; }
+    footer a:hover { color: var(--accent); }
+    .foot-accent { color: var(--accent); }
+
+    @media (max-width: 700px) {
+      .page-wrap { padding: 80px 20px 60px; }
+      footer { padding: 16px 20px; flex-direction: column; gap: 6px; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<canvas id="bg-canvas"></canvas>
+<div class="cur-dot" id="curDot"></div>
+<div class="cur-ring" id="curRing"></div>
+
+<nav class="topbar">
+  <div class="tb-left">
+    <span class="tb-dot"></span>
+    <span id="clock">--:--:--</span>
+  </div>
+  <div class="tb-right">
+    <a href="./systems.html" class="tb-link back">← systems</a>
+    <a href="./index.html#bice" class="tb-link">Research</a>
+    <a href="./index.html#dashboard" class="tb-link">Projects</a>
+    <a href="./index.html#contact" class="tb-link">Contact</a>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+  <div class="reveal">
+    <div class="intro-line">System Recovery</div>
+    <h1 class="page-title">Kernel Reconstruction<span>&amp; Linux Recovery</span></h1>
+    <div class="meta-row">
+      <span class="meta-badge">System Recovery</span>
+      <span class="meta-year">2025</span>
+    </div>
+  </div>
+
+  <!-- OVERVIEW -->
+  <div class="body-section reveal" style="transition-delay:.08s;">
+    <h2>Overview</h2>
+    <p>
+      Two separate boot failures, a few months apart. Different root causes, same basic lesson: the thing that looks broken usually isn't the actual problem. This documents both incidents, what each one actually was, and how they got fixed.
+    </p>
+    <p>
+      The first happened during initial setup. The second dropped in after a routine package update, the kind you run without thinking. Both required getting past the visible symptom before any real debugging could start.
+    </p>
+  </div>
+
+  <!-- INCIDENT 01 -->
+  <div class="body-section reveal" style="transition-delay:.12s;">
+    <h2>Incident 01: The Chroot Rebuild</h2>
+
+    <div class="incident-label">Problem</div>
+    <p>
+      Fresh dual-boot setup using <code>Ventoy</code>. Installation worked. Then, during bootloader configuration afterward, something broke and Linux stopped booting entirely. On startup: a display manager crash. Hard stop, no desktop, no logs in view.
+    </p>
+    <p>
+      The obvious read was a graphics or display stack problem. That's what it looked like. It was not that.
+    </p>
+
+    <div class="incident-label">Investigation</div>
+    <p>
+      Booted from a live USB. Mounted the broken root partition, then used <code>chroot</code> to enter the non-booting system from inside the live environment. This is the move when you need to run commands against a broken install as if you were logged into it normally. From there, the actual error logs were accessible.
+    </p>
+    <p>
+      The display manager was crashing, yes. But it was crashing because it couldn't load. And it couldn't load because a proprietary GPU driver was conflicting at a lower level, corrupting the init sequence before the display stack even had a chance to start. The display manager was just the first visible casualty.
+    </p>
+    <p>
+      The wrong assumption: display manager broken, fix the display manager. The right read: something upstream of the display manager is poisoning the boot. Finding that required getting inside the system and actually reading what was failing and why.
+    </p>
+
+    <div class="incident-label">Resolution</div>
+    <p>
+      Rebuilt <code>initramfs</code> from inside the chroot to regenerate the early userspace without the conflicting driver state. Regenerated <code>vmlinuz</code>. Repaired the <code>EFI System Partition</code> entries, then rebuilt <code>GRUB</code> from scratch to make sure the bootloader was pointing at a clean kernel image. System came back up clean on next boot.
+    </p>
+  </div>
+
+  <!-- INCIDENT 02 -->
+  <div class="body-section reveal" style="transition-delay:.16s;">
+    <h2>Incident 02: BusyBox at Dawn</h2>
+
+    <div class="incident-label">Problem</div>
+    <p>
+      A few months later. Ran a package update before going to sleep, which is a fine idea until it isn't. Next morning: instead of a desktop, a <code>BusyBox</code> shell. No display. No cursor. No wifi. Just a minimal emergency shell sitting there.
+    </p>
+    <p>
+      The error logs pointed at an I/O failure. Which suggested storage corruption, maybe a bad write during the update. That's the obvious read. It was also wrong.
+    </p>
+
+    <div class="incident-label">Investigation</div>
+    <p>
+      The I/O failure wasn't random corruption. The SSD was becoming intermittently invisible during boot, which made everything downstream look like a read error. The real cause was a <code>VMD/Intel RST</code> kernel incompatibility: the storage controller driver was loading in the wrong sequence during init, meaning the kernel was trying to access the drive before the controller responsible for it had finished initializing.
+    </p>
+    <p>
+      This one was harder to find because the error output was genuinely misleading. An I/O failure that appears randomly and inconsistently looks like hardware or filesystem damage. It took ruling out actual corruption first, then tracing back through what was loading when, before the sequencing issue became visible.
+    </p>
+    <p>
+      <code>VMD</code> (Volume Management Device) is an Intel storage controller architecture used in modern NVMe configurations. When the kernel module for it loads late or out of order, the SSD can appear absent during early boot. The symptom is indistinguishable from a dead drive unless you know to look at the module load sequence.
+    </p>
+
+    <div class="incident-label">Resolution</div>
+    <p>
+      Fixed by reordering boot-time kernel modules in the init configuration to ensure the VMD controller driver loaded before the storage access sequence began. Rebuilt manually, confirmed the drive was consistently visible across several reboots, and came back up clean.
+    </p>
+  </div>
+
+  <!-- LESSONS LEARNED -->
+  <div class="body-section reveal" style="transition-delay:.2s;">
+    <h2>Lessons Learned</h2>
+    <p>
+      Both failures had the same structure. A visible thing breaks. The visible thing is not the broken thing. The broken thing is one layer underneath it, and the error output doesn't tell you that directly.
+    </p>
+    <p>
+      In the first incident, the display manager crash was real but downstream. In the second, the I/O failure was real but the cause was a sequencing problem, not data corruption. Fixing the thing you can see first is almost always wrong. Getting inside the system and asking what failed before this failed is the actual work.
+    </p>
+    <p>
+      The chroot workflow is worth knowing well. When a system won't boot, you still need to run commands against it. A live USB plus <code>chroot</code> is how you do that without reinstalling. It's not complicated, but you have to know it exists before you need it.
+    </p>
+    <p>
+      The VMD issue is also worth filing away. Modern NVMe storage on Intel platforms can behave this way after kernel updates. If a drive seems to disappear intermittently at boot after an update, module load order is worth checking before assuming hardware failure.
+    </p>
+  </div>
+
+  <!-- ELI5 -->
+  <div class="tldr-box reveal" style="transition-delay:.24s;">
+    <div class="tldr-label">ELI5 tldr</div>
+    <div class="tldr-steps">
+      <div class="tldr-step">
+        <span class="tldr-num">01</span>
+        <span>The front door of a building was stuck. Everyone assumed the door was broken. The lock mechanism behind the wall was broken. The door was just the first thing that fell over when it failed.</span>
+      </div>
+      <div class="tldr-step">
+        <span class="tldr-num">02</span>
+        <span>Went in through the emergency entrance, found the actual broken part, rebuilt it from the inside, and left through the front door like nothing happened.</span>
+      </div>
+      <div class="tldr-step">
+        <span class="tldr-num">03</span>
+        <span>Second time: the computer couldn't reliably find its own drive because two things were trying to start in the wrong order, like a key trying to work a lock that hasn't been installed yet. Fixed the order. Drive stayed visible. Problem gone.</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="tags-row reveal" style="transition-delay:.28s;">
+    <span class="tag">Linux Internals</span>
+    <span class="tag">chroot</span>
+    <span class="tag">initramfs</span>
+    <span class="tag">GRUB/EFI</span>
+    <span class="tag">VMD/Intel RST</span>
+    <span class="tag">BusyBox Recovery</span>
+    <span class="tag">Ventoy</span>
+    <span class="tag">Kernel Module Sequencing</span>
+  </div>
+
+  <div class="page-nav reveal" style="transition-delay:.32s;">
+    <a href="./systems.html">← All Investigations</a>
+    <a href="./visor-evaluation.html" class="next">Visor BootManager Evaluation →</a>
+  </div>
+
+</div>
+
+<footer>
+  <span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
+  <a href="./systems.html">systems ↗</a>
+  <a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
+</footer>
+
+<script>
+const canvas = document.getElementById('bg-canvas');
+const ctx = canvas.getContext('2d');
+let W, H;
+const mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
+function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
+resize();
+window.addEventListener('resize', resize);
+document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
+
+const WORLD_H = 3000, NODE_COUNT = 200, CONNECT_DIST = 150;
+const nodes = Array.from({length: NODE_COUNT}, () => ({
+  x: Math.random() * window.innerWidth,
+  y: Math.random() * WORLD_H,
+  vx: (Math.random()-.5)*.55, vy: (Math.random()-.5)*.55,
+  r: Math.random()*2+1,
+  color: Math.random()>.5 ? '#00b4ff' : Math.random()>.7 ? '#9b59f5' : '#0090d4',
+  pulse: Math.random()*Math.PI*2,
+  pulseSpeed: .02+Math.random()*.025
+}));
+
+const LABELS = ['KPROBE','INITRAMFS','BROM','CHROOT','EFI','VBMETA','eBPF','VMD','GRUB','SYN','BUSYBOX','RST','VMLINUZ'];
+const floaters = Array.from({length:12},(_,i)=>({
+  text: LABELS[i%LABELS.length],
+  x: Math.random()*window.innerWidth,
+  y: Math.random()*WORLD_H,
+  vy: -(Math.random()*.2+.07),
+  opacity: Math.random()*.15+.04
+}));
+
+function draw() {
+  const sy = window.scrollY;
+  ctx.clearRect(0,0,W,H);
+  const mg = ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,200);
+  mg.addColorStop(0,'rgba(0,180,255,0.05)');
+  mg.addColorStop(1,'rgba(0,0,0,0)');
+  ctx.fillStyle=mg; ctx.fillRect(0,0,W,H);
+  ctx.save(); ctx.translate(0,-sy);
+  const wxm=mouse.x, wym=mouse.y+sy;
+  for(const n of nodes){
+    n.pulse+=n.pulseSpeed;
+    const dx=n.x-wxm,dy=n.y-wym,dist=Math.sqrt(dx*dx+dy*dy);
+    if(dist<150&&dist>0){const f=(150-dist)/150*1.0;n.vx+=(dx/dist)*f;n.vy+=(dy/dist)*f;}
+    const spd=Math.sqrt(n.vx*n.vx+n.vy*n.vy);
+    if(spd>2){n.vx*=2/spd;n.vy*=2/spd;}
+    n.vx*=.993;n.vy*=.993;n.x+=n.vx;n.y+=n.vy;
+    if(n.x<0){n.x=0;n.vx*=-1;} if(n.x>W){n.x=W;n.vx*=-1;}
+    if(n.y<0){n.y=0;n.vy*=-1;} if(n.y>WORLD_H){n.y=WORLD_H;n.vy*=-1;}
+    if(n.y<sy-160||n.y>sy+H+160)continue;
+    for(const m of nodes){
+      if(m===n)continue;
+      if(m.y<sy-160||m.y>sy+H+160)continue;
+      const ex=n.x-m.x,ey=n.y-m.y,ed=Math.sqrt(ex*ex+ey*ey);
+      if(ed<CONNECT_DIST){
+        const alpha=(1-ed/CONNECT_DIST)*.4;
+        const isPurp=n.color==='#9b59f5'||m.color==='#9b59f5';
+        ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);
+        ctx.strokeStyle=isPurp?`rgba(155,89,245,${alpha*.9})`:`rgba(0,180,255,${alpha})`;
+        ctx.lineWidth=.6;ctx.stroke();
+      }
+    }
+    const pa=.55+Math.sin(n.pulse)*.3, pr=n.r+Math.sin(n.pulse)*.5;
+    ctx.beginPath();ctx.arc(n.x,n.y,pr,0,Math.PI*2);
+    ctx.fillStyle=n.color==='#9b59f5'?`rgba(155,89,245,${pa})`:n.color==='#0090d4'?`rgba(0,144,212,${pa})`:`rgba(0,180,255,${pa})`;
+    ctx.fill();
+  }
+  ctx.font='9px JetBrains Mono,monospace';
+  for(const f of floaters){
+    f.y+=f.vy;
+    if(f.y<0){f.y=WORLD_H;f.x=Math.random()*W;}
+    if(f.y<sy-20||f.y>sy+H+20)continue;
+    ctx.fillStyle=`rgba(0,180,255,${f.opacity})`;
+    ctx.fillText(f.text,f.x,f.y);
+  }
+  ctx.restore();
+  requestAnimationFrame(draw);
+}
+draw();
+
+const dot = document.getElementById('curDot');
+const ring = document.getElementById('curRing');
+let mx=0,my=0,rx=0,ry=0;
+document.addEventListener('mousemove', e => { mx=e.clientX; my=e.clientY; });
+(function animCursor(){
+  rx+=(mx-rx)*.15; ry+=(my-ry)*.15;
+  dot.style.transform=`translate(${mx}px, ${my}px) translate(-50%,-50%)`;
+  ring.style.transform=`translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+  requestAnimationFrame(animCursor);
+})();
+
+function updateClock(){
+  const now=new Date();
+  document.getElementById('clock').textContent=now.toTimeString().slice(0,8);
+}
+updateClock(); setInterval(updateClock,1000);
+
+const revealObs = new IntersectionObserver(entries => {
+  let delay = 0;
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      setTimeout(()=>e.target.classList.add('in'), delay);
+      delay += 60;
+      revealObs.unobserve(e.target);
+    }
+  });
+},{threshold:.06});
+document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
+</script>
+</body>
+</html>
