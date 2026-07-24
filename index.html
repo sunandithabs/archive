@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Sunanditha B S • Research Archive</title>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2300010a'/%3E%3Crect x='1' y='1' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='5' y='1' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='9' y='1' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='13' y='1' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='3' y='3' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='7' y='3' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='1' y='5' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='5' y='5' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='9' y='5' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='13' y='5' width='2' height='2' fill='%2300b4ff'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
@@ -335,12 +336,18 @@ body::after {
 /* TOOLKIT */
 #toolkit { padding:60px 80px; background:rgba(3,5,10,.75); border-top:1px solid var(--wire); position:relative; z-index:1; }
 .toolkit-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; margin-top:44px; }
-.tk-card { background-color:var(--panel); border:1px solid var(--wire2); border-radius:2px; padding:28px 32px; position:relative; overflow:hidden; transition:border-color .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s cubic-bezier(.2,.8,.2,1), transform .25s cubic-bezier(.2,.8,.2,1); }
+.tk-card { background-color:var(--panel); border:1px solid var(--wire2); border-left:3px solid var(--wire2); border-radius:2px; padding:28px 32px; position:relative; overflow:hidden; transition:border-color .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s cubic-bezier(.2,.8,.2,1), transform .25s cubic-bezier(.2,.8,.2,1); }
+.tk-card.soft { border-left-color:#e2413f; }
+.tk-card.soft:hover { box-shadow:0 10px 28px rgba(0,0,0,.4),-3px 0 16px rgba(226,65,63,.08); }
 .tk-card::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--green),transparent); opacity:0; transition:opacity .4s; }
 .tk-card::after { content:''; position:absolute; bottom:0; left:0; right:100%; height:1px; background:var(--green); transition:right .4s; }
 .tk-card:hover { border-color:rgba(0,180,255,.3); transform:translateY(-3px); box-shadow:0 10px 28px rgba(0,0,0,.4),0 0 22px rgba(0,180,255,.05); }
 .tk-card:hover::before { opacity:.6; }
 .tk-card:hover::after { right:0; }
+.tk-flag { position:absolute; top:0; right:0; width:26px; height:26px; opacity:0; transition:opacity .25s; background-image:linear-gradient(45deg,var(--muted) 25%,transparent 25%),linear-gradient(-45deg,var(--muted) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,var(--muted) 75%),linear-gradient(-45deg,transparent 75%,var(--muted) 75%); background-size:8px 8px; background-position:0 0,0 4px,4px -4px,-4px 0; }
+.tk-card:hover .tk-flag { opacity:.5; }
+.tk-telem { font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; color:var(--muted); opacity:0; max-height:0; overflow:hidden; transition:opacity .25s, max-height .25s; }
+.tk-card:hover .tk-telem { opacity:.85; max-height:20px; margin-top:6px; }
 .tk-cat { font-family:var(--mono); font-size:9px; color:var(--muted); letter-spacing:.2em; text-transform:uppercase; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--wire2); }
 .tk-items { display:flex; flex-direction:column; gap:8px; }
 .tk-item { font-family:var(--body); font-size:14px; color:#b0d0ee; font-weight:300; padding:6px 0; border-bottom:1px solid rgba(8,14,32,.8); display:flex; align-items:center; gap:8px; }
@@ -566,11 +573,11 @@ footer .g { color:var(--green); }
     <div class="hero-name" id="heroName" data-text="Sunanditha">
       <span class="name-main" data-text="Sunanditha">Sunanditha</span><span class="name-stroke" id="heroNameSub" data-text="B S">B S</span>
     </div>
-    <div class="hero-role">Systems Research / Threat Intelligence / OSINT</div>
+    <div class="hero-role">Systems Research / Automotive Security / Detection Engineering</div>
     <div style="font-family:var(--mono); font-size:11px; color:var(--muted); opacity:.5; margin-bottom:14px;">&gt; i use arch btw.</div>
     <p class="hero-bio">
-      A research archive, not a portfolio. Linux internals, behavioral detection, threat actor profiling, OSINT.
-      <strong>BICE</strong> is the longest-running thread, a per-device drift detector for catching slow IoT compromise. Fourth-year Information Science student. Still adding to this.
+      A research archive, not a portfolio. ECU trust chains, CAN bus behavior, boot and OTA integrity.
+      <strong>BICE</strong> catches slow IoT compromise through per-device drift. <strong>BOLT</strong>, <strong>WARDEN</strong>, and <strong>CANary</strong> pick apart ECU trust chains, UDS SecurityAccess, and CAN bus traffic from three different angles. Fourth-year Information Science student. Still adding to this.
     </p>
     <div class="hero-actions">
       <a href="#dashboard" class="hbtn hbtn-primary"><span class="btn-inner">./explore_archive</span></a>
@@ -581,7 +588,7 @@ footer .g { color:var(--green); }
   <div class="hero-right reveal">
     <div class="intel-header">// <span>operator profile</span></div>
     <div class="intel-row"><div class="ir-label">Operator</div><div class="ir-val">Sunanditha B S<br><span class="sub">Bengaluru, India</span></div></div>
-    <div class="intel-row"><div class="ir-label">Focus</div><div class="ir-val"><span class="big" style="color:#ffaa00">Systems</span><span class="sub">SecOps · eBPF · Telemetry</span></div></div>
+    <div class="intel-row"><div class="ir-label">Focus</div><div class="ir-val"><span class="big" style="color:#ffaa00">Systems</span><span class="sub">ECU Security · eBPF · Drift Detection</span></div></div>
     <div class="intel-row"><div class="ir-label">Status</div><div class="ir-val"><span class="sub" style="color:var(--green)"><span class="sdot"></span>Actively Researching</span></div></div>
   </div>
 </section>
@@ -593,41 +600,22 @@ footer .g { color:var(--green); }
     <div class="sc-divider"></div>
   </div>
 
-  <a href="./bolt.html" class="tk-card reveal" style="display:block;margin-bottom:14px;text-decoration:none;color:inherit;">
+  <a href="./bolt.html" class="tk-card soft reveal" style="display:block;margin-bottom:14px;text-decoration:none;color:inherit;">
     <div class="tk-cat" style="color:var(--green);">// latest project</div>
     <div style="font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:.01em;text-transform:uppercase;color:var(--text);margin:8px 0 8px;">BOLT <span style="color:var(--muted);font-weight:400;font-size:12.5px;text-transform:none;letter-spacing:normal;">— Boot &amp; OTA Lockdown Toolkit</span></div>
     <div style="font-size:12.5px;color:#8ab0cc;line-height:1.7;margin-bottom:14px;">Signed OTA update and boot integrity framework for automotive ECUs. Real X.509 trust chain, A/B partitioning, and a four-attack suite (downgrade, signature strip, MITM, power loss) that all get blocked.</div>
     <div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:var(--green)"><span class="sdot"></span>Read the Writeup →</div></div>
+    <div class="tk-telem">TRUST_CHAIN: X.509 → A/B → VERIFIED</div>
   </a>
-
-  <a href="./warden.html" class="tk-card reveal" style="display:block;margin-bottom:14px;text-decoration:none;color:inherit;">
-    <div class="tk-cat" style="color:var(--green);">// recent project</div>
-    <div style="font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:.01em;text-transform:uppercase;color:var(--text);margin:8px 0 8px;">WARDEN <span style="color:var(--muted);font-weight:400;font-size:12.5px;text-transform:none;letter-spacing:normal;">— UDS SecurityAccess Attack &amp; Detection</span></div>
-    <div style="font-size:12.5px;color:#8ab0cc;line-height:1.7;margin-bottom:14px;">SocketCAN testbed built on ISO 14229. Brute-forces a weak seed-key ECU simulation while a sliding-window detector on the same bus flags the attack in progress.</div>
-    <div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:var(--green)"><span class="sdot"></span>Read the Writeup →</div></div>
-  </a>
-
-  <a href="./canary.html" class="tk-card reveal" style="display:block;margin-bottom:14px;text-decoration:none;color:inherit;">
-    <div class="tk-cat" style="color:var(--green);">// recent project</div>
-    <div style="font-family:var(--display);font-weight:800;font-size:19px;letter-spacing:.01em;text-transform:uppercase;color:var(--text);margin:8px 0 8px;">CANARY <span style="color:var(--muted);font-weight:400;font-size:12.5px;text-transform:none;letter-spacing:normal;">— CAN Bus Intrusion Detection Framework</span></div>
-    <div style="font-size:12.5px;color:#8ab0cc;line-height:1.7;margin-bottom:14px;">Simulated a 3-ECU CAN bus, built six behavioral detectors, and verified the whole thing against real Linux SocketCAN, where it turned up an actual kernel-level loopback bug.</div>
-    <div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:var(--green)"><span class="sdot"></span>Read the Writeup →</div></div>
-  </a>
-
-  <div class="tk-card reveal">
-    <div class="threat-tags" style="margin-bottom:18px;">
-      <span class="ttag">Threat Actor Profiling</span>
-      <span class="ttag">OSINT Geolocation</span>
-      <span class="ttag">Behavioral Detection</span>
-      <span class="ttag">Unreal Engine 5</span>
-    </div>
-    <div class="intel-row" style="border-top:1px solid var(--wire);padding-top:12px;"><div class="ir-label">Active Investigations</div><div class="ir-val"><span class="big purple">2</span></div></div>
-    <div class="intel-row"><div class="ir-label">Archive Status</div><div class="ir-val" style="color:var(--green)"><span class="sdot"></span>Growing</div></div>
-    <div class="intel-row" style="border-bottom:none;"><div class="ir-label">Entries Indexed</div><div class="ir-val"><span class="big purple">13</span></div></div>
-  </div>
 
   <div class="tm-col-label reveal" style="margin-top:48px;">// explore the archive</div>
   <div class="archive-grid reveal">
+    <a href="./automotive-security.html" class="tk-card">
+      <div class="tk-flag"></div>
+      <div class="tk-cat">Automotive Security</div>
+      <div style="font-size:12.5px;color:#8ab0cc;line-height:1.6;margin:8px 0 14px;">ECU trust chains, UDS SecurityAccess, CAN bus intrusion detection.</div>
+      <div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:var(--green)"><span class="sdot"></span>3 Entries</div></div>
+    </a>
     <a href="./systems.html" class="tk-card">
       <div class="tk-cat">Systems Research</div>
       <div style="font-size:12.5px;color:#8ab0cc;line-height:1.6;margin:8px 0 14px;">Linux, telemetry, recovery, architecture, experiments, debugging.</div>
@@ -638,11 +626,6 @@ footer .g { color:var(--green); }
       <div style="font-size:12.5px;color:#8ab0cc;line-height:1.6;margin:8px 0 14px;">Threat actor profiles, ransomware groups, TTP analysis, campaign tracking.</div>
       <div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:var(--green)"><span class="sdot"></span>2 Entries</div></div>
     </a>
-    <div class="tk-card" style="opacity:.75;">
-      <div class="tk-cat">OSINT Investigations</div>
-      <div style="font-size:12.5px;color:#8ab0cc;line-height:1.6;margin:8px 0 14px;">Geolocation, attribution exercises, investigative techniques, challenge writeups.</div>
-      <div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:#ffaa00"><span class="sdot amber"></span>Archive Initializing</div></div>
-    </div>
     <a href="./publications.html" class="tk-card">
       <div class="tk-cat">Publications</div>
       <div style="font-size:12.5px;color:#8ab0cc;line-height:1.6;margin:8px 0 14px;">Research papers, whitepapers, technical reports, conference submissions.</div>
@@ -698,12 +681,11 @@ footer .g { color:var(--green); }
       <a href="mailto:sunanditha24@gmail.com" class="ct-email-big">sunanditha24@gmail.com</a>
       <div style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;">// areas of interest</div>
       <div class="ct-roles">
-        <div class="ct-role">Security Research</div>
+        <div class="ct-role">Automotive Security</div>
         <div class="ct-role">Detection Engineering</div>
         <div class="ct-role">Systems Programming (eBPF)</div>
-        <div class="ct-role">Threat Hunting</div>
-        <div class="ct-role">Linux Internals</div>
-        <div class="ct-role">Threat Actor Profiling</div>
+        <div class="ct-role">Boot &amp; Firmware Integrity</div>
+        <div class="ct-role">Behavioral Drift Detection</div>
       </div>
       <div class="ct-socials">
         <a href="https://github.com/sunandithabs" class="ct-soc" target="_blank">GitHub ↗</a>
@@ -713,13 +695,13 @@ footer .g { color:var(--green); }
     <div class="ct-terminal">
       <div class="ct-term-bar">
         <div class="term-dot r"></div><div class="term-dot a"></div><div class="term-dot g"></div>
-        <span style="margin-left:8px;">terminal · sunanditha@archive:~</span>
+        <span style="margin-left:8px;">terminal · sunanditha@0x7E0:~</span>
       </div>
       <div class="ct-term-output" id="termOutput">
         <div><span class="to-dim">// type a message and hit SEND or Enter</span></div>
-        <div><span class="to-green">sunanditha@archive</span><span class="to-dim">:~$</span> status --contact</div>
+        <div><span class="to-green">sunanditha@0x7E0</span><span class="to-dim">:~$</span> status --contact</div>
         <div>Availability: <span class="to-green">Open to Collaboration &amp; Internships</span></div>
-        <div>Focus: <span class="to-green">Adversarial Systems &amp; Security Telemetry</span></div>
+        <div>Focus: <span class="to-green">Automotive ECUs &amp; Boot Integrity</span></div>
       </div>
       <div class="ct-term-input-row">
         <span class="ct-term-prompt">❯</span>
@@ -789,7 +771,7 @@ const nodes=Array.from({length:NODE_COUNT},(_,i)=>{
   };
 });
 
-const DATA_LABELS=['SYN_FLOOD','ANOMALY','PKT_LOSS','ENTROPY:0.87','DRIFT:+2.4σ','BASELINE','Z-SCORE','TRUST:0.62','POLICY_CHK','IOT_DEV_07','443/tcp','RECON','LOG_PARSE','HONEYPOT','ALERT:LOW'];
+const DATA_LABELS=['SYN_FLOOD','ANOMALY','PKT_LOSS','ENTROPY:0.87','DRIFT:+2.4σ','BASELINE','Z-SCORE','TRUST:0.62','POLICY_CHK','IOT_DEV_07','443/tcp','RECON','LOG_PARSE','HONEYPOT','ALERT:LOW','0x7E0','0x27 SECURITYACCESS','CAN_ID:0x7E8','SEED/KEY','DRS_ZONE','ECU_TRUST','VBMETA'];
 const floaters=Array.from({length:22},(_,i)=>({text:DATA_LABELS[i%DATA_LABELS.length],x:Math.random()*window.innerWidth,y:Math.random()*WORLD_H,vy:-(Math.random()*.18+.05),opacity:Math.random()*.14+.04}));
 
 function draw(){
@@ -897,6 +879,7 @@ const bootLines=[
 {t:'<span class="dim">Memory Testing : 131072MB OK</span>',d:300},
 {t:'<span class="dim">NVMe : SAMSUNG MZ-V9P2T0B/AM 2048GB</span>',d:120},
 {t:'<span class="dim">S.M.A.R.T Status : OK</span>',d:150},
+{t:'<span class="dim">Initializing CAN0 Interface ... OK</span>',d:130},
 {t:'<span class="dim">Booting from Local Disk...</span>',d:250},
 {t:'<span class="dim">Detecting ATA/ATAPI Devices ...</span>',d:120},
 ];
@@ -1048,18 +1031,19 @@ const hiddenCmds={
     termPrint(`<span class="to-dim">favorite dinosaur:</span>`,1050);
     termPrint(`<span class="to-green">spinosaurus</span>`,1200);
     termPrint(`<span class="to-dim">research interests:</span>`,1350);
-    termPrint(`<span class="to-dim">systems</span>`,1450);
-    termPrint(`<span class="to-dim">threat intelligence</span>`,1550);
-    termPrint(`<span class="to-dim">osint</span>`,1650);
+    termPrint(`<span class="to-dim">automotive security</span>`,1450);
+    termPrint(`<span class="to-dim">detection engineering</span>`,1550);
+    termPrint(`<span class="to-dim">boot and firmware integrity</span>`,1650);
     termPrint(`<span class="to-dim">currently breaking:</span>`,1800);
     termPrint(`<span class="to-dim">something</span>`,1950);
   },
   'research':()=>{
     termPrint(`<span class="to-amber">active threads</span>`);
-    termPrint(`<span class="to-dim">[1] scattered spider</span>`,150);
-    termPrint(`<span class="to-dim">[2] osint methodology</span>`,300);
-    termPrint(`<span class="to-dim">[3] behavioral drift detection</span>`,450);
-    termPrint(`<span class="to-dim">[4] whatever arch broke this week</span>`,600);
+    termPrint(`<span class="to-dim">[1] warden — uds securityaccess</span>`,150);
+    termPrint(`<span class="to-dim">[2] canary — can bus intrusion detection</span>`,300);
+    termPrint(`<span class="to-dim">[3] bolt — boot and ota integrity</span>`,450);
+    termPrint(`<span class="to-dim">[4] bice — behavioral drift detection</span>`,600);
+    termPrint(`<span class="to-dim">[5] whatever arch broke this week</span>`,750);
   },
   'btw':()=>{
     termPrint(`<span class="to-dim">i use arch btw.</span>`);
@@ -1081,11 +1065,31 @@ const hiddenCmds={
     termPrint(`<span class="to-green">[✓] systems research</span>`,150);
     termPrint(`<span class="to-green">[✓] threat intelligence</span>`,300);
     termPrint(`<span class="to-green">[✓] publications</span>`,450);
-    termPrint(`<span class="to-dim">[ ] osint investigations</span>`,650);
     termPrint(`<span class="to-dim">[ ] field notes</span>`,800);
     termPrint(`<span class="to-dim">[ ] scattered spider profile</span>`,950);
     termPrint(`<span class="to-dim">status:</span>`,1150);
     termPrint(`<span class="to-dim">archive expanding</span>`,1300);
+  },
+  'drs':()=>{
+    termPrint(`<span class="to-amber">DRS ENABLED</span>`);
+    termPrint(`<span class="to-dim">the rear wing opens on trust, same as a bus does.</span>`,200);
+    termPrint(`<span class="to-dim">one flap. one gate. no verification either way.</span>`,400);
+    termPrint(`<span class="to-dim">difference is nobody's flashed a fake DRS signal yet.</span>`,650);
+    termPrint(`<span class="to-dim">yet.</span>`,900);
+  },
+  'pit':()=>{
+    termPrint(`<span class="to-amber">PIT WALL // radio check</span>`);
+    termPrint(`<span class="to-dim">box box box.</span>`,150);
+    termPrint(`<span class="to-dim">tyres: warden, bolt, canary</span>`,400);
+    termPrint(`<span class="to-dim">strategy: keep grinding until the pattern shows itself</span>`,650);
+    termPrint(`<span class="to-dim">stop time: still faster than fixing a bootloop at 4am</span>`,900);
+  },
+  'ecu':()=>{
+    termPrint(`<span class="to-amber">ECU STATUS</span>`);
+    termPrint(`<span class="to-dim">every car on the grid is a rolling network of ECUs</span>`,150);
+    termPrint(`<span class="to-dim">talking over buses built for a room with no strangers in it</span>`,400);
+    termPrint(`<span class="to-dim">that's the whole reason bolt, warden, and canary exist</span>`,650);
+    termPrint(`<span class="to-green">[✓] trust the seed. verify the key.</span>`,900);
   }
 };
 function handleSend(){
