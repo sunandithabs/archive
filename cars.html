@@ -1,26 +1,42 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Cars </title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<meta charset="utf-8"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23060a14'/%3E%3Crect x='1' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='3' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='7' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='1' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='5' width='2' height='2' fill='%23e1001a'/%3E%3C/svg%3E">
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Cars · Sunanditha B S</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
 <style>
     :root {
-      --black: #0a0605; --panel: #100807; --wire-1: #1c1210; --wire-2: #2a1614;
-      --accent: #e10600; --accent2: #ff2a1a; --purple: #1e5bff; --gold: #ffd400;
-      --text: #f0ede8; --muted: #a89890;
-      --font-mono: "JetBrains Mono", ui-monospace, monospace;
-      --font-display: "Syne", sans-serif;
+      --black: #060a14; --panel: #0a1020; --wire-1: #141d33; --wire-2: #1e2a48;
+      --accent: #e1001a; --accent2: #3fd0ff; --purple: #2a5aff; --gold: #ffd400;
+      --text: #f2f4f8; --muted: #7a88a8;
+      --font-mono: 'Space Mono', ui-monospace, monospace;
+      --font-display: 'Fraunces', sans-serif;
       --font-body: "DM Sans", system-ui, sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body { background: var(--black); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.6; overflow-x: hidden; cursor: none; }
     body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px); pointer-events: none; z-index: 9000; }
-    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    #bg-carbon {
+      position: fixed; inset: -60px; z-index: 0; pointer-events: none;
+      background-color: #060a14;
+      background-image:
+        linear-gradient(27deg, #0c1324 5px, transparent 5px) 0 5px,
+        linear-gradient(207deg, #0c1324 5px, transparent 5px) 10px 0,
+        linear-gradient(27deg, #141d33 5px, transparent 5px) 0 10px,
+        linear-gradient(207deg, #141d33 5px, transparent 5px) 10px 5px,
+        linear-gradient(90deg, #0a1020 10px, transparent 10px),
+        linear-gradient(#0d1526 25%, #0a1020 25%, #0a1020 50%, transparent 50%, transparent 75%, #0d1526 75%, #0d1526);
+      background-size: 20px 20px;
+      opacity: .55;
+      will-change: transform;
+    }
+    #bg-carbon::after{ content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%, rgba(225,6,0,.05), transparent 60%); }
     .cur-dot { position: fixed; z-index: 9999; pointer-events: none; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); transform: translate(-50%,-50%); box-shadow: 0 0 8px var(--accent); }
     .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(225,6,0,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
     .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 500; height: 40px; background: rgba(16,8,7,.94); border-bottom: 1px solid var(--wire-2); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); backdrop-filter: blur(12px); }
@@ -81,112 +97,110 @@
     .foot-accent { color: var(--accent); }
     @media (max-width: 700px) { .page-wrap { padding: 80px 20px 60px; } .wu-card { padding: 26px 22px; } footer { padding: 16px 20px; flex-direction: column; gap: 6px; text-align: center; } }
 </style>
-</head>
+<style>
+/* === INTERACTIVE SECTIONS (shared) === */
+.xsec { border-bottom: 1px solid var(--wire-2); }
+.xsec-head { width: 100%; display: flex; align-items: center; gap: 14px; background: none; border: none; cursor: pointer; padding: 20px 0; text-align: left; font-family: var(--font-mono); color: var(--text); }
+.xsec-num { font-size: 10px; color: var(--accent); opacity: .55; min-width: 20px; letter-spacing: .05em; }
+.xsec-title { flex: 1; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--text); transition: color .2s; }
+.xsec-chev { font-size: 10px; color: var(--muted); transition: transform .25s ease; }
+.xsec[data-open="false"] .xsec-chev { transform: rotate(-90deg); }
+.xsec-body { overflow: hidden; max-height: 3000px; transition: max-height .4s cubic-bezier(.4,0,.2,1), opacity .3s ease, padding .3s ease; opacity: 1; padding-bottom: 22px; }
+.xsec[data-open="false"] .xsec-body { max-height: 0; opacity: 0; padding-bottom: 0; }
+.xsec-head:hover .xsec-title { color: var(--accent); }
+.xsec-head:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+
+/* progress dot-nav */
+.xdots { position: fixed; right: 22px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 11px; z-index: 400; }
+.xdot { width: 6px; height: 6px; border-radius: 50%; background: var(--wire-2); display: block; transition: background .25s, transform .25s, box-shadow .25s; cursor: pointer; }
+.xdot:hover { background: var(--muted); }
+.xdot.active { background: var(--accent); transform: scale(1.7); box-shadow: 0 0 6px var(--accent); }
+@media (max-width: 900px) { .xdots { display: none; } }
+
+/* jump-to pill */
+.xjump { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(225,0,26,.3); background: rgba(225,0,26,.05); border-radius: 999px; padding: 7px 16px; text-decoration: none; margin: 4px 0 28px; transition: background .2s, border-color .2s; }
+.xjump:hover { background: rgba(225,0,26,.12); border-color: var(--accent); }
+.xjump::before { content: '↓'; }
+</style></head>
 <body>
-<canvas id="bg-canvas"></canvas>
+<div id="bg-carbon"></div>
 <div class="cur-dot" id="curDot"></div>
 <div class="cur-ring" id="curRing"></div>
-
 <nav class="topbar">
-  <div class="tb-left">
-    <span class="tb-dot"></span>
-    <span id="clock">--:--:--</span>
-  </div>
-  <div class="tb-right">
-    <a href="./index.html" class="tb-link back">← home</a>
-    <a href="./index.html#contact" class="tb-link">Contact</a>
-  </div>
+<div class="tb-left">
+<span class="tb-dot"></span>
+<span id="clock">--:--:--</span>
+</div>
+<div class="tb-right">
+<a class="tb-link back" href="./index.html">← home</a>
+<a class="tb-link" href="./index.html#contact">Contact</a>
+</div>
 </nav>
 <div id="lap-progress"><div id="lap-progress-fill"></div></div>
-
 <div class="page-wrap">
-  <div class="reveal">
-    <div class="breadcrumb">
-      <a href="./index.html">Home</a>
-      <span>/</span>
-      <span class="current">Cars</span>
-    </div>
-    <h1 class="page-title">Cars<span>All The Lore</span></h1>
-  </div>
-
-  <div class="wu-card reveal">
-    <div class="wu-meta">
-      <span class="wu-badge">Garage Log</span>
-    </div>
-    <h2 class="wu-title">Why Cars?</h2>
-    <div class="wu-body">
-      <div class="wu-h3">Origin</div>
-      <p>Dad's an electronics engineer. First memory I've got: watching him crack open his laptop, motherboard exposed, cables spilling out everywhere. Most kids wander off to find something shinier. I sat there staring at the guts of it, trying to figure out how the wires actually talked to each other. Took apart projector watches, Walkmans, tape recorders, tablets, whatever had screws in it. Had to see what's inside, every time. Dad's precision screwdriver set became mine by attrition, one borrowed screw at a time. Kept a drawer full of gears, motors, springs, loose screws, mystery mechanisms. I genuinely thought I'd need that stuff someday. Sometimes I did.</p>
-
-      <div class="wu-h3">The Build-Up</div>
-      <p>Every Christmas I asked for a DJI Mavic. Never got one. Wanted to go to a proper robotics summer camp too. That fell through, so I talked my regular arts and crafts camp into running a robotics session and an RC car building competition instead. Built one car, learned to crimp RJ45 cable along the way. My car was slower than the kid I was up against, so I flipped his car over mid-race and drove to the finish line. Won.</p>
-      <p>Mechanix kits came next, cars and linkages, anything that could move once you bolted it together. LEGO stop-motion films with a friend, badly lit Fast &amp; Furious knockoffs shot on a windowsill. An RC JCB I visited my cousins' exclusively for. A ride-on Audi I was way too obsessed with as a kid. Somewhere in there I also watched the Cars trilogy and the Transformers movies on repeat, which did substantial damage to how I think about machines.</p
-
-      <div class="wu-h3">Now</div>
+<div class="reveal">
+<div class="breadcrumb">
+<a href="./index.html">Home</a>
+<span>/</span>
+<span class="current">Cars</span>
+</div>
+<h1 class="page-title">Cars<span>All The Lore</span></h1>
+</div>
+<div class="wu-card reveal">
+<div class="wu-meta">
+<span class="wu-badge">Garage Log</span>
+</div>
+<h2 class="wu-title">Why Cars?</h2>
+<div class="wu-body">
+<div class="xsec" data-open="true" data-title="Origin" id="sec-origin"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">01</span><span class="xsec-title">Origin</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<p>Dad's an electronics engineer. First memory I've got: watching him crack open his laptop, motherboard exposed, cables spilling out everywhere. Most kids wander off to find something shinier. I sat there staring at the guts of it, trying to figure out how the wires actually talked to each other. Took apart projector watches, Walkmans, tape recorders, tablets, whatever had screws in it. Had to see what's inside, every time. Dad's precision screwdriver set became mine by attrition, one borrowed screw at a time. Kept a drawer full of gears, motors, springs, loose screws, mystery mechanisms. I genuinely thought I'd need that stuff someday. Sometimes I did.</p>
+</div></div><div class="xsec" data-open="true" data-title="The Build-Up" id="sec-the-build-up"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">02</span><span class="xsec-title">The Build-Up</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<p>Every Christmas I asked for a DJI Mavic. Never got one. Wanted to go to a proper robotics summer camp too. That fell through, so I talked my regular arts and crafts camp into running a robotics session and an RC car building competition instead. Built one car, learned to crimp RJ45 cable along the way. My car was slower than the kid I was up against, so I flipped his car over mid-race and drove to the finish line. Won.</p>
+<p>Mechanix kits came next, cars and linkages, anything that could move once you bolted it together. LEGO stop-motion films with a friend, badly lit Fast &amp; Furious knockoffs shot on a windowsill. An RC JCB I visited my cousins' exclusively for. A ride-on Audi I was way too obsessed with as a kid. Somewhere in there I also watched the Cars trilogy and the Transformers movies on repeat, which did substantial damage to how I think about machines.</p>Now</div></div></div>s
       <p>I only started watching F1 recently, and I'm already a Verstappen fan, really digging into tyre degradation curves, battery regen zones, overtake mode, like I've been doing it for a decade. Same itch, bigger machines now. Arch Linux I've broken and rebuilt more times than I'd like to admit, just to understand why it broke. <code>CAN bus</code>, <code>UDS</code>, <code>ECUs</code>, secure <code>OTA</code>. Automotive cybersecurity is the projector watch, grown up and a lot more expensive to take apart.</p>
-
-      <p>It was never really about cars, or any one machine. Just one question every time: how's this thing actually work, and can I make it work better?</p>
-    </div>
-
-    <div class="trivia-box">
-      <div class="trivia-label">grid trivia · dream garage top 3</div>
-      <ul class="trivia-list">
-        <li><span class="trivia-rank">P1</span> <span class="trivia-text"><strong style="color:var(--accent)">Porsche 918 Spyder</strong>, hybrid V8, engineering perfection.</span></li>
-        <li><span class="trivia-rank">P2</span> <span class="trivia-text"><strong style="color:var(--accent)">Ferrari 458 Speciale Aperta</strong>, naturally aspirated V8, easy 9000 RPM, absolute peak.</span></li>
-        <li><span class="trivia-rank">P3</span> <span class="trivia-text"><strong style="color:var(--accent)">Apollo Intensa Emozione</strong>, a beaut. No ABS, no traction control, overqualified enough to count as an F1 car.</span></li>
-      </ul>
-    </div>
-
-    <div class="wu-tags">
-      <span class="wu-tag">RC Cars</span>
-      <span class="wu-tag">Arch Linux</span>
-      <span class="wu-tag">CAN Bus</span>
-      <span class="wu-tag">UDS</span>
-      <span class="wu-tag">F1</span>
-      <span class="wu-tag">Verstappen</span>
-      <span class="wu-tag">OTA</span>
-    </div>
-  </div>
+<p>It was never really about cars, or any one machine. Just one question every time: how's this thing actually work, and can I make it work better?</p>
+</div>
+<div class="trivia-box">
+<div class="trivia-label">grid trivia · dream garage top 3</div>
+<ul class="trivia-list">
+<li><span class="trivia-rank">P1</span> <span class="trivia-text"><strong style="color:var(--accent)">Porsche 918 Spyder</strong>, hybrid V8, engineering perfection.</span></li>
+<li><span class="trivia-rank">P2</span> <span class="trivia-text"><strong style="color:var(--accent)">Ferrari 458 Speciale Aperta</strong>, naturally aspirated V8, easy 9000 RPM, absolute peak.</span></li>
+<li><span class="trivia-rank">P3</span> <span class="trivia-text"><strong style="color:var(--accent)">Apollo Intensa Emozione</strong>, a beaut. No ABS, no traction control, overqualified enough to count as an F1 car.</span></li>
+</ul>
+</div>
+<div class="wu-tags">
+<span class="wu-tag">RC Cars</span>
+<span class="wu-tag">Arch Linux</span>
+<span class="wu-tag">CAN Bus</span>
+<span class="wu-tag">UDS</span>
+<span class="wu-tag">F1</span>
+<span class="wu-tag">Verstappen</span>
+<span class="wu-tag">OTA</span>
+</div>
 </div>
 
 <footer>
-  <span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
-  <a href="./index.html">← home</a>
-  <a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
+<span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
+<a href="./index.html">← home</a>
+<a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
 </footer>
-
 <script>
-const canvas=document.getElementById('bg-canvas'),ctx=canvas.getContext('2d');
-let W,H;const mouse={x:window.innerWidth/2,y:window.innerHeight/2};
-function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-resize();window.addEventListener('resize',resize);
-document.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
-const WORLD_H=3000,NODE_COUNT=140,CONNECT_DIST=130;
-const nodes=Array.from({length:NODE_COUNT},()=>({x:Math.random()*window.innerWidth,y:Math.random()*WORLD_H,vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5,r:Math.random()*2+1,color:Math.random()>.6?'#e10600':Math.random()>.5?'#1e5bff':'#ff2a1a',pulse:Math.random()*Math.PI*2,pulseSpeed:.02+Math.random()*.02}));
-const LABELS=['DRS','ERS','CAN','UDS','P-ZERO','MGU-K','BOX BOX','OTA','ECU','MAX 1'];
-const floaters=Array.from({length:10},(_,i)=>({text:LABELS[i%LABELS.length],x:Math.random()*window.innerWidth,y:Math.random()*WORLD_H,vy:-(Math.random()*.18+.05),opacity:Math.random()*.14+.04}));
-function draw(){
-  const sy=window.scrollY;ctx.clearRect(0,0,W,H);
-  const mg=ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,200);
-  mg.addColorStop(0,'rgba(225,6,0,0.08)');mg.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=mg;ctx.fillRect(0,0,W,H);ctx.save();ctx.translate(0,-sy);
-  for(const n of nodes){
-    n.pulse+=n.pulseSpeed;
-    const dx=n.x-mouse.x,dy=n.y-(mouse.y+sy),dist=Math.sqrt(dx*dx+dy*dy);
-    if(dist<160&&dist>0){const f=(160-dist)/160*.9;n.vx+=(dx/dist)*f;n.vy+=(dy/dist)*f;}
-    const spd=Math.sqrt(n.vx*n.vx+n.vy*n.vy);if(spd>2){n.vx*=2/spd;n.vy*=2/spd;}
-    n.vx*=.993;n.vy*=.993;n.x+=n.vx;n.y+=n.vy;
-    if(n.x<0){n.x=0;n.vx*=-1;}if(n.x>W){n.x=W;n.vx*=-1;}if(n.y<0){n.y=0;n.vy*=-1;}if(n.y>WORLD_H){n.y=WORLD_H;n.vy*=-1;}
-    if(n.y<sy-120||n.y>sy+H+120)continue;
-    for(const m of nodes){if(m===n)continue;if(m.y<sy-120||m.y>sy+H+120)continue;const ex=n.x-m.x,ey=n.y-m.y,ed=Math.sqrt(ex*ex+ey*ey);if(ed<CONNECT_DIST){const a=(1-ed/CONNECT_DIST)*.4;ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);ctx.strokeStyle=n.color==='#1e5bff'||m.color==='#1e5bff'?`rgba(30,91,255,${a*.9})`:`rgba(225,6,0,${a})`;ctx.lineWidth=.65;ctx.stroke();}}
-    const pa=.6+Math.sin(n.pulse)*.3,pr=n.r+Math.sin(n.pulse)*.5;
-    ctx.beginPath();ctx.arc(n.x,n.y,pr,0,Math.PI*2);ctx.fillStyle=n.color==='#1e5bff'?`rgba(30,91,255,${pa})`:n.color==='#ff2a1a'?`rgba(255,42,26,${pa})`:`rgba(225,6,0,${pa})`;ctx.fill();
+(function carbonBg(){
+  const el=document.getElementById('bg-carbon');
+  if(!el) return;
+  let mx=0,my=0,tx=0,ty=0;
+  window.addEventListener('mousemove',(e)=>{
+    mx=(e.clientX/window.innerWidth-0.5)*30;
+    my=(e.clientY/window.innerHeight-0.5)*30;
+  });
+  function frame(){
+    tx += (mx-tx)*0.04; ty += (my-ty)*0.04;
+    const scrollShift = window.scrollY*0.06;
+    el.style.transform = `translate3d(${tx}px, ${ty+scrollShift}px, 0)`;
+    requestAnimationFrame(frame);
   }
-  ctx.font='9px JetBrains Mono,monospace';
-  for(const f of floaters){f.y+=f.vy;if(f.y<0){f.y=WORLD_H;f.x=Math.random()*W;}if(f.y<sy-20||f.y>sy+H+20)continue;ctx.fillStyle=`rgba(225,6,0,${f.opacity})`;ctx.fillText(f.text,f.x,f.y);}
-  ctx.restore();requestAnimationFrame(draw);
-}
-draw();
+  frame();
+})();
 const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
 let rx=0,ry=0,mx=0,my=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
@@ -203,5 +217,59 @@ document.querySelectorAll('.wu-card').forEach(card=>{
   card.addEventListener('mouseleave',()=>{card.style.transform='perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';});
 });
 </script>
-</body>
+<script>
+(function interactiveSections(){
+  // collapsibles
+  document.querySelectorAll('.xsec-head').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const sec=btn.closest('.xsec');
+      const open = sec.getAttribute('data-open')==='true';
+      sec.setAttribute('data-open', open?'false':'true');
+      btn.setAttribute('aria-expanded', String(!open));
+    });
+  });
+
+  // progress dot-nav, built from .xsec sections that have an id
+  const secs = Array.from(document.querySelectorAll('.xsec[id]'));
+  if(secs.length > 1){
+    const nav=document.createElement('nav');
+    nav.className='xdots';
+    nav.setAttribute('aria-label','Section navigation');
+    secs.forEach(s=>{
+      const dot=document.createElement('a');
+      dot.className='xdot';
+      dot.href='#'+s.id;
+      dot.title=s.dataset.title||'';
+      dot.addEventListener('click',(e)=>{
+        e.preventDefault();
+        if(s.getAttribute('data-open')==='false'){ s.setAttribute('data-open','true'); }
+        s.scrollIntoView({behavior:'smooth',block:'start'});
+      });
+      nav.appendChild(dot);
+    });
+    document.body.appendChild(nav);
+    const dots=Array.from(nav.children);
+    const obs=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        const i=secs.indexOf(e.target);
+        if(e.isIntersecting) dots.forEach((d,j)=>d.classList.toggle('active', j===i));
+      });
+    },{rootMargin:'-45% 0px -45% 0px'});
+    secs.forEach(s=>obs.observe(s));
+  }
+
+  // jump-to pill
+  document.querySelectorAll('.xjump').forEach(a=>{
+    a.addEventListener('click',(e)=>{
+      const id=a.getAttribute('href');
+      const target=id&&document.querySelector(id);
+      if(target){
+        e.preventDefault();
+        if(target.getAttribute('data-open')==='false') target.setAttribute('data-open','true');
+        target.scrollIntoView({behavior:'smooth',block:'start'});
+      }
+    });
+  });
+})();
+</script></body>
 </html>
