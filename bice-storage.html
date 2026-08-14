@@ -1,28 +1,44 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BICE Storage & Dataset Investigation</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
-  <style>
+<meta charset="utf-8"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23060a14'/%3E%3Crect x='1' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='3' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='7' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='1' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='5' width='2' height='2' fill='%23e1001a'/%3E%3C/svg%3E">
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>BICE Storage & Dataset Investigation · Systems Research</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<style>
     :root {
-      --black: #00010a; --panel: #02040f; --wire-1: #080e20; --wire-2: #0c1430;
-      --accent: #00b4ff; --accent2: #0090d4; --purple: #9b59f5; --green: #25d076;
-      --amber: #ffb547; --red: #e8002d; --text: #c8e4ff; --muted: #6090b8;
-      --font-mono: "JetBrains Mono", ui-monospace, monospace;
-      --font-display: "Syne", sans-serif;
+      --black: #060a14; --panel: #0a1020; --wire-1: #141d33; --wire-2: #1e2a48;
+      --accent: #e1001a; --accent2: #3fd0ff; --purple: #2a5aff; --green: #25d076;
+      --amber: #ffb547; --red: #e8002d; --text: #f2f4f8; --muted: #7a88a8;
+      --font-mono: 'Space Mono', ui-monospace, monospace;
+      --font-display: 'Fraunces', sans-serif;
       --font-body: "DM Sans", system-ui, sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body { background: var(--black); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.6; overflow-x: hidden; cursor: none; }
     body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px); pointer-events: none; z-index: 9000; }
-    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    #bg-carbon {
+      position: fixed; inset: -60px; z-index: 0; pointer-events: none;
+      background-color: #060a14;
+      background-image:
+        linear-gradient(27deg, #0c1324 5px, transparent 5px) 0 5px,
+        linear-gradient(207deg, #0c1324 5px, transparent 5px) 10px 0,
+        linear-gradient(27deg, #141d33 5px, transparent 5px) 0 10px,
+        linear-gradient(207deg, #141d33 5px, transparent 5px) 10px 5px,
+        linear-gradient(90deg, #0a1020 10px, transparent 10px),
+        linear-gradient(#0d1526 25%, #0a1020 25%, #0a1020 50%, transparent 50%, transparent 75%, #0d1526 75%, #0d1526);
+      background-size: 20px 20px;
+      opacity: .55;
+      will-change: transform;
+    }
+    #bg-carbon::after{ content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%, rgba(225,6,0,.05), transparent 60%); }
     .cur-dot { position: fixed; z-index: 9999; pointer-events: none; width: 6px; height: 6px; border-radius: 50%; background: var(--purple); transform: translate(-50%,-50%); box-shadow: 0 0 8px var(--purple); transition: transform .1s; }
-    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(155,89,245,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
+    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(42,90,255,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
     .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 500; height: 40px; background: rgba(2,4,15,.94); border-bottom: 1px solid var(--wire-2); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); backdrop-filter: blur(12px); }
     .topbar::after { content: ''; position: absolute; bottom: -2px; left: 0; height: 2px; background: linear-gradient(90deg, var(--purple), transparent); animation: sweep 4s ease-in-out infinite; }
     @keyframes sweep { 0%,100%{ width: 20%; opacity: .7; } 50%{ width: 55%; opacity: 1; } }
@@ -34,15 +50,20 @@
     .tb-link::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:1px; background:var(--purple); transform:scaleX(0); transition:transform .2s; transform-origin:left; }
     .tb-link:hover { color: var(--purple); }
     .tb-link:hover::after { transform: scaleX(1); }
-    .tb-link.back { color: var(--purple); border: 1px solid rgba(155,89,245,.25); padding: 2px 10px; font-size: 9px; }
-    .tb-link.back:hover { background: rgba(155,89,245,.08); }
+    .tb-link.back { color: var(--purple); border: 1px solid rgba(42,90,255,.25); padding: 2px 10px; font-size: 9px; }
+    .tb-link.back:hover { background: rgba(42,90,255,.08); }
     .tb-link.back::after { display: none; }
     .page-wrap { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 100px 40px 80px; }
+    .breadcrumb { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .12em; margin-bottom: 28px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .breadcrumb a { color: var(--muted); text-decoration: none; transition: color .2s; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb span { color: var(--wire-2); }
+    .breadcrumb .current { color: var(--accent); }
     .intro-line { font-family: var(--font-mono); font-size: 10px; color: var(--purple); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
     .intro-line::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--purple); opacity: .5; }
     .page-title { font-family: var(--font-display); font-size: clamp(36px, 6vw, 72px); font-weight: 900; line-height: .95; letter-spacing: -.02em; text-transform: uppercase; margin-bottom: 28px; color: var(--text); }
-    .page-title span { -webkit-text-stroke: 1px rgba(155,89,245,.35); -webkit-text-fill-color: transparent; display: block; }
-    .framing { font-family: var(--font-body); font-size: 15px; color: var(--muted); font-weight: 300; max-width: 560px; line-height: 1.75; margin-bottom: 56px; padding-left: 20px; border-left: 2px solid rgba(155,89,245,.25); font-style: italic; }
+    .page-title span { -webkit-text-stroke: 1px rgba(42,90,255,.35); -webkit-text-fill-color: transparent; display: block; }
+    .framing { font-family: var(--font-body); font-size: 15px; color: var(--muted); font-weight: 300; max-width: 560px; line-height: 1.75; margin-bottom: 56px; padding-left: 20px; border-left: 2px solid rgba(42,90,255,.25); font-style: italic; }
     .section-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: 18px; margin-top: 44px; display: flex; align-items: center; gap: 14px; }
     .section-label::after { content: ''; flex: 1; height: 1px; background: var(--wire-2); }
     .section-label:first-of-type { margin-top: 0; }
@@ -61,7 +82,7 @@
     .tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 44px; padding-top: 20px; border-top: 1px solid var(--wire-1); }
     .tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; padding: 3px 9px; border: 1px solid var(--wire-2); color: var(--muted); border-radius: 2px; }
 
-    .conclusion-box { margin-top: 44px; padding: 28px 32px; background: rgba(155,89,245,.05); border: 1px solid rgba(155,89,245,.3); border-left: 3px solid var(--purple); border-radius: 2px; max-width: 760px; box-shadow: 0 12px 40px rgba(155,89,245,.08); }
+    .conclusion-box { margin-top: 44px; padding: 28px 32px; background: rgba(42,90,255,.05); border: 1px solid rgba(42,90,255,.3); border-left: 3px solid var(--purple); border-radius: 2px; max-width: 760px; box-shadow: 0 12px 40px rgba(42,90,255,.08); }
     .conclusion-title { font-family: var(--font-display); font-size: 17px; font-weight: 800; text-transform: uppercase; letter-spacing: .04em; color: var(--purple); margin-bottom: 14px; }
     .conclusion-box p { color: #b9c8e0; font-size: 14.5px; font-weight: 300; line-height: 1.85; margin-bottom: 10px; }
     .conclusion-box p:last-child { margin-bottom: 0; }
@@ -74,169 +95,128 @@
     .foot-accent { color: var(--purple); }
     @media (max-width: 700px) { .page-wrap { padding: 80px 20px 60px; } footer { padding: 16px 20px; flex-direction: column; gap: 6px; text-align: center; } .bar-label { width: 110px; font-size: 10px; } }
   </style>
-</head>
-<body>
+<style>
+/* === INTERACTIVE SECTIONS (shared) === */
+.xsec { border-bottom: 1px solid var(--wire-2); }
+.xsec-head { width: 100%; display: flex; align-items: center; gap: 14px; background: none; border: none; cursor: pointer; padding: 20px 0; text-align: left; font-family: var(--font-mono); color: var(--text); }
+.xsec-num { font-size: 10px; color: var(--accent); opacity: .55; min-width: 20px; letter-spacing: .05em; }
+.xsec-title { flex: 1; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--text); transition: color .2s; }
+.xsec-chev { font-size: 10px; color: var(--muted); transition: transform .25s ease; }
+.xsec[data-open="false"] .xsec-chev { transform: rotate(-90deg); }
+.xsec-body { overflow: hidden; max-height: 3000px; transition: max-height .4s cubic-bezier(.4,0,.2,1), opacity .3s ease, padding .3s ease; opacity: 1; padding-bottom: 22px; }
+.xsec[data-open="false"] .xsec-body { max-height: 0; opacity: 0; padding-bottom: 0; }
+.xsec-head:hover .xsec-title { color: var(--accent); }
+.xsec-head:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
 
-<canvas id="bg-canvas"></canvas>
+/* progress dot-nav */
+.xdots { position: fixed; right: 22px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 11px; z-index: 400; }
+.xdot { width: 6px; height: 6px; border-radius: 50%; background: var(--wire-2); display: block; transition: background .25s, transform .25s, box-shadow .25s; cursor: pointer; }
+.xdot:hover { background: var(--muted); }
+.xdot.active { background: var(--accent); transform: scale(1.7); box-shadow: 0 0 6px var(--accent); }
+@media (max-width: 900px) { .xdots { display: none; } }
+
+/* jump-to pill */
+.xjump { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(225,0,26,.3); background: rgba(225,0,26,.05); border-radius: 999px; padding: 7px 16px; text-decoration: none; margin: 4px 0 28px; transition: background .2s, border-color .2s; }
+.xjump:hover { background: rgba(225,0,26,.12); border-color: var(--accent); }
+.xjump::before { content: '↓'; }
+</style></head>
+<body>
+<div id="bg-carbon"></div>
 <div class="cur-dot" id="curDot"></div>
 <div class="cur-ring" id="curRing"></div>
-
 <nav class="topbar">
-  <div class="tb-left">
-    <span class="tb-dot"></span>
-    <span id="clock">--:--:--</span>
-  </div>
-  <div class="tb-right">
-    <a href="./systems.html" class="tb-link back">← back to systems</a>
-    <a href="./index.html#research" class="tb-link">Research</a>
-    <a href="./index.html#projects" class="tb-link">Projects</a>
-    <a href="./index.html#contact" class="tb-link">Contact</a>
-  </div>
+<div class="tb-left"><span class="tb-dot"></span><span id="clock">--:--:--</span></div>
+<div class="tb-right">
+<a class="tb-link back" href="./systems.html">← systems</a>
+<a class="tb-link" href="./index.html#dashboard">Projects</a>
+<a class="tb-link" href="./index.html#contact">Contact</a>
+</div>
 </nav>
-
 <div class="page-wrap">
-
-  <div class="reveal">
-    <div class="intro-line">engineering note</div>
-    <h1 class="page-title">BICE<span>Storage Investigation</span></h1>
-    <p class="framing">
+<div class="reveal">
+<div class="breadcrumb">
+<a href="./index.html">Home</a>
+<span>/</span>
+<a href="./systems.html">Systems Research</a>
+<span>/</span>
+<span class="current">BICE Storage Investigation</span>
+</div>
+<div class="intro-line">engineering note</div>
+<h1 class="page-title">BICE<span>Storage Investigation</span></h1>
+<p class="framing">
       A routine filesystem check that turned up a research project quietly outgrowing its own footprint.
     </p>
-  </div>
-
-  <div class="section-label reveal">Overview</div>
-  <div class="block reveal">
-    <p>A storage audit was run as routine maintenance, not in response to any pressure on disk space. The goal was simply to understand where space was going and whether anything could be reclaimed. It turned into a short investigation into how a single research project, BICE, had accumulated a disproportionate share of total usage.</p>
-  </div>
-
-  <div class="section-label reveal">Discovery</div>
-  <div class="block reveal">
-    <p>A top-level home directory scan showed one project directory standing far above everything else. Drilling into it pointed at a single subproject as the dominant consumer, with the rest of the workspace contributing comparatively little. The imbalance was the signal worth following, not the absolute numbers.</p>
-  </div>
-
-  <div class="section-label reveal">Analysis</div>
-  <div class="block reveal">
-    <p>Inside the subproject, most of the space was split between a generated database file, a research dataset directory, and a compressed archive. The dataset itself consisted of labeled network traffic captures used for IoT malware analysis, including botnet attack traffic and benign baseline traffic, the kind of files that grow large quickly and tend to get copied rather than referenced.</p>
-    <p>A closer look at related directories elsewhere on the system showed the same dataset files duplicated across multiple archive folders. Different extraction passes had each left their own full copy behind instead of being cleaned up afterward.</p>
-    <div class="storage-bars">
-      <div class="bar-row">
-        <span class="bar-label">Research Datasets</span>
-        <div class="bar-track"><div class="bar-fill" style="width: 92%;"></div></div>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Generated Artifacts</span>
-        <div class="bar-track"><div class="bar-fill alt" style="width: 58%;"></div></div>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">Archives</span>
-        <div class="bar-track"><div class="bar-fill alt" style="width: 44%;"></div></div>
-      </div>
-      <div class="bar-row">
-        <span class="bar-label">System Files</span>
-        <div class="bar-track"><div class="bar-fill dim" style="width: 12%;"></div></div>
-      </div>
-    </div>
-  </div>
-
-  <div class="section-label reveal">Cleanup Strategy</div>
-  <div class="block reveal">
-    <p>Rather than deleting anything immediately, the approach was to verify before removing. Folder sizes were compared, and duplicate archive directories were diffed against each other to confirm they held identical content before any of them were cleared. Once confirmed, redundant copies were removed and the remaining dataset was moved into a dedicated research data location instead of living alongside temporary downloads. Routine cache and package cleanup was run alongside this work and recovered a modest amount of additional space on its own.</p>
-  </div>
-
-  <div class="conclusion-box reveal">
-    <div class="conclusion-title">Key Takeaway</div>
-    <p>The system was never at risk. What this audit actually found was a dataset management problem dressed up as a storage problem: large research files copied across multiple working folders with no single owner keeping track of which copy was current.</p>
-    <p>The fix was procedural, not technical. Verify before deleting, give datasets one canonical location instead of letting them spread, and treat duplication as the default outcome of repeated extraction unless something actively prevents it.</p>
-  </div>
-
-  <div class="tags-row reveal">
-    <span class="tag">Storage Audit</span>
-    <span class="tag">Filesystem Analysis</span>
-    <span class="tag">Dataset Management</span>
-    <span class="tag">Deduplication</span>
-    <span class="tag">Arch Linux</span>
-  </div>
-
 </div>
-
+<div class="xsec" data-open="true" data-title="Overview" id="sec-overview"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">01</span><span class="xsec-title">Overview</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<div class="block reveal">
+<p>A storage audit was run as routine maintenance, not in response to any pressure on disk space. The goal was simply to understand where space was going and whether anything could be reclaimed. It turned into a short investigation into how a single research project, BICE, had accumulated a disproportionate share of total usage.</p>
+</div>
+</div></div><div class="xsec" data-open="true" data-title="Discovery" id="sec-discovery"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">02</span><span class="xsec-title">Discovery</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<div class="block reveal">
+<p>A top-level home directory scan showed one project directory standing far above everything else. Drilling into it pointed at a single subproject as the dominant consumer, with the rest of the workspace contributing comparatively little. The imbalance was the signal worth following, not the absolute numbers.</p>
+</div>
+</div></div><div class="xsec" data-open="true" data-title="Analysis" id="sec-analysis"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">03</span><span class="xsec-title">Analysis</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<div class="block reveal">
+<p>Inside the subproject, most of the space was split between a generated database file, a research dataset directory, and a compressed archive. The dataset itself consisted of labeled network traffic captures used for IoT malware analysis, including botnet attack traffic and benign baseline traffic, the kind of files that grow large quickly and tend to get copied rather than referenced.</p>
+<p>A closer look at related directories elsewhere on the system showed the same dataset files duplicated across multiple archive folders. Different extraction passes had each left their own full copy behind instead of being cleaned up afterward.</p>
+<div class="storage-bars">
+<div class="bar-row">
+<span class="bar-label">Research Datasets</span>
+<div class="bar-track"><div class="bar-fill" style="width: 92%;"></div></div>
+</div>
+<div class="bar-row">
+<span class="bar-label">Generated Artifacts</span>
+<div class="bar-track"><div class="bar-fill alt" style="width: 58%;"></div></div>
+</div>
+<div class="bar-row">
+<span class="bar-label">Archives</span>
+<div class="bar-track"><div class="bar-fill alt" style="width: 44%;"></div></div>
+</div>
+<div class="bar-row">
+<span class="bar-label">System Files</span>
+<div class="bar-track"><div class="bar-fill dim" style="width: 12%;"></div></div>
+</div>
+</div>
+</div>
+</div></div><div class="xsec" data-open="true" data-title="Cleanup Strategy" id="sec-cleanup-strategy"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">04</span><span class="xsec-title">Cleanup Strategy</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<div class="block reveal">
+<p>Rather than deleting anything immediately, the approach was to verify before removing. Folder sizes were compared, and duplicate archive directories were diffed against each other to confirm they held identical content before any of them were cleared. Once confirmed, redundant copies were removed and the remaining dataset was moved into a dedicated research data location instead of living alongside temporary downloads. Routine cache and package cleanup was run alongside this work and recovered a modest amount of additional space on its own.</p>
+</div>
+<div class="conclusion-box reveal">
+<div class="conclusion-title">Key Takeaway</div>
+<p>The system was never at risk. What this audit actually found was a dataset management problem dressed up as a storage problem: large research files copied across multiple working folders with no single owner keeping track of which copy was current.</p>
+<p>The fix was procedural, not technical. Verify before deleting, give datasets one canonical location instead of letting them spread, and treat duplication as the default outcome of repeated extraction unless something actively prevents it.</p>
+</div>
+<div class="tags-row reveal">
+<span class="tag">Storage Audit</span>
+<span class="tag">Filesystem Analysis</span>
+<span class="tag">Dataset Management</span>
+<span class="tag">Deduplication</span>
+<span class="tag">Arch Linux</span>
+</div>
+</div></div></div>
 <footer>
-  <span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
-  <a href="./systems.html">back to systems ↗</a>
-  <a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
+<span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
+<a href="./systems.html">back to systems ↗</a>
+<a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
 </footer>
-
 <script>
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
-let W, H;
-const mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
-function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-resize();
-window.addEventListener('resize', resize);
-document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-
-const WORLD_H = 2600, NODE_COUNT = 180, CONNECT_DIST = 160;
-const nodes = Array.from({length: NODE_COUNT}, () => ({
-  x: Math.random() * window.innerWidth, y: Math.random() * WORLD_H,
-  vx: (Math.random()-.5)*.6, vy: (Math.random()-.5)*.6,
-  r: Math.random()*2.2+1.1,
-  color: Math.random()>.5 ? '#9b59f5' : Math.random()>.7 ? '#00b4ff' : '#7c4dd9',
-  pulse: Math.random()*Math.PI*2, pulseSpeed: .02+Math.random()*.025
-}));
-
-const LABELS = ['DATASET','DUPLICATE','ARCHIVE','du/df','CLEANUP','VERIFY'];
-const floaters = Array.from({length:10},(_,i)=>({
-  text: LABELS[i%LABELS.length], x: Math.random()*window.innerWidth, y: Math.random()*WORLD_H,
-  vy: -(Math.random()*.2+.07), opacity: Math.random()*.18+.05
-}));
-
-function draw() {
-  const sy = window.scrollY;
-  ctx.clearRect(0,0,W,H);
-  const mg = ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,200);
-  mg.addColorStop(0,'rgba(155,89,245,0.06)'); mg.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=mg; ctx.fillRect(0,0,W,H);
-  ctx.save(); ctx.translate(0,-sy);
-  const wxm=mouse.x, wym=mouse.y+sy;
-  for(const n of nodes){
-    n.pulse+=n.pulseSpeed;
-    const dx=n.x-wxm,dy=n.y-wym,dist=Math.sqrt(dx*dx+dy*dy);
-    if(dist<170&&dist>0){const f=(170-dist)/170*1.1;n.vx+=(dx/dist)*f;n.vy+=(dy/dist)*f;}
-    const spd=Math.sqrt(n.vx*n.vx+n.vy*n.vy);
-    if(spd>2.2){n.vx*=2.2/spd;n.vy*=2.2/spd;}
-    n.vx*=.993;n.vy*=.993;n.x+=n.vx;n.y+=n.vy;
-    if(n.x<0){n.x=0;n.vx*=-1;} if(n.x>W){n.x=W;n.vx*=-1;}
-    if(n.y<0){n.y=0;n.vy*=-1;} if(n.y>WORLD_H){n.y=WORLD_H;n.vy*=-1;}
-    if(n.y<sy-160||n.y>sy+H+160)continue;
-    for(const m of nodes){
-      if(m===n)continue;
-      if(m.y<sy-160||m.y>sy+H+160)continue;
-      const ex=n.x-m.x,ey=n.y-m.y,ed=Math.sqrt(ex*ex+ey*ey);
-      if(ed<CONNECT_DIST){
-        const alpha=(1-ed/CONNECT_DIST)*.45;
-        ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);
-        ctx.strokeStyle=`rgba(155,89,245,${alpha*.85})`;
-        ctx.lineWidth=.7;ctx.stroke();
-      }
-    }
-    const pa=.6+Math.sin(n.pulse)*.35, pr=n.r+Math.sin(n.pulse)*.6;
-    ctx.beginPath();ctx.arc(n.x,n.y,pr,0,Math.PI*2);
-    ctx.fillStyle=`rgba(155,89,245,${pa})`;
-    ctx.fill();
+(function carbonBg(){
+  const el=document.getElementById('bg-carbon');
+  if(!el) return;
+  let mx=0,my=0,tx=0,ty=0;
+  window.addEventListener('mousemove',(e)=>{
+    mx=(e.clientX/window.innerWidth-0.5)*30;
+    my=(e.clientY/window.innerHeight-0.5)*30;
+  });
+  function frame(){
+    tx += (mx-tx)*0.04; ty += (my-ty)*0.04;
+    const scrollShift = window.scrollY*0.06;
+    el.style.transform = `translate3d(${tx}px, ${ty+scrollShift}px, 0)`;
+    requestAnimationFrame(frame);
   }
-  ctx.font='9px JetBrains Mono,monospace';
-  for(const f of floaters){
-    f.y+=f.vy;
-    if(f.y<0){f.y=WORLD_H;f.x=Math.random()*W;}
-    if(f.y<sy-20||f.y>sy+H+20)continue;
-    ctx.fillStyle=`rgba(155,89,245,${f.opacity})`;
-    ctx.fillText(f.text,f.x,f.y);
-  }
-  ctx.restore();
-  requestAnimationFrame(draw);
-}
-draw();
-
+  frame();
+})();
 const dot = document.getElementById('curDot');
 const ring = document.getElementById('curRing');
 let mx=0,my=0,rx=0,ry=0;
@@ -266,5 +246,59 @@ const revealObs = new IntersectionObserver(entries => {
 },{threshold:.06});
 document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
 </script>
-</body>
+<script>
+(function interactiveSections(){
+  // collapsibles
+  document.querySelectorAll('.xsec-head').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const sec=btn.closest('.xsec');
+      const open = sec.getAttribute('data-open')==='true';
+      sec.setAttribute('data-open', open?'false':'true');
+      btn.setAttribute('aria-expanded', String(!open));
+    });
+  });
+
+  // progress dot-nav, built from .xsec sections that have an id
+  const secs = Array.from(document.querySelectorAll('.xsec[id]'));
+  if(secs.length > 1){
+    const nav=document.createElement('nav');
+    nav.className='xdots';
+    nav.setAttribute('aria-label','Section navigation');
+    secs.forEach(s=>{
+      const dot=document.createElement('a');
+      dot.className='xdot';
+      dot.href='#'+s.id;
+      dot.title=s.dataset.title||'';
+      dot.addEventListener('click',(e)=>{
+        e.preventDefault();
+        if(s.getAttribute('data-open')==='false'){ s.setAttribute('data-open','true'); }
+        s.scrollIntoView({behavior:'smooth',block:'start'});
+      });
+      nav.appendChild(dot);
+    });
+    document.body.appendChild(nav);
+    const dots=Array.from(nav.children);
+    const obs=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        const i=secs.indexOf(e.target);
+        if(e.isIntersecting) dots.forEach((d,j)=>d.classList.toggle('active', j===i));
+      });
+    },{rootMargin:'-45% 0px -45% 0px'});
+    secs.forEach(s=>obs.observe(s));
+  }
+
+  // jump-to pill
+  document.querySelectorAll('.xjump').forEach(a=>{
+    a.addEventListener('click',(e)=>{
+      const id=a.getAttribute('href');
+      const target=id&&document.querySelector(id);
+      if(target){
+        e.preventDefault();
+        if(target.getAttribute('data-open')==='false') target.setAttribute('data-open','true');
+        target.scrollIntoView({behavior:'smooth',block:'start'});
+      }
+    });
+  });
+})();
+</script></body>
 </html>

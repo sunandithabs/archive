@@ -1,28 +1,44 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta charset="utf-8"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23060a14'/%3E%3Crect x='1' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='3' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='7' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='1' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='5' width='2' height='2' fill='%23e1001a'/%3E%3C/svg%3E">
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
 <title>TheGentlemen · Threat Intelligence</title>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
 <style>
     :root {
-      --black: #00010a; --panel: #02040f; --wire-1: #080e20; --wire-2: #0c1430;
-      --accent: #00b4ff; --accent2: #0090d4; --purple: #9b59f5;
-      --text: #c8e4ff; --muted: #6090b8;
-      --font-mono: "JetBrains Mono", ui-monospace, monospace;
-      --font-display: "Syne", sans-serif;
+      --black: #060a14; --panel: #0a1020; --wire-1: #141d33; --wire-2: #1e2a48;
+      --accent: #e1001a; --accent2: #3fd0ff; --purple: #2a5aff;
+      --text: #f2f4f8; --muted: #7a88a8;
+      --font-mono: 'Space Mono', ui-monospace, monospace;
+      --font-display: 'Fraunces', sans-serif;
       --font-body: "DM Sans", system-ui, sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body { background: var(--black); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.6; overflow-x: hidden; cursor: none; }
     body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px); pointer-events: none; z-index: 9000; }
-    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    #bg-carbon {
+      position: fixed; inset: -60px; z-index: 0; pointer-events: none;
+      background-color: #060a14;
+      background-image:
+        linear-gradient(27deg, #0c1324 5px, transparent 5px) 0 5px,
+        linear-gradient(207deg, #0c1324 5px, transparent 5px) 10px 0,
+        linear-gradient(27deg, #141d33 5px, transparent 5px) 0 10px,
+        linear-gradient(207deg, #141d33 5px, transparent 5px) 10px 5px,
+        linear-gradient(90deg, #0a1020 10px, transparent 10px),
+        linear-gradient(#0d1526 25%, #0a1020 25%, #0a1020 50%, transparent 50%, transparent 75%, #0d1526 75%, #0d1526);
+      background-size: 20px 20px;
+      opacity: .55;
+      will-change: transform;
+    }
+    #bg-carbon::after{ content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%, rgba(225,6,0,.05), transparent 60%); }
     .cur-dot { position: fixed; z-index: 9999; pointer-events: none; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); transform: translate(-50%,-50%); box-shadow: 0 0 8px var(--accent); }
-    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(0,180,255,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
+    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(225,0,26,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
     .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 500; height: 40px; background: rgba(2,4,15,.94); border-bottom: 1px solid var(--wire-2); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); backdrop-filter: blur(12px); }
     .topbar::after { content: ''; position: absolute; bottom: -2px; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); animation: sweep 4s ease-in-out infinite; }
     @keyframes sweep { 0%,100%{ width: 20%; opacity: .7; } 50%{ width: 55%; opacity: 1; } }
@@ -34,8 +50,8 @@
     .tb-link::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:1px; background:var(--accent); transform:scaleX(0); transition:transform .2s; transform-origin:left; }
     .tb-link:hover { color: var(--accent); }
     .tb-link:hover::after { transform: scaleX(1); }
-    .tb-link.back { color: var(--accent); border: 1px solid rgba(0,180,255,.25); padding: 2px 10px; font-size: 9px; }
-    .tb-link.back:hover { background: rgba(0,180,255,.08); }
+    .tb-link.back { color: var(--accent); border: 1px solid rgba(225,0,26,.25); padding: 2px 10px; font-size: 9px; }
+    .tb-link.back:hover { background: rgba(225,0,26,.08); }
     .tb-link.back::after { display: none; }
     .page-wrap { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 100px 40px 80px; }
     .breadcrumb { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .12em; margin-bottom: 28px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
@@ -46,31 +62,31 @@
     .intro-line { font-family: var(--font-mono); font-size: 10px; color: var(--accent); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
     .intro-line::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--accent); opacity: .5; }
     .page-title { font-family: var(--font-display); font-size: clamp(40px, 6vw, 72px); font-weight: 900; line-height: .95; letter-spacing: -.02em; text-transform: uppercase; margin-bottom: 28px; color: var(--text); }
-    .page-title span { -webkit-text-stroke: 1px rgba(0,180,255,.35); -webkit-text-fill-color: transparent; display: block; }
+    .page-title span { -webkit-text-stroke: 1px rgba(225,0,26,.35); -webkit-text-fill-color: transparent; display: block; }
     .wu-card { background: var(--panel); border: 1px solid var(--wire-2); border-radius: 2px; padding: 48px 44px; margin-bottom: 28px; position: relative; overflow: hidden; transition: border-color .3s, box-shadow .3s; transform-style: preserve-3d; background-image: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(255,255,255,0.038) 2px, rgba(255,255,255,0.038) 3px), repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(255,255,255,0.02) 2px, rgba(255,255,255,0.02) 3px); }
     .wu-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0; transition: opacity .4s; }
-    .wu-card::after { content: attr(data-num); position: absolute; top: 32px; right: 36px; font-family: var(--font-display); font-size: 80px; font-weight: 900; -webkit-text-stroke: 1px rgba(0,180,255,.08); -webkit-text-fill-color: transparent; line-height: 1; pointer-events: none; }
-    .wu-card:hover { border-color: rgba(0,180,255,.3); box-shadow: 0 0 40px rgba(0,180,255,.04); }
+    .wu-card::after { content: attr(data-num); position: absolute; top: 32px; right: 36px; font-family: var(--font-display); font-size: 80px; font-weight: 900; -webkit-text-stroke: 1px rgba(225,0,26,.08); -webkit-text-fill-color: transparent; line-height: 1; pointer-events: none; }
+    .wu-card:hover { border-color: rgba(225,0,26,.3); box-shadow: 0 0 40px rgba(225,0,26,.04); }
     .wu-card:hover::before { opacity: .7; }
     a.wu-card { display: block; text-decoration: none; color: inherit; }
     .wu-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
-    .wu-badge { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; padding: 4px 10px; border: 1px solid rgba(0,180,255,.3); color: var(--accent); background: rgba(0,180,255,.05); border-radius: 2px; }
+    .wu-badge { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; padding: 4px 10px; border: 1px solid rgba(225,0,26,.3); color: var(--accent); background: rgba(225,0,26,.05); border-radius: 2px; }
     .wu-badge.amber { border-color: rgba(255,181,71,.3); color: #ffb547; background: rgba(255,181,71,.05); }
     .wu-year { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .15em; }
     .wu-title { font-family: var(--font-display); font-size: clamp(26px, 3.5vw, 40px); font-weight: 800; line-height: 1.05; text-transform: uppercase; letter-spacing: .01em; margin-bottom: 28px; }
     .wu-body { font-family: var(--font-body); font-size: 15px; line-height: 1.82; color: #b0d0ee; font-weight: 300; }
     .wu-body p { margin-bottom: 18px; }
     .wu-body p:last-child { margin-bottom: 0; }
-    .wu-body code { font-family: var(--font-mono); font-size: 12.5px; background: rgba(0,180,255,.07); border: 1px solid rgba(0,180,255,.22); padding: 1px 7px; border-radius: 2px; color: var(--accent); white-space: nowrap; }
+    .wu-body code { font-family: var(--font-mono); font-size: 12.5px; background: rgba(225,0,26,.07); border: 1px solid rgba(225,0,26,.22); padding: 1px 7px; border-radius: 2px; color: var(--accent); white-space: nowrap; }
     .wu-h3 { font-family: var(--font-mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--purple); margin: 28px 0 10px; }
     .wu-tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--wire-1); }
     .wu-tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--wire-2); color: var(--muted); border-radius: 2px; transition: border-color .2s, color .2s; position: relative; overflow: hidden; }
-    .wu-tag::before { content: ''; position: absolute; inset: 0; background: rgba(0,180,255,.08); transform: scaleX(0); transform-origin: left; transition: transform .25s; }
-    .wu-tag:hover { border-color: rgba(0,180,255,.45); color: var(--accent); }
+    .wu-tag::before { content: ''; position: absolute; inset: 0; background: rgba(225,0,26,.08); transform: scaleX(0); transform-origin: left; transition: transform .25s; }
+    .wu-tag:hover { border-color: rgba(225,0,26,.45); color: var(--accent); }
     .wu-tag:hover::before { transform: scaleX(1); }
     .status-bar { margin-top: 22px; display: flex; gap: 6px; flex-wrap: wrap; }
     .status-pill { font-family: var(--font-mono); font-size: 10px; padding: 4px 10px; border-radius: 2px; letter-spacing: .1em; text-transform: uppercase; }
-    .sp-done { border: 1px solid rgba(0,180,255,.3); color: var(--accent); background: rgba(0,180,255,.05); }
+    .sp-done { border: 1px solid rgba(225,0,26,.3); color: var(--accent); background: rgba(225,0,26,.05); }
     .sp-wip { border: 1px solid rgba(255,181,71,.3); color: #ffb547; background: rgba(255,181,71,.05); }
     .kv-grid { display: grid; grid-template-columns: 170px 1fr; border: 1px solid var(--wire-2); border-radius: 2px; margin: 18px 0 28px; overflow: hidden; }
     .kv-k { font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--muted); padding: 11px 14px; border-bottom: 1px solid var(--wire-1); background: rgba(255,255,255,.02); }
@@ -85,7 +101,7 @@
     .attck-table th { font-family: var(--font-mono); font-size: 9.5px; letter-spacing: .14em; text-transform: uppercase; color: var(--purple); text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--wire-2); white-space: nowrap; }
     .attck-table td { padding: 9px 10px; border-bottom: 1px solid var(--wire-1); color: #b0d0ee; font-weight: 300; }
     .table-scroll { overflow-x: auto; }
-    .note-box { margin-top: 28px; background: rgba(155,89,245,.03); border: 1px solid rgba(155,89,245,.15); border-left: 3px solid var(--purple); border-radius: 2px; padding: 20px 22px; }
+    .note-box { margin-top: 28px; background: rgba(42,90,255,.03); border: 1px solid rgba(42,90,255,.15); border-left: 3px solid var(--purple); border-radius: 2px; padding: 20px 22px; }
     .note-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: var(--purple); margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
     .note-label::before { content: '//'; color: var(--muted); }
     .src-list { display: flex; flex-direction: column; gap: 7px; margin-top: 10px; }
@@ -99,178 +115,168 @@
     .foot-accent { color: var(--accent); }
     @media (max-width: 700px) { .page-wrap { padding: 80px 20px 60px; } .wu-card { padding: 26px 22px; } footer { padding: 16px 20px; flex-direction: column; gap: 6px; text-align: center; } .kv-grid { grid-template-columns: 130px 1fr; } }
 </style>
-</head>
+<style>
+/* === INTERACTIVE SECTIONS (shared) === */
+.xsec { border-bottom: 1px solid var(--wire-2); }
+.xsec-head { width: 100%; display: flex; align-items: center; gap: 14px; background: none; border: none; cursor: pointer; padding: 20px 0; text-align: left; font-family: var(--font-mono); color: var(--text); }
+.xsec-num { font-size: 10px; color: var(--accent); opacity: .55; min-width: 20px; letter-spacing: .05em; }
+.xsec-title { flex: 1; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--text); transition: color .2s; }
+.xsec-chev { font-size: 10px; color: var(--muted); transition: transform .25s ease; }
+.xsec[data-open="false"] .xsec-chev { transform: rotate(-90deg); }
+.xsec-body { overflow: hidden; max-height: 3000px; transition: max-height .4s cubic-bezier(.4,0,.2,1), opacity .3s ease, padding .3s ease; opacity: 1; padding-bottom: 22px; }
+.xsec[data-open="false"] .xsec-body { max-height: 0; opacity: 0; padding-bottom: 0; }
+.xsec-head:hover .xsec-title { color: var(--accent); }
+.xsec-head:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
+
+/* progress dot-nav */
+.xdots { position: fixed; right: 22px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 11px; z-index: 400; }
+.xdot { width: 6px; height: 6px; border-radius: 50%; background: var(--wire-2); display: block; transition: background .25s, transform .25s, box-shadow .25s; cursor: pointer; }
+.xdot:hover { background: var(--muted); }
+.xdot.active { background: var(--accent); transform: scale(1.7); box-shadow: 0 0 6px var(--accent); }
+@media (max-width: 900px) { .xdots { display: none; } }
+
+/* jump-to pill */
+.xjump { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(225,0,26,.3); background: rgba(225,0,26,.05); border-radius: 999px; padding: 7px 16px; text-decoration: none; margin: 4px 0 28px; transition: background .2s, border-color .2s; }
+.xjump:hover { background: rgba(225,0,26,.12); border-color: var(--accent); }
+.xjump::before { content: '↓'; }
+</style></head>
 <body>
-<canvas id="bg-canvas"></canvas>
+<div id="bg-carbon"></div>
 <div class="cur-dot" id="curDot"></div>
 <div class="cur-ring" id="curRing"></div>
-
 <nav class="topbar">
-  <div class="tb-left">
-    <span class="tb-dot"></span>
-    <span id="clock">--:--:--</span>
-  </div>
-  <div class="tb-right">
-    <a href="./index.html" class="tb-link back">← threat-intel</a>
-    <a href="../index.html#contact" class="tb-link">Contact</a>
-  </div>
-</nav>
-
-<div class="page-wrap">
-  <div class="reveal">
-    <div class="breadcrumb">
-      <a href="../index.html">Home</a>
-      <span>/</span>
-      <a href="./index.html">Threat Intelligence</a>
-      <span>/</span>
-      <span class="current">TheGentlemen</span>
-    </div>
-    <div class="intro-line">ransomware profile · likely qilin splinter</div>
-    <h1 class="page-title">TheGentlemen<span>Ransomware Group</span></h1>
-  </div>
-
-  <div class="wu-card reveal" data-num="01">
-    <div class="wu-meta">
-      <span class="wu-badge">Ransomware · RaaS</span>
-      <span class="wu-year">July 2025 to present</span>
-    </div>
-    <h2 class="wu-title">Overview</h2>
-    <div class="wu-body">
-      <div class="wu-h3">Summary</div>
-      <p>TheGentlemen showed its earliest development activity in July 2025, with active campaigns beginning that August. Halcyon assesses the group as a likely splinter of the <code>Qilin</code> ransomware-as-a-service operation, formed after a reported payment dispute, though ASEC's own research flags that lineage as unconfirmed elsewhere. The group is suspected to run out of Russian-speaking regions and, like many RaaS crews, enforces an internal ban on targeting Russia and CIS countries.</p>
-      <p>Growth has been fast: from about 27 victims across 17 countries in its first month of confirmed campaigns to nearly 300 victims across 66+ countries and 20+ industries by mid-2026 per Halcyon's tracking, against the 442-victim figure in current source notes. Halcyon describes it as one of the fastest-scaling ransomware operations currently being tracked.</p>
-
-      <div class="wu-h3">Key Facts</div>
-      <div class="kv-grid">
-        <div class="kv-k">First observed</div><div class="kv-v">July to August 2025 (development from July, active campaigns from August)</div>
-        <div class="kv-k">Victims</div><div class="kv-v">442 per source notes; external trackers reported 27 in Sept 2025, 200+ by early 2026, ~300 by May 2026</div>
-        <div class="kv-k">Geography</div><div class="kv-v">US, Thailand, France per source notes; broader reporting puts footprint at 50 to 66+ countries across APAC, Europe, Americas, Middle East</div>
-        <div class="kv-k">Industries</div><div class="kv-v">Manufacturing, construction, healthcare, insurance most consistent; also IT services, financial services, tech, education, energy, government</div>
-        <div class="kv-k">Status</div><div class="kv-v">Active; one of the fastest-scaling RaaS operations currently tracked</div>
-      </div>
-
-      <div class="wu-h3">Timeline</div>
-      <div class="timeline">
-        <div class="tl-item"><div class="tl-date">July 2025</div><div class="tl-text">Earliest development activity (SOCRadar).</div></div>
-        <div class="tl-item"><div class="tl-date">August 2025</div><div class="tl-text">First observed in active campaigns; ASEC dates initial emergence here too.</div></div>
-        <div class="tl-item"><div class="tl-date">September 2025</div><div class="tl-text">Trend Micro and CSO Online report ~27 victims across 17 countries, manufacturing and construction leading.</div></div>
-        <div class="tl-item"><div class="tl-date">Early 2026</div><div class="tl-text">Leak site activity tops 200 victims across 50+ countries, 20+ industries (Fortiguard, Surefire Cyber).</div></div>
-        <div class="tl-item"><div class="tl-date">~May 2026</div><div class="tl-text">Halcyon reports nearly 300 victims across 66+ countries, assesses likely Qilin-splinter origin, estimates ~20-person core team.</div></div>
-        <div class="tl-item"><div class="tl-date">June 4, 2026</div><div class="tl-text">Claimed attack on National Industries, an Indian automotive components manufacturer (DeXpose, HookPhish).</div></div>
-        <div class="tl-item"><div class="tl-date">Present</div><div class="tl-text">442 victims recorded per source notes; activity ongoing.</div></div>
-      </div>
-
-      <div class="wu-h3">Victimology</div>
-      <p>Source notes place confirmed victims in the US, Thailand, and France, but external reporting shows a much wider net spanning dozens of countries. Thailand tops the list; Halcyon puts the US share of total victims at only around 7%, well below the roughly 50% US share typical of the broader ransomware ecosystem.</p>
-      <p>Manufacturing and construction lead the sector breakdown, followed by healthcare and insurance. Ankura Consulting points to these sectors' low tolerance for downtime and high-value data as reasons they tend to pay quickly. IT services, financial services, technology, energy, and government round out the rest as the group has scaled.</p>
-
-      <div class="wu-h3">Tradecraft: Initial Access</div>
-      <p>Source notes describe valid account abuse (<code>T1078</code>), spearphishing attachment delivery (<code>T1566.001</code>), and vishing (<code>T1566.004</code>); a four-technique total was referenced but only three were detailed. External reporting fills in a likely fourth: exploitation of internet-facing infrastructure, most notably FortiGate appliances via <code>CVE-2024-55591</code>, a FortiOS/FortiProxy auth bypass (<code>T1190</code>), per Surefire Cyber. Reporting also notes use of infostealer malware and initial access brokers to source credentials ahead of intrusion.</p>
-
-      <div class="wu-h3">Tradecraft: Persistence & Privilege Escalation</div>
-      <p>Registry run keys (<code>T1547.001</code>) per source notes. Privilege escalation via exploitation (<code>T1068</code>); specific vulnerability not identified in current sourcing.</p>
-
-      <div class="wu-h3">Tradecraft: Execution & Defense Evasion</div>
-      <p>PowerShell (<code>T1059.001</code>), WMI (<code>T1059.005</code> per source mapping), Python (<code>T1059.006</code>). Trend Micro documents abuse of legitimate signed drivers and custom anti-AV utilities to disable endpoint protection (<code>T1562.001</code>), alongside GPO manipulation to push payloads domain-wide (<code>T1484.001</code>).</p>
-
-      <div class="wu-h3">Tradecraft: Lateral Movement & Impact</div>
-      <p>GPO-based payload distribution via NETLOGON shares (<code>T1021.002</code>), enabling near-simultaneous infection across domain-joined machines. Runs a double-extortion model: data exfiltrated over encrypted channels before encryption, with publication threatened on a leak site if the ransom isn't paid (ASEC, Trend Micro). Exact exfiltration protocol isn't detailed in current sourcing.</p>
-
-      <div class="wu-h3">MITRE ATT&CK Mapping</div>
-      <div class="table-scroll">
-        <table class="attck-table">
-          <tr><th>Tactic</th><th>Technique</th><th>ID</th></tr>
-          <tr><td>Initial Access</td><td>Valid Accounts</td><td><code>T1078</code></td></tr>
-          <tr><td>Initial Access</td><td>Phishing: Spearphishing Attachment</td><td><code>T1566.001</code></td></tr>
-          <tr><td>Initial Access</td><td>Phishing: Spearphishing Voice</td><td><code>T1566.004</code></td></tr>
-          <tr><td>Initial Access</td><td>Exploit Public-Facing Application</td><td><code>T1190</code></td></tr>
-          <tr><td>Persistence</td><td>Boot/Logon Autostart: Registry Run Keys</td><td><code>T1547.001</code></td></tr>
-          <tr><td>Privilege Escalation</td><td>Exploitation for Privilege Escalation</td><td><code>T1068</code></td></tr>
-          <tr><td>Execution</td><td>Command and Scripting Interpreter: PowerShell</td><td><code>T1059.001</code></td></tr>
-          <tr><td>Execution</td><td>Command and Scripting Interpreter (WMI, per source mapping)</td><td><code>T1059.005</code></td></tr>
-          <tr><td>Execution</td><td>Command and Scripting Interpreter: Python</td><td><code>T1059.006</code></td></tr>
-          <tr><td>Defense Evasion</td><td>Impair Defenses: Disable or Modify Tools</td><td><code>T1562.001</code></td></tr>
-          <tr><td>Defense Evasion</td><td>Domain Policy Modification: GPO Modification</td><td><code>T1484.001</code></td></tr>
-          <tr><td>Lateral Movement</td><td>Remote Services: SMB/Windows Admin Shares</td><td><code>T1021.002</code></td></tr>
-        </table>
-      </div>
-      <p style="font-size:11.5px;color:var(--muted);">Note: source notes map WMI to T1059.005; current ATT&amp;CK lists WMI separately under T1047. Mapping kept as originally provided.</p>
-    </div>
-
-    <div class="note-box">
-      <div class="note-label">analyst notes</div>
-      <div class="wu-body">
-        <p>Something that jumped out while putting this together: most of the tradecraft here scales without extra work per victim, GPO abuse and NETLOGON propagation hit every machine on a domain at once, and the credentials reportedly come from infostealers and brokers rather than the group's own phishing effort. Vishing doesn't fit that pattern, it takes an actual phone call per attempt and doesn't scale the same way. I don't have enough to prove this, but my guess is that the undocumented fourth initial access technique in the source notes isn't another mass-market option, it's probably a fallback used when the cheap stuff doesn't work, something like calling a help desk after phishing fails. Take that as a hunch, not a finding.</p>
-        <p>The geography also surprised me. I'd assumed most ransomware victims were US-based, since that's what I'd read elsewhere, but Halcyon's numbers put this group's US share at only around 7%, against an industry average closer to half. Thailand is the top target instead, with Brazil and India showing up more than I expected too. I'm not sure what to make of that beyond flagging it. If the Qilin-splinter theory holds, it might just reflect where those affiliates were already operating.</p>
-        <p>One thing I'm trying to keep in mind while reading these reports: "first observed" just means when defenders started watching, not when the people behind a group learned their craft. A name barely a year old pulling off domain-wide GPO deployment and purpose-built anti-AV tooling on day one probably isn't run by beginners, even if the brand itself is.</p>
-      </div>
-    </div>
-
-    <div class="wu-h3" style="margin-top:28px;">// sources</div>
-    <div class="src-list">
-      <a href="https://ransomwhere.org/ttps" target="_blank">ransomwhere.org/ttps</a>
-      <a href="https://www.trendmicro.com/en_us/research/25/i/unmasking-the-gentlemen-ransomware.html" target="_blank">trendmicro.com: unmasking-the-gentlemen-ransomware</a>
-      <a href="https://www.csoonline.com/article/4054790/ransomware-upstart-the-gentlemen-raises-the-stakes-for-ot%E2%80%91heavy-sectors.html" target="_blank">csoonline.com: ransomware-upstart-the-gentlemen</a>
-      <a href="https://www.halcyon.ai/ransomware-research-reports/threat-assessment-the-gentlemen-ransomware-group" target="_blank">halcyon.ai: threat-assessment-the-gentlemen</a>
-      <a href="https://industrialcyber.co/ransomware/asec-warns-of-expanding-gentlemen-ransomware-campaigns-hitting-manufacturing-and-healthcare/" target="_blank">industrialcyber.co: asec-warns-of-expanding-gentlemen-campaigns</a>
-      <a href="https://socradar.io/blog/dark-web-profile-the-gentlemen-ransomware/" target="_blank">socradar.io: dark-web-profile-the-gentlemen-ransomware</a>
-      <a href="https://www.fortiguard.com/threat-actor/6387/the-gentlemen-ransomware" target="_blank">fortiguard.com: threat-actor/the-gentlemen-ransomware</a>
-      <a href="https://sosransomware.com/en/ransomware-groups/the-gentlemen-the-new-ransomware-of-autumn-2025/" target="_blank">sosransomware.com: the-gentlemen-new-ransomware-autumn-2025</a>
-      <a href="https://www.surefirecyber.com/threat-deep-dive-the-gentlemen/" target="_blank">surefirecyber.com: threat-deep-dive-the-gentlemen</a>
-      <a href="https://www.dexpose.io/thegentlemen-ransomware-attack-on-national-industries/" target="_blank">dexpose.io: thegentlemen-attack-on-national-industries</a>
-    </div>
-
-    <div class="wu-tags">
-      <span class="wu-tag">Qilin Splinter</span>
-      <span class="wu-tag">T1078</span>
-      <span class="wu-tag">T1190</span>
-      <span class="wu-tag">GPO Abuse</span>
-      <span class="wu-tag">NETLOGON Propagation</span>
-      <span class="wu-tag">Vishing</span>
-      <span class="wu-tag">FortiGate CVE-2024-55591</span>
-      <span class="wu-tag">Double Extortion</span>
-    </div>
-  </div>
+<div class="tb-left"><span class="tb-dot"></span><span id="clock">--:--:--</span></div>
+<div class="tb-right">
+<a class="tb-link back" href="./threat-intel.html">← threat-intel</a>
+<a class="tb-link" href="./index.html#dashboard">Projects</a>
+<a class="tb-link" href="./index.html#contact">Contact</a>
 </div>
-
+</nav>
+<div class="page-wrap">
+<div class="reveal">
+<div class="breadcrumb">
+<a href="./index.html">Home</a>
+<span>/</span>
+<a href="./threat-intel.html">Threat Intelligence</a>
+<span>/</span>
+<span class="current">TheGentlemen</span>
+</div>
+<div class="intro-line">ransomware profile · likely qilin splinter</div>
+<h1 class="page-title">TheGentlemen<span>Ransomware Group</span></h1>
+</div>
+<div class="wu-card reveal" data-num="01">
+<div class="wu-meta">
+<span class="wu-badge">Ransomware · RaaS</span>
+<span class="wu-year">July 2025 to present</span>
+</div>
+<h2 class="wu-title">Overview</h2>
+<div class="wu-body">
+<div class="xsec" data-open="true" data-title="Summary" id="sec-summary"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">01</span><span class="xsec-title">Summary</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<p>TheGentlemen showed its earliest development activity in July 2025, with active campaigns beginning that August. Halcyon assesses the group as a likely splinter of the <code>Qilin</code> ransomware-as-a-service operation, formed after a reported payment dispute, though ASEC's own research flags that lineage as unconfirmed elsewhere. The group is suspected to run out of Russian-speaking regions and, like many RaaS crews, enforces an internal ban on targeting Russia and CIS countries.</p>
+<p>Growth has been fast: from about 27 victims across 17 countries in its first month of confirmed campaigns to nearly 300 victims across 66+ countries and 20+ industries by mid-2026 per Halcyon's tracking, against the 442-victim figure in current source notes. Halcyon describes it as one of the fastest-scaling ransomware operations currently being tracked.</p>
+</div></div><div class="xsec" data-open="true" data-title="Key Facts" id="sec-key-facts"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">02</span><span class="xsec-title">Key Facts</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<div class="kv-grid">
+<div class="kv-k">First observed</div><div class="kv-v">July to August 2025 (development from July, active campaigns from August)</div>
+<div class="kv-k">Victims</div><div class="kv-v">442 per source notes; external trackers reported 27 in Sept 2025, 200+ by early 2026, ~300 by May 2026</div>
+<div class="kv-k">Geography</div><div class="kv-v">US, Thailand, France per source notes; broader reporting puts footprint at 50 to 66+ countries across APAC, Europe, Americas, Middle East</div>
+<div class="kv-k">Industries</div><div class="kv-v">Manufacturing, construction, healthcare, insurance most consistent; also IT services, financial services, tech, education, energy, government</div>
+<div class="kv-k">Status</div><div class="kv-v">Active; one of the fastest-scaling RaaS operations currently tracked</div>
+</div>
+</div></div><div class="xsec" data-open="true" data-title="Timeline" id="sec-timeline"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">03</span><span class="xsec-title">Timeline</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<div class="timeline">
+<div class="tl-item"><div class="tl-date">July 2025</div><div class="tl-text">Earliest development activity (SOCRadar).</div></div>
+<div class="tl-item"><div class="tl-date">August 2025</div><div class="tl-text">First observed in active campaigns; ASEC dates initial emergence here too.</div></div>
+<div class="tl-item"><div class="tl-date">September 2025</div><div class="tl-text">Trend Micro and CSO Online report ~27 victims across 17 countries, manufacturing and construction leading.</div></div>
+<div class="tl-item"><div class="tl-date">Early 2026</div><div class="tl-text">Leak site activity tops 200 victims across 50+ countries, 20+ industries (Fortiguard, Surefire Cyber).</div></div>
+<div class="tl-item"><div class="tl-date">~May 2026</div><div class="tl-text">Halcyon reports nearly 300 victims across 66+ countries, assesses likely Qilin-splinter origin, estimates ~20-person core team.</div></div>
+<div class="tl-item"><div class="tl-date">June 4, 2026</div><div class="tl-text">Claimed attack on National Industries, an Indian automotive components manufacturer (DeXpose, HookPhish).</div></div>
+<div class="tl-item"><div class="tl-date">Present</div><div class="tl-text">442 victims recorded per source notes; activity ongoing.</div></div>
+</div>
+</div></div><div class="xsec" data-open="true" data-title="Victimology" id="sec-victimology"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">04</span><span class="xsec-title">Victimology</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<p>Thailand tops the victim list; Halcyon puts the US share at only ~7%, well below the ~50% typical of the broader ransomware ecosystem. Manufacturing and construction lead sector targeting, per Ankura Consulting, due to low downtime tolerance and high-value data.</p>
+</div></div><div class="xsec" data-open="true" data-title="Tradecraft: Initial Access" id="sec-tradecraft-initial-access"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">05</span><span class="xsec-title">Tradecraft: Initial Access</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<p>Source notes describe valid account abuse (<code>T1078</code>), spearphishing attachment delivery (<code>T1566.001</code>), and vishing (<code>T1566.004</code>); a four-technique total was referenced but only three were detailed. External reporting fills in a likely fourth: exploitation of internet-facing infrastructure, most notably FortiGate appliances via <code>CVE-2024-55591</code>, a FortiOS/FortiProxy auth bypass (<code>T1190</code>), per Surefire Cyber. Reporting also notes use of infostealer malware and initial access brokers to source credentials ahead of intrusion.</p>
+</div></div><div class="xsec" data-open="true" data-title="Tradecraft: Persistence &amp; Privilege Escalation" id="sec-tradecraft-persistence-privilege-escalat"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">06</span><span class="xsec-title">Tradecraft: Persistence &amp; Privilege Escalation</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<p>Registry run keys (<code>T1547.001</code>) per source notes. Privilege escalation via exploitation (<code>T1068</code>); specific vulnerability not identified in current sourcing.</p>
+</div></div><div class="xsec" data-open="true" data-title="Tradecraft: Execution &amp; Defense Evasion" id="sec-tradecraft-execution-defense-evasion"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">07</span><span class="xsec-title">Tradecraft: Execution &amp; Defense Evasion</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<p>PowerShell (<code>T1059.001</code>), WMI (<code>T1059.005</code> per source mapping), Python (<code>T1059.006</code>). Trend Micro documents abuse of legitimate signed drivers and custom anti-AV utilities to disable endpoint protection (<code>T1562.001</code>), alongside GPO manipulation to push payloads domain-wide (<code>T1484.001</code>).</p>
+</div></div><div class="xsec" data-open="true" data-title="Tradecraft: Lateral Movement &amp; Impact" id="sec-tradecraft-lateral-movement-impact"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">08</span><span class="xsec-title">Tradecraft: Lateral Movement &amp; Impact</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<p>GPO-based payload distribution via NETLOGON shares (<code>T1021.002</code>), enabling near-simultaneous infection across domain-joined machines. Runs a double-extortion model: data exfiltrated over encrypted channels before encryption, with publication threatened on a leak site if the ransom isn't paid (ASEC, Trend Micro). Exact exfiltration protocol isn't detailed in current sourcing.</p>
+</div></div><div class="xsec" data-open="true" data-title="MITRE ATT&amp;CK Mapping" id="sec-mitre-att-ck-mapping"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">09</span><span class="xsec-title">MITRE ATT&amp;CK Mapping</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<div class="table-scroll">
+<table class="attck-table">
+<tr><th>Tactic</th><th>Technique</th><th>ID</th></tr>
+<tr><td>Initial Access</td><td>Valid Accounts</td><td><code>T1078</code></td></tr>
+<tr><td>Initial Access</td><td>Phishing: Spearphishing Attachment</td><td><code>T1566.001</code></td></tr>
+<tr><td>Initial Access</td><td>Phishing: Spearphishing Voice</td><td><code>T1566.004</code></td></tr>
+<tr><td>Initial Access</td><td>Exploit Public-Facing Application</td><td><code>T1190</code></td></tr>
+<tr><td>Persistence</td><td>Boot/Logon Autostart: Registry Run Keys</td><td><code>T1547.001</code></td></tr>
+<tr><td>Privilege Escalation</td><td>Exploitation for Privilege Escalation</td><td><code>T1068</code></td></tr>
+<tr><td>Execution</td><td>Command and Scripting Interpreter: PowerShell</td><td><code>T1059.001</code></td></tr>
+<tr><td>Execution</td><td>Command and Scripting Interpreter (WMI, per source mapping)</td><td><code>T1059.005</code></td></tr>
+<tr><td>Execution</td><td>Command and Scripting Interpreter: Python</td><td><code>T1059.006</code></td></tr>
+<tr><td>Defense Evasion</td><td>Impair Defenses: Disable or Modify Tools</td><td><code>T1562.001</code></td></tr>
+<tr><td>Defense Evasion</td><td>Domain Policy Modification: GPO Modification</td><td><code>T1484.001</code></td></tr>
+<tr><td>Lateral Movement</td><td>Remote Services: SMB/Windows Admin Shares</td><td><code>T1021.002</code></td></tr>
+</table>
+</div>
+<p style="font-size:11.5px;color:var(--muted);">Note: source notes map WMI to T1059.005; current ATT&amp;CK lists WMI separately under T1047. Mapping kept as originally provided.</p>
+</div></div></div>
+<div class="note-box">
+<div class="note-label">analyst notes</div>
+<div class="wu-body">
+<p>Something that jumped out while putting this together: most of the tradecraft here scales without extra work per victim, GPO abuse and NETLOGON propagation hit every machine on a domain at once, and the credentials reportedly come from infostealers and brokers rather than the group's own phishing effort. Vishing doesn't fit that pattern, it takes an actual phone call per attempt and doesn't scale the same way. I don't have enough to prove this, but my guess is that the undocumented fourth initial access technique in the source notes isn't another mass-market option, it's probably a fallback used when the cheap stuff doesn't work, something like calling a help desk after phishing fails. Take that as a hunch, not a finding.</p>
+<p>The geography also surprised me, I'd assumed most ransomware victims were US-based. Brazil and India showing up more than expected too. Not sure what to make of it beyond flagging it, if the Qilin-splinter theory holds, it might just reflect where those affiliates were already operating.</p>
+<p>One thing I'm trying to keep in mind while reading these reports: "first observed" just means when defenders started watching, not when the people behind a group learned their craft. A name barely a year old pulling off domain-wide GPO deployment and purpose-built anti-AV tooling on day one probably isn't run by beginners, even if the brand itself is.</p>
+</div>
+</div>
+<div class="wu-h3" style="margin-top:28px;">// sources</div>
+<div class="src-list">
+<a href="https://ransomwhere.org/ttps" target="_blank">ransomwhere.org/ttps</a>
+<a href="https://www.trendmicro.com/en_us/research/25/i/unmasking-the-gentlemen-ransomware.html" target="_blank">trendmicro.com: unmasking-the-gentlemen-ransomware</a>
+<a href="https://www.csoonline.com/article/4054790/ransomware-upstart-the-gentlemen-raises-the-stakes-for-ot%E2%80%91heavy-sectors.html" target="_blank">csoonline.com: ransomware-upstart-the-gentlemen</a>
+<a href="https://www.halcyon.ai/ransomware-research-reports/threat-assessment-the-gentlemen-ransomware-group" target="_blank">halcyon.ai: threat-assessment-the-gentlemen</a>
+<a href="https://industrialcyber.co/ransomware/asec-warns-of-expanding-gentlemen-ransomware-campaigns-hitting-manufacturing-and-healthcare/" target="_blank">industrialcyber.co: asec-warns-of-expanding-gentlemen-campaigns</a>
+<a href="https://socradar.io/blog/dark-web-profile-the-gentlemen-ransomware/" target="_blank">socradar.io: dark-web-profile-the-gentlemen-ransomware</a>
+<a href="https://www.fortiguard.com/threat-actor/6387/the-gentlemen-ransomware" target="_blank">fortiguard.com: threat-actor/the-gentlemen-ransomware</a>
+<a href="https://sosransomware.com/en/ransomware-groups/the-gentlemen-the-new-ransomware-of-autumn-2025/" target="_blank">sosransomware.com: the-gentlemen-new-ransomware-autumn-2025</a>
+<a href="https://www.surefirecyber.com/threat-deep-dive-the-gentlemen/" target="_blank">surefirecyber.com: threat-deep-dive-the-gentlemen</a>
+<a href="https://www.dexpose.io/thegentlemen-ransomware-attack-on-national-industries/" target="_blank">dexpose.io: thegentlemen-attack-on-national-industries</a>
+</div>
+<div class="wu-tags">
+<span class="wu-tag">Qilin Splinter</span>
+<span class="wu-tag">T1078</span>
+<span class="wu-tag">T1190</span>
+<span class="wu-tag">GPO Abuse</span>
+<span class="wu-tag">NETLOGON Propagation</span>
+<span class="wu-tag">Vishing</span>
+<span class="wu-tag">FortiGate CVE-2024-55591</span>
+<span class="wu-tag">Double Extortion</span>
+</div>
+</div>
+</div>
 <footer>
-  <span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
-  <a href="./index.html">← threat-intel index</a>
-  <a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
+<span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
+<a href="./index.html">← threat-intel index</a>
+<a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
 </footer>
-
 <script>
-const canvas=document.getElementById('bg-canvas'),ctx=canvas.getContext('2d');
-let W,H;const mouse={x:window.innerWidth/2,y:window.innerHeight/2};
-function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-resize();window.addEventListener('resize',resize);
-document.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
-const WORLD_H=3000,NODE_COUNT=200,CONNECT_DIST=140;
-const nodes=Array.from({length:NODE_COUNT},()=>({x:Math.random()*window.innerWidth,y:Math.random()*WORLD_H,vx:(Math.random()-.5)*.5,vy:(Math.random()-.5)*.5,r:Math.random()*2+1,color:Math.random()>.5?'#00b4ff':Math.random()>.7?'#9b59f5':'#0090d4',pulse:Math.random()*Math.PI*2,pulseSpeed:.02+Math.random()*.02}));
-const LABELS=['T1078','T1190','GPO','NETLOGON','Qilin','RaaS','leak-site','vishing','FortiGate','double-ext'];
-const floaters=Array.from({length:10},(_,i)=>({text:LABELS[i%LABELS.length],x:Math.random()*window.innerWidth,y:Math.random()*WORLD_H,vy:-(Math.random()*.18+.05),opacity:Math.random()*.14+.04}));
-function draw(){
-  const sy=window.scrollY;ctx.clearRect(0,0,W,H);
-  const mg=ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,200);
-  mg.addColorStop(0,'rgba(0,180,255,0.06)');mg.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=mg;ctx.fillRect(0,0,W,H);ctx.save();ctx.translate(0,-sy);
-  for(const n of nodes){
-    n.pulse+=n.pulseSpeed;
-    const dx=n.x-mouse.x,dy=n.y-(mouse.y+sy),dist=Math.sqrt(dx*dx+dy*dy);
-    if(dist<160&&dist>0){const f=(160-dist)/160*.9;n.vx+=(dx/dist)*f;n.vy+=(dy/dist)*f;}
-    const spd=Math.sqrt(n.vx*n.vx+n.vy*n.vy);if(spd>2){n.vx*=2/spd;n.vy*=2/spd;}
-    n.vx*=.993;n.vy*=.993;n.x+=n.vx;n.y+=n.vy;
-    if(n.x<0){n.x=0;n.vx*=-1;}if(n.x>W){n.x=W;n.vx*=-1;}if(n.y<0){n.y=0;n.vy*=-1;}if(n.y>WORLD_H){n.y=WORLD_H;n.vy*=-1;}
-    if(n.y<sy-120||n.y>sy+H+120)continue;
-    for(const m of nodes){if(m===n)continue;if(m.y<sy-120||m.y>sy+H+120)continue;const ex=n.x-m.x,ey=n.y-m.y,ed=Math.sqrt(ex*ex+ey*ey);if(ed<CONNECT_DIST){const a=(1-ed/CONNECT_DIST)*.4;ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);ctx.strokeStyle=n.color==='#9b59f5'||m.color==='#9b59f5'?`rgba(155,89,245,${a*.9})`:`rgba(0,180,255,${a})`;ctx.lineWidth=.65;ctx.stroke();}}
-    const pa=.6+Math.sin(n.pulse)*.3,pr=n.r+Math.sin(n.pulse)*.5;
-    ctx.beginPath();ctx.arc(n.x,n.y,pr,0,Math.PI*2);ctx.fillStyle=n.color==='#9b59f5'?`rgba(155,89,245,${pa})`:n.color==='#0090d4'?`rgba(0,144,212,${pa})`:`rgba(0,180,255,${pa})`;ctx.fill();
+(function carbonBg(){
+  const el=document.getElementById('bg-carbon');
+  if(!el) return;
+  let mx=0,my=0,tx=0,ty=0;
+  window.addEventListener('mousemove',(e)=>{
+    mx=(e.clientX/window.innerWidth-0.5)*30;
+    my=(e.clientY/window.innerHeight-0.5)*30;
+  });
+  function frame(){
+    tx += (mx-tx)*0.04; ty += (my-ty)*0.04;
+    const scrollShift = window.scrollY*0.06;
+    el.style.transform = `translate3d(${tx}px, ${ty+scrollShift}px, 0)`;
+    requestAnimationFrame(frame);
   }
-  ctx.font='9px JetBrains Mono,monospace';
-  for(const f of floaters){f.y+=f.vy;if(f.y<0){f.y=WORLD_H;f.x=Math.random()*W;}if(f.y<sy-20||f.y>sy+H+20)continue;ctx.fillStyle=`rgba(0,180,255,${f.opacity})`;ctx.fillText(f.text,f.x,f.y);}
-  ctx.restore();requestAnimationFrame(draw);
-}
-draw();
+  frame();
+})();
 const dot=document.getElementById('curDot'),ring=document.getElementById('curRing');
 let rx=0,ry=0,mx=0,my=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
@@ -284,5 +290,59 @@ document.querySelectorAll('.wu-card').forEach(card=>{
   card.addEventListener('mouseleave',()=>{card.style.transform='perspective(1200px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';});
 });
 </script>
-</body>
+<script>
+(function interactiveSections(){
+  // collapsibles
+  document.querySelectorAll('.xsec-head').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const sec=btn.closest('.xsec');
+      const open = sec.getAttribute('data-open')==='true';
+      sec.setAttribute('data-open', open?'false':'true');
+      btn.setAttribute('aria-expanded', String(!open));
+    });
+  });
+
+  // progress dot-nav, built from .xsec sections that have an id
+  const secs = Array.from(document.querySelectorAll('.xsec[id]'));
+  if(secs.length > 1){
+    const nav=document.createElement('nav');
+    nav.className='xdots';
+    nav.setAttribute('aria-label','Section navigation');
+    secs.forEach(s=>{
+      const dot=document.createElement('a');
+      dot.className='xdot';
+      dot.href='#'+s.id;
+      dot.title=s.dataset.title||'';
+      dot.addEventListener('click',(e)=>{
+        e.preventDefault();
+        if(s.getAttribute('data-open')==='false'){ s.setAttribute('data-open','true'); }
+        s.scrollIntoView({behavior:'smooth',block:'start'});
+      });
+      nav.appendChild(dot);
+    });
+    document.body.appendChild(nav);
+    const dots=Array.from(nav.children);
+    const obs=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        const i=secs.indexOf(e.target);
+        if(e.isIntersecting) dots.forEach((d,j)=>d.classList.toggle('active', j===i));
+      });
+    },{rootMargin:'-45% 0px -45% 0px'});
+    secs.forEach(s=>obs.observe(s));
+  }
+
+  // jump-to pill
+  document.querySelectorAll('.xjump').forEach(a=>{
+    a.addEventListener('click',(e)=>{
+      const id=a.getAttribute('href');
+      const target=id&&document.querySelector(id);
+      if(target){
+        e.preventDefault();
+        if(target.getAttribute('data-open')==='false') target.setAttribute('data-open','true');
+        target.scrollIntoView({behavior:'smooth',block:'start'});
+      }
+    });
+  });
+})();
+</script></body>
 </html>

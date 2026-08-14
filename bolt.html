@@ -1,28 +1,44 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>BOLT: Systems Research</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
-  <style>
+<meta charset="utf-8"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23060a14'/%3E%3Crect x='1' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='3' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='7' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='1' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='5' width='2' height='2' fill='%23e1001a'/%3E%3C/svg%3E">
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>BOLT · Automotive Security</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<style>
     :root {
-      --black: #00010a; --panel: #02040f; --wire-1: #080e20; --wire-2: #0c1430;
-      --accent: #00b4ff; --accent2: #0090d4; --purple: #9b59f5;
-      --text: #c8e4ff; --muted: #6090b8;
-      --font-mono: "JetBrains Mono", ui-monospace, monospace;
-      --font-display: "Syne", sans-serif;
+      --black: #060a14; --panel: #0a1020; --wire-1: #141d33; --wire-2: #1e2a48;
+      --accent: #e1001a; --accent2: #3fd0ff; --purple: #2a5aff;
+      --text: #f2f4f8; --muted: #7a88a8;
+      --font-mono: 'Space Mono', ui-monospace, monospace;
+      --font-display: 'Fraunces', sans-serif;
       --font-body: "DM Sans", system-ui, sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body { background: var(--black); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.6; overflow-x: hidden; cursor: none; }
     body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px); pointer-events: none; z-index: 9000; }
-    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    #bg-carbon {
+      position: fixed; inset: -60px; z-index: 0; pointer-events: none;
+      background-color: #060a14;
+      background-image:
+        linear-gradient(27deg, #0c1324 5px, transparent 5px) 0 5px,
+        linear-gradient(207deg, #0c1324 5px, transparent 5px) 10px 0,
+        linear-gradient(27deg, #141d33 5px, transparent 5px) 0 10px,
+        linear-gradient(207deg, #141d33 5px, transparent 5px) 10px 5px,
+        linear-gradient(90deg, #0a1020 10px, transparent 10px),
+        linear-gradient(#0d1526 25%, #0a1020 25%, #0a1020 50%, transparent 50%, transparent 75%, #0d1526 75%, #0d1526);
+      background-size: 20px 20px;
+      opacity: .55;
+      will-change: transform;
+    }
+    #bg-carbon::after{ content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%, rgba(225,6,0,.05), transparent 60%); }
     .cur-dot { position: fixed; z-index: 9999; pointer-events: none; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); transform: translate(-50%,-50%); box-shadow: 0 0 8px var(--accent); }
-    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(0,180,255,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
+    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(225,0,26,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
 
     .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 500; height: 40px; background: rgba(2,4,15,.94); border-bottom: 1px solid var(--wire-2); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); backdrop-filter: blur(12px); }
     .topbar::after { content: ''; position: absolute; bottom: -2px; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); animation: sweep 4s ease-in-out infinite; }
@@ -35,20 +51,25 @@
     .tb-link::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:1px; background:var(--accent); transform:scaleX(0); transition:transform .2s; transform-origin:left; }
     .tb-link:hover { color: var(--accent); }
     .tb-link:hover::after { transform: scaleX(1); }
-    .tb-link.back { color: var(--accent); border: 1px solid rgba(0,180,255,.25); padding: 2px 10px; font-size: 9px; }
-    .tb-link.back:hover { background: rgba(0,180,255,.08); }
+    .tb-link.back { color: var(--accent); border: 1px solid rgba(225,0,26,.25); padding: 2px 10px; font-size: 9px; }
+    .tb-link.back:hover { background: rgba(225,0,26,.08); }
     .tb-link.back::after { display: none; }
 
     .page-wrap { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 108px 40px 96px; }
 
+    .breadcrumb { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .12em; margin-bottom: 28px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .breadcrumb a { color: var(--muted); text-decoration: none; transition: color .2s; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb span { color: var(--wire-2); }
+    .breadcrumb .current { color: var(--accent); }
     .intro-line { font-family: var(--font-mono); font-size: 10px; color: var(--accent); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
     .intro-line::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--accent); opacity: .5; }
 
     .page-title { font-family: var(--font-display); font-size: clamp(36px, 5.5vw, 68px); font-weight: 900; line-height: .95; letter-spacing: -.02em; text-transform: uppercase; margin-bottom: 32px; color: var(--text); }
-    .page-title span { -webkit-text-stroke: 1.5px rgba(0,180,255,.9); -webkit-text-fill-color: transparent; display: block; }
+    .page-title span { -webkit-text-stroke: 1.5px rgba(225,0,26,.9); -webkit-text-fill-color: transparent; display: block; }
 
     .meta-row { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; flex-wrap: wrap; }
-    .meta-badge { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; padding: 4px 10px; border: 1px solid rgba(0,180,255,.3); color: var(--accent); background: rgba(0,180,255,.05); border-radius: 2px; }
+    .meta-badge { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; padding: 4px 10px; border: 1px solid rgba(225,0,26,.3); color: var(--accent); background: rgba(225,0,26,.05); border-radius: 2px; }
     .meta-year { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .15em; }
 
     .body-section { margin-bottom: 48px; }
@@ -56,11 +77,11 @@
     .body-section p { font-family: var(--font-body); font-size: 15px; line-height: 1.85; color: #aac8e8; font-weight: 300; margin-bottom: 16px; }
     .body-section p:last-child { margin-bottom: 0; }
 
-    code { font-family: var(--font-mono); font-size: 12.5px; background: rgba(0,180,255,.07); border: 1px solid rgba(0,180,255,.22); padding: 1px 7px; border-radius: 2px; color: var(--accent); white-space: nowrap; }
+    code { font-family: var(--font-mono); font-size: 12.5px; background: rgba(225,0,26,.07); border: 1px solid rgba(225,0,26,.22); padding: 1px 7px; border-radius: 2px; color: var(--accent); white-space: nowrap; }
 
-    .diagram { font-family: var(--font-mono); font-size: 12px; line-height: 1.7; color: #8fc2ea; background: rgba(0,180,255,.04); border: 1px solid var(--wire-2); border-radius: 2px; padding: 18px 20px; margin-bottom: 16px; overflow-x: auto; white-space: pre; }
+    .diagram { font-family: var(--font-mono); font-size: 12px; line-height: 1.7; color: #8fc2ea; background: rgba(225,0,26,.04); border: 1px solid var(--wire-2); border-radius: 2px; padding: 18px 20px; margin-bottom: 16px; overflow-x: auto; white-space: pre; }
 
-    .verdict-box { margin-top: 8px; background: rgba(155,89,245,.04); border: 1px solid rgba(155,89,245,.2); border-left: 3px solid var(--purple); border-radius: 2px; padding: 22px 26px; }
+    .verdict-box { margin-top: 8px; background: rgba(42,90,255,.04); border: 1px solid rgba(42,90,255,.2); border-left: 3px solid var(--purple); border-radius: 2px; padding: 22px 26px; }
     .verdict-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: var(--purple); margin-bottom: 12px; display: flex; align-items: center; gap: 8px; }
     .verdict-label::before { content: '//'; color: var(--muted); }
     .verdict-box p { font-family: var(--font-body); font-size: 14.5px; line-height: 1.8; color: #b8a8e0; font-weight: 300; margin-bottom: 12px; }
@@ -68,7 +89,7 @@
 
     .tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 52px; padding-top: 24px; border-top: 1px solid var(--wire-1); }
     .tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--wire-2); color: var(--muted); border-radius: 2px; transition: border-color .2s, color .2s; }
-    .tag:hover { border-color: rgba(0,180,255,.3); color: var(--accent); }
+    .tag:hover { border-color: rgba(225,0,26,.3); color: var(--accent); }
 
     .page-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--wire-1); font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; }
     .page-nav a { color: var(--muted); text-decoration: none; transition: color .2s; }
@@ -88,51 +109,75 @@
       footer { padding: 16px 20px; flex-direction: column; gap: 6px; text-align: center; }
     }
   </style>
-</head>
-<body>
+<style>
+/* === INTERACTIVE SECTIONS (shared) === */
+.xsec { border-bottom: 1px solid var(--wire-2); }
+.xsec-head { width: 100%; display: flex; align-items: center; gap: 14px; background: none; border: none; cursor: pointer; padding: 20px 0; text-align: left; font-family: var(--font-mono); color: var(--text); }
+.xsec-num { font-size: 10px; color: var(--accent); opacity: .55; min-width: 20px; letter-spacing: .05em; }
+.xsec-title { flex: 1; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--text); transition: color .2s; }
+.xsec-chev { font-size: 10px; color: var(--muted); transition: transform .25s ease; }
+.xsec[data-open="false"] .xsec-chev { transform: rotate(-90deg); }
+.xsec-body { overflow: hidden; max-height: 3000px; transition: max-height .4s cubic-bezier(.4,0,.2,1), opacity .3s ease, padding .3s ease; opacity: 1; padding-bottom: 22px; }
+.xsec[data-open="false"] .xsec-body { max-height: 0; opacity: 0; padding-bottom: 0; }
+.xsec-head:hover .xsec-title { color: var(--accent); }
+.xsec-head:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
 
-<canvas id="bg-canvas"></canvas>
+/* progress dot-nav */
+.xdots { position: fixed; right: 22px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 11px; z-index: 400; }
+.xdot { width: 6px; height: 6px; border-radius: 50%; background: var(--wire-2); display: block; transition: background .25s, transform .25s, box-shadow .25s; cursor: pointer; }
+.xdot:hover { background: var(--muted); }
+.xdot.active { background: var(--accent); transform: scale(1.7); box-shadow: 0 0 6px var(--accent); }
+@media (max-width: 900px) { .xdots { display: none; } }
+
+/* jump-to pill */
+.xjump { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(225,0,26,.3); background: rgba(225,0,26,.05); border-radius: 999px; padding: 7px 16px; text-decoration: none; margin: 4px 0 28px; transition: background .2s, border-color .2s; }
+.xjump:hover { background: rgba(225,0,26,.12); border-color: var(--accent); }
+.xjump::before { content: '↓'; }
+</style></head>
+<body>
+<div id="bg-carbon"></div>
 <div class="cur-dot" id="curDot"></div>
 <div class="cur-ring" id="curRing"></div>
-
 <nav class="topbar">
-  <div class="tb-left"><span class="tb-dot"></span><span id="clock">--:--:--</span></div>
-  <div class="tb-right">
-    <a href="./index.html#dashboard" class="tb-link back">← projects</a>
-    <a href="./systems.html" class="tb-link">Systems</a>
-    <a href="./index.html#dashboard" class="tb-link">Projects</a>
-    <a href="./index.html#contact" class="tb-link">Contact</a>
-  </div>
+<div class="tb-left"><span class="tb-dot"></span><span id="clock">--:--:--</span></div>
+<div class="tb-right">
+<a class="tb-link back" href="./automotive-security.html">← automotive security</a>
+<a class="tb-link" href="./index.html#dashboard">Projects</a>
+<a class="tb-link" href="./index.html#contact">Contact</a>
+</div>
 </nav>
-
 <div class="page-wrap">
-  <div class="reveal">
-    <div class="intro-line">Automotive OTA &amp; Boot Security</div>
-    <h1 class="page-title">BOLT<span>Boot &amp; OTA Lockdown Toolkit</span></h1>
-    <div class="meta-row">
-      <span class="meta-badge">Automotive Security</span>
-      <span class="meta-badge">Firmware Integrity</span>
-      <span class="meta-year">2026</span>
-      <a href="https://github.com/sunandithabs/bolt" class="meta-badge" style="text-decoration:none;">GitHub ↗</a>
-    </div>
-  </div>
+<div class="reveal">
+<div class="breadcrumb">
+<a href="./index.html">Home</a>
+<span>/</span>
+<a href="./automotive-security.html">Automotive Security</a>
+<span>/</span>
+<span class="current">BOLT</span>
+</div>
+<div class="intro-line">automotive security · boot &amp; ota toolkit</div>
+<h1 class="page-title">BOLT<span>Boot &amp; OTA Lockdown Toolkit</span></h1>
+<div class="meta-row">
+<span class="meta-badge">Automotive Security</span>
+<span class="meta-badge">Firmware Integrity</span>
+<span class="meta-year">2026</span>
+<a class="meta-badge" href="https://github.com/sunandithabs/bolt" style="text-decoration:none;">GitHub ↗</a>
+</div>
+</div>
+<div class="reveal xsec" data-open="true" data-title="Overview" id="sec-overview" style="transition-delay:.08s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">01</span><span class="xsec-title">Overview</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 
-  <div class="body-section reveal" style="transition-delay:.08s;">
-    <h2>Overview</h2>
-    <p>BOLT is a signed OTA update and boot integrity framework for automotive ECUs, built entirely in software. A signing pipeline produces firmware images backed by a real X.509 chain, a bootloader verifies and flashes them onto an A/B partition layout, and an attacker toolkit throws four different attacks at the whole thing to see what actually holds.</p>
-    <p>Root CA signs an OEM cert. OEM cert signs images, manifests, and OTA metadata. The verifier checks the full chain before it trusts anything, and a Rich dashboard renders what happened when the attacks run.</p>
-    <p>Named half after what it does and half after watching Max put down a qualifying lap in the RB. Same idea either way: verified, locked down, and quick about it.</p>
-  </div>
+<p>BOLT is a signed OTA update and boot integrity framework for automotive ECUs, built entirely in software. A signing pipeline produces firmware images backed by a real X.509 chain, a bootloader verifies and flashes them onto an A/B partition layout, and an attacker toolkit throws four different attacks at the whole thing to see what actually holds.</p>
+<p>Root CA signs an OEM cert. OEM cert signs images, manifests, and OTA metadata. The verifier checks the full chain before it trusts anything, and a Rich dashboard renders what happened when the attacks run.</p>
+<p>Named half after what it does and half after watching Max put down a qualifying lap in the RB. Same idea either way: verified, locked down, and quick about it.</p>
+</div></div>
+<div class="reveal xsec" data-open="true" data-title="Motivation" id="sec-motivation" style="transition-delay:.11s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">02</span><span class="xsec-title">Motivation</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 
-  <div class="body-section reveal" style="transition-delay:.11s;">
-    <h2>Motivation</h2>
-    <p>Automotive OTA has a track record of shipping without the basics: no rollback protection, no channel integrity separate from image signing, no A/B fallback when a flash gets interrupted halfway. The 2015 Jeep Cherokee remote exploit happened partly because the head unit accepted an old, vulnerable firmware image with nothing stopping the downgrade.</p>
-    <p>BOLT builds each of these failure modes as a real, working attack and pairs it against the mitigation that's supposed to stop it. Not a paper description of rollback protection, an actual rollback index check that a real downgrade attempt actually fails against.</p>
-  </div>
+<p>Automotive OTA has a track record of shipping without the basics: no rollback protection, no channel integrity separate from image signing, no A/B fallback when a flash gets interrupted halfway. The 2015 Jeep Cherokee remote exploit happened partly because the head unit accepted an old, vulnerable firmware image with nothing stopping the downgrade.</p>
+<p>BOLT builds each of these failure modes as a real, working attack and pairs it against the mitigation that's supposed to stop it. Not a paper description of rollback protection, an actual rollback index check that a real downgrade attempt actually fails against.</p>
+</div></div>
+<div class="reveal xsec" data-open="true" data-title="Trust Chain" id="sec-trust-chain" style="transition-delay:.14s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">03</span><span class="xsec-title">Trust Chain</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 
-  <div class="body-section reveal" style="transition-delay:.14s;">
-    <h2>Trust Chain</h2>
-    <div class="diagram">Root CA (offline, long-lived)
+<div class="diagram">Root CA (offline, long-lived)
    |
    | signs
    v
@@ -145,139 +190,74 @@ Firmware image + manifest + OTA metadata
    | verified by
    v
 Verifier.from_cert_chain()  --  issuer match, signature, validity window</div>
-    <p>A compromised OEM key gets rotated by issuing a new cert off the root, no re-provisioning needed on every ECU in the field. The root key itself is assumed offline and HSM-protected in any real deployment. BOLT's <code>pki.py</code> generates a full chain locally for simulation, and none of that key material should ever be treated as production-grade.</p>
-  </div>
+<p>A compromised OEM key gets rotated by issuing a new cert off the root, no re-provisioning needed on every ECU in the field. The root key itself is assumed offline and HSM-protected in any real deployment. BOLT's <code>pki.py</code> generates a full chain locally for simulation, and none of that key material should ever be treated as production-grade.</p>
+</div></div>
+<div class="reveal xsec" data-open="true" data-title="Image Format &amp; Signing" id="sec-image-format-signing" style="transition-delay:.17s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">04</span><span class="xsec-title">Image Format &amp; Signing</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 
-  <div class="body-section reveal" style="transition-delay:.17s;">
-    <h2>Image Format &amp; Signing</h2>
-    <p>Each image is a 4-byte header length, a JSON header holding version, rollback index, and signature, then the payload. The signature itself is RSA-PSS over SHA-256, computed across version, rollback index, and payload together, so none of the three can be swapped independently without invalidating it.</p>
-    <p><code>pipeline/manifest.py</code> signs a separate manifest per ECU listing target firmware names, lengths, and SHA-256 hashes. That's metadata about what should be installed, kept independent of the image bytes. <code>pipeline/ota_metadata.py</code> goes further, splitting update authority into a director role that assigns targets to ECUs and an image repository role that attests to what targets actually exist, loosely modeled on Uptane's role separation. A compromised director alone can't push a malicious update unless the target it names also shows up in the separately signed image repository.</p>
-  </div>
+<p>Each image is a 4-byte header length, a JSON header holding version, rollback index, and signature, then the payload. The signature itself is RSA-PSS over SHA-256, computed across version, rollback index, and payload together, so none of the three can be swapped independently without invalidating it.</p>
+<p><code>pipeline/manifest.py</code> signs a separate manifest per ECU listing target firmware names, lengths, and SHA-256 hashes. That's metadata about what should be installed, kept independent of the image bytes. <code>pipeline/ota_metadata.py</code> goes further, splitting update authority into a director role that assigns targets to ECUs and an image repository role that attests to what targets actually exist, loosely modeled on Uptane's role separation. A compromised director alone can't push a malicious update unless the target it names also shows up in the separately signed image repository.</p>
+</div></div>
+<div class="reveal xsec" data-open="true" data-title="A/B Partitioning" id="sec-a-b-partitioning" style="transition-delay:.2s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">05</span><span class="xsec-title">A/B Partitioning</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 
-  <div class="body-section reveal" style="transition-delay:.2s;">
-    <h2>A/B Partitioning</h2>
-    <p>Every flash writes to the inactive slot. Rollback commit and slot activation happen only after signature and rollback checks pass, so a crash or truncated write mid-flash never touches the currently active, known-good image. It's the same approach Android and most automotive OTA systems use for exactly this reason.</p>
-    <p><code>bootloader/flash.py</code> and <code>bootloader/flash_ecu.py</code> model this against a single byte-addressed virtual flash file with named regions: bootloader, slot_a, slot_b, rollback_counter, slot_state, manifest. Closer to how flash-backed ECUs actually lay out memory than a handful of separate JSON files would be.</p>
-  </div>
+<p>Every flash writes to the inactive slot. Rollback commit and slot activation happen only after signature and rollback checks pass, so a crash or truncated write mid-flash never touches the currently active, known-good image. It's the same approach Android and most automotive OTA systems use for exactly this reason.</p>
+<p><code>bootloader/flash.py</code> and <code>bootloader/flash_ecu.py</code> model this against a single byte-addressed virtual flash file with named regions: bootloader, slot_a, slot_b, rollback_counter, slot_state, manifest. Closer to how flash-backed ECUs actually lay out memory than a handful of separate JSON files would be.</p>
+</div></div>
+<div class="reveal xsec" data-open="true" data-title="Attack Suite" id="sec-attack-suite" style="transition-delay:.23s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">06</span><span class="xsec-title">Attack Suite</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 
-  <div class="body-section reveal" style="transition-delay:.23s;">
-    <h2>Attack Suite</h2>
-    <p>Four attacks run against a fresh signer/verifier pair each time. Downgrade replay flashes an older signed image, the same class of bug that let the Jeep Cherokee exploit through. Signature strip zeroes out the signature and tries to flash anyway. MITM tampers with an image in transit. Power loss simulates a truncated write mid-flash.</p>
-    <p>Each attack either gets blocked or it doesn't, and the event log records which, along with a one-line detail on what the attack actually did. <code>run_attack_suite.py</code> runs all four back to back and hands the results to a Rich terminal dashboard.</p>
-  </div>
+<p>Four attacks run against a fresh signer/verifier pair each time. Downgrade replay flashes an older signed image, the same class of bug that let the Jeep Cherokee exploit through. Signature strip zeroes out the signature and tries to flash anyway. MITM tampers with an image in transit. Power loss simulates a truncated write mid-flash.</p>
+<p>Each attack either gets blocked or it doesn't, and the event log records which, along with a one-line detail on what the attack actually did. <code>run_attack_suite.py</code> runs all four back to back and hands the results to a Rich terminal dashboard.</p>
+</div></div>
+<div class="reveal xsec" data-open="true" data-title="Running It" id="sec-running-it" style="transition-delay:.26s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">07</span><span class="xsec-title">Running It</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 
-  <div class="body-section reveal" style="transition-delay:.26s;">
-    <h2>Running It</h2>
-    <p>Setup is <code>pip install -e ".[dev]"</code>, then generate keys and sign an image through <code>pipeline.cli</code>, or just run <code>python run_attack_suite.py</code> directly for the full four-attack pass against a throwaway signer and verifier. Tests cover the pipeline, bootloader, attacks, and detector modules through pytest, with ruff and mypy on top for lint and typing.</p>
-  </div>
+<p>Setup is <code>pip install -e ".[dev]"</code>, then generate keys and sign an image through <code>pipeline.cli</code>, or just run <code>python run_attack_suite.py</code> directly for the full four-attack pass against a throwaway signer and verifier. Tests cover the pipeline, bootloader, attacks, and detector modules through pytest, with ruff and mypy on top for lint and typing.</p>
+</div></div>
+<div class="reveal xsec" data-open="true" data-title="Verdict" id="sec-verdict" style="transition-delay:.29s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">08</span><span class="xsec-title">Verdict</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 
-  <div class="body-section reveal" style="transition-delay:.29s;">
-    <h2>Verdict</h2>
-    <div class="verdict-box">
-      <div class="verdict-label">Conclusion</div>
-      <p>All four attacks get blocked, and the threat model doc explains why each one maps to a real vulnerability class rather than a made-up one. The rollback index stops downgrade replay, the signature check stops a stripped image from flashing, the A/B layout stops a truncated write from bricking anything, and image-level signing stops MITM tampering regardless of what the channel itself does.</p>
-      <p>What's out of scope matters too: no revocation checking on OEM certs, no modeling of verifier-level compromise, no defense against a supply-chain attack that happens before the signer ever sees the payload. Those are real gaps, not oversights BOLT is pretending don't exist.</p>
-      <p>As a working demonstration of how the standard automotive OTA mitigations actually hold up against the attacks they're meant to stop, BOLT does the job.</p>
-    </div>
-  </div>
-
-  <div class="tags-row reveal" style="transition-delay:.32s;">
-    <span class="tag">OTA Security</span>
-    <span class="tag">Secure Boot</span>
-    <span class="tag">X.509</span>
-    <span class="tag">RSA-PSS</span>
-    <span class="tag">A/B Partitioning</span>
-    <span class="tag">Rollback Protection</span>
-    <span class="tag">Uptane</span>
-    <span class="tag">Automotive Security</span>
-  </div>
-
-  <div class="page-nav reveal" style="transition-delay:.35s;">
-    <a href="./index.html#dashboard">← Projects</a>
-    <a href="./systems.html" class="next">Systems →</a>
-  </div>
-
+<div class="verdict-box">
+<div class="verdict-label">Conclusion</div>
+<p>All four attacks get blocked, and the threat model doc explains why each one maps to a real vulnerability class rather than a made-up one. The rollback index stops downgrade replay, the signature check stops a stripped image from flashing, the A/B layout stops a truncated write from bricking anything, and image-level signing stops MITM tampering regardless of what the channel itself does.</p>
+<p>What's out of scope matters too: no revocation checking on OEM certs, no modeling of verifier-level compromise, no defense against a supply-chain attack that happens before the signer ever sees the payload. Those are real gaps, not oversights BOLT is pretending don't exist.</p>
+<p>As a working demonstration of how the standard automotive OTA mitigations actually hold up against the attacks they're meant to stop, BOLT does the job.</p>
 </div>
-
+</div></div>
+<div class="tags-row reveal" style="transition-delay:.32s;">
+<span class="tag">OTA Security</span>
+<span class="tag">Secure Boot</span>
+<span class="tag">X.509</span>
+<span class="tag">RSA-PSS</span>
+<span class="tag">A/B Partitioning</span>
+<span class="tag">Rollback Protection</span>
+<span class="tag">Uptane</span>
+<span class="tag">Automotive Security</span>
+</div>
+<div class="page-nav reveal" style="transition-delay:.35s;">
+<a href="./index.html#dashboard">← Projects</a>
+<a class="next" href="./systems.html">Systems →</a>
+</div>
 </div>
 
 <footer>
-  <span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
-  <a href="./index.html#dashboard">archive ↗</a>
-  <a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
+<span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
+<a href="./index.html#dashboard">archive ↗</a>
+<a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
 </footer>
-
 <script>
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
-let W, H;
-const mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
-function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-resize();
-window.addEventListener('resize', resize);
-document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-
-const WORLD_H = 3000, NODE_COUNT = 200, CONNECT_DIST = 150;
-const nodes = Array.from({length: NODE_COUNT}, () => ({
-  x: Math.random() * window.innerWidth, y: Math.random() * WORLD_H,
-  vx: (Math.random()-.5)*.55, vy: (Math.random()-.5)*.55,
-  r: Math.random()*2+1,
-  color: Math.random()>.5 ? '#00b4ff' : Math.random()>.7 ? '#9b59f5' : '#0090d4',
-  pulse: Math.random()*Math.PI*2, pulseSpeed: .02+Math.random()*.025
-}));
-const LABELS = ['UDS','0x27','0x7E0','0x7E8','SEED','KEY','ISO14229','CAN','NRC','ECU','XOR'];
-const floaters = Array.from({length:11},(_,i)=>({
-  text: LABELS[i%LABELS.length], x: Math.random()*window.innerWidth, y: Math.random()*WORLD_H,
-  vy: -(Math.random()*.2+.07), opacity: Math.random()*.15+.04
-}));
-
-function draw() {
-  const sy = window.scrollY;
-  ctx.clearRect(0,0,W,H);
-  const mg = ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,200);
-  mg.addColorStop(0,'rgba(0,180,255,0.05)'); mg.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=mg; ctx.fillRect(0,0,W,H);
-  ctx.save(); ctx.translate(0,-sy);
-  const wxm=mouse.x, wym=mouse.y+sy;
-  for(const n of nodes){
-    n.pulse+=n.pulseSpeed;
-    const dx=n.x-wxm,dy=n.y-wym,dist=Math.sqrt(dx*dx+dy*dy);
-    if(dist<150&&dist>0){const f=(150-dist)/150;n.vx+=(dx/dist)*f;n.vy+=(dy/dist)*f;}
-    const spd=Math.sqrt(n.vx*n.vx+n.vy*n.vy);
-    if(spd>2){n.vx*=2/spd;n.vy*=2/spd;}
-    n.vx*=.993;n.vy*=.993;n.x+=n.vx;n.y+=n.vy;
-    if(n.x<0){n.x=0;n.vx*=-1;} if(n.x>W){n.x=W;n.vx*=-1;}
-    if(n.y<0){n.y=0;n.vy*=-1;} if(n.y>WORLD_H){n.y=WORLD_H;n.vy*=-1;}
-    if(n.y<sy-160||n.y>sy+H+160)continue;
-    for(const m of nodes){
-      if(m===n||m.y<sy-160||m.y>sy+H+160)continue;
-      const ex=n.x-m.x,ey=n.y-m.y,ed=Math.sqrt(ex*ex+ey*ey);
-      if(ed<CONNECT_DIST){
-        const alpha=(1-ed/CONNECT_DIST)*.4;
-        const isPurp=n.color==='#9b59f5'||m.color==='#9b59f5';
-        ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);
-        ctx.strokeStyle=isPurp?`rgba(155,89,245,${alpha*.9})`:`rgba(0,180,255,${alpha})`;
-        ctx.lineWidth=.6;ctx.stroke();
-      }
-    }
-    const pa=.55+Math.sin(n.pulse)*.3, pr=n.r+Math.sin(n.pulse)*.5;
-    ctx.beginPath();ctx.arc(n.x,n.y,pr,0,Math.PI*2);
-    ctx.fillStyle=n.color==='#9b59f5'?`rgba(155,89,245,${pa})`:n.color==='#0090d4'?`rgba(0,144,212,${pa})`:`rgba(0,180,255,${pa})`;
-    ctx.fill();
+(function carbonBg(){
+  const el=document.getElementById('bg-carbon');
+  if(!el) return;
+  let mx=0,my=0,tx=0,ty=0;
+  window.addEventListener('mousemove',(e)=>{
+    mx=(e.clientX/window.innerWidth-0.5)*30;
+    my=(e.clientY/window.innerHeight-0.5)*30;
+  });
+  function frame(){
+    tx += (mx-tx)*0.04; ty += (my-ty)*0.04;
+    const scrollShift = window.scrollY*0.06;
+    el.style.transform = `translate3d(${tx}px, ${ty+scrollShift}px, 0)`;
+    requestAnimationFrame(frame);
   }
-  ctx.font='9px JetBrains Mono,monospace';
-  for(const f of floaters){
-    f.y+=f.vy;
-    if(f.y<0){f.y=WORLD_H;f.x=Math.random()*W;}
-    if(f.y<sy-20||f.y>sy+H+20)continue;
-    ctx.fillStyle=`rgba(0,180,255,${f.opacity})`;
-    ctx.fillText(f.text,f.x,f.y);
-  }
-  ctx.restore();
-  requestAnimationFrame(draw);
-}
-draw();
-
+  frame();
+})();
 const dot=document.getElementById('curDot'), ring=document.getElementById('curRing');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
@@ -296,5 +276,59 @@ const obs=new IntersectionObserver(entries=>{
 },{threshold:.06});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 </script>
-</body>
+<script>
+(function interactiveSections(){
+  // collapsibles
+  document.querySelectorAll('.xsec-head').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const sec=btn.closest('.xsec');
+      const open = sec.getAttribute('data-open')==='true';
+      sec.setAttribute('data-open', open?'false':'true');
+      btn.setAttribute('aria-expanded', String(!open));
+    });
+  });
+
+  // progress dot-nav, built from .xsec sections that have an id
+  const secs = Array.from(document.querySelectorAll('.xsec[id]'));
+  if(secs.length > 1){
+    const nav=document.createElement('nav');
+    nav.className='xdots';
+    nav.setAttribute('aria-label','Section navigation');
+    secs.forEach(s=>{
+      const dot=document.createElement('a');
+      dot.className='xdot';
+      dot.href='#'+s.id;
+      dot.title=s.dataset.title||'';
+      dot.addEventListener('click',(e)=>{
+        e.preventDefault();
+        if(s.getAttribute('data-open')==='false'){ s.setAttribute('data-open','true'); }
+        s.scrollIntoView({behavior:'smooth',block:'start'});
+      });
+      nav.appendChild(dot);
+    });
+    document.body.appendChild(nav);
+    const dots=Array.from(nav.children);
+    const obs=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        const i=secs.indexOf(e.target);
+        if(e.isIntersecting) dots.forEach((d,j)=>d.classList.toggle('active', j===i));
+      });
+    },{rootMargin:'-45% 0px -45% 0px'});
+    secs.forEach(s=>obs.observe(s));
+  }
+
+  // jump-to pill
+  document.querySelectorAll('.xjump').forEach(a=>{
+    a.addEventListener('click',(e)=>{
+      const id=a.getAttribute('href');
+      const target=id&&document.querySelector(id);
+      if(target){
+        e.preventDefault();
+        if(target.getAttribute('data-open')==='false') target.setAttribute('data-open','true');
+        target.scrollIntoView({behavior:'smooth',block:'start'});
+      }
+    });
+  });
+})();
+</script></body>
 </html>

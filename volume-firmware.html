@@ -1,28 +1,44 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Volume Restructuring & Firmware Security Analysis — Systems Research</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
-  <style>
+<meta charset="utf-8"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23060a14'/%3E%3Crect x='1' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='3' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='7' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='1' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='5' width='2' height='2' fill='%23e1001a'/%3E%3C/svg%3E">
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Volume Restructuring & Firmware Security Analysis · Systems Research</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<style>
     :root {
-      --black: #00010a; --panel: #02040f; --wire-1: #080e20; --wire-2: #0c1430;
-      --accent: #00b4ff; --accent2: #0090d4; --purple: #9b59f5;
-      --text: #c8e4ff; --muted: #6090b8;
-      --font-mono: "JetBrains Mono", ui-monospace, monospace;
-      --font-display: "Syne", sans-serif;
+      --black: #060a14; --panel: #0a1020; --wire-1: #141d33; --wire-2: #1e2a48;
+      --accent: #e1001a; --accent2: #3fd0ff; --purple: #2a5aff;
+      --text: #f2f4f8; --muted: #7a88a8;
+      --font-mono: 'Space Mono', ui-monospace, monospace;
+      --font-display: 'Fraunces', sans-serif;
       --font-body: "DM Sans", system-ui, sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body { background: var(--black); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.6; overflow-x: hidden; cursor: none; }
     body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px); pointer-events: none; z-index: 9000; }
-    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    #bg-carbon {
+      position: fixed; inset: -60px; z-index: 0; pointer-events: none;
+      background-color: #060a14;
+      background-image:
+        linear-gradient(27deg, #0c1324 5px, transparent 5px) 0 5px,
+        linear-gradient(207deg, #0c1324 5px, transparent 5px) 10px 0,
+        linear-gradient(27deg, #141d33 5px, transparent 5px) 0 10px,
+        linear-gradient(207deg, #141d33 5px, transparent 5px) 10px 5px,
+        linear-gradient(90deg, #0a1020 10px, transparent 10px),
+        linear-gradient(#0d1526 25%, #0a1020 25%, #0a1020 50%, transparent 50%, transparent 75%, #0d1526 75%, #0d1526);
+      background-size: 20px 20px;
+      opacity: .55;
+      will-change: transform;
+    }
+    #bg-carbon::after{ content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%, rgba(225,6,0,.05), transparent 60%); }
     .cur-dot { position: fixed; z-index: 9999; pointer-events: none; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); transform: translate(-50%,-50%); box-shadow: 0 0 8px var(--accent); }
-    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(0,180,255,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
+    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(225,0,26,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
 
     .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 500; height: 40px; background: rgba(2,4,15,.94); border-bottom: 1px solid var(--wire-2); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); backdrop-filter: blur(12px); }
     .topbar::after { content: ''; position: absolute; bottom: -2px; left: 0; height: 2px; background: linear-gradient(90deg, var(--accent), transparent); animation: sweep 4s ease-in-out infinite; }
@@ -35,38 +51,43 @@
     .tb-link::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:1px; background:var(--accent); transform:scaleX(0); transition:transform .2s; transform-origin:left; }
     .tb-link:hover { color: var(--accent); }
     .tb-link:hover::after { transform: scaleX(1); }
-    .tb-link.back { color: var(--accent); border: 1px solid rgba(0,180,255,.25); padding: 2px 10px; font-size: 9px; }
-    .tb-link.back:hover { background: rgba(0,180,255,.08); }
+    .tb-link.back { color: var(--accent); border: 1px solid rgba(225,0,26,.25); padding: 2px 10px; font-size: 9px; }
+    .tb-link.back:hover { background: rgba(225,0,26,.08); }
     .tb-link.back::after { display: none; }
 
     .page-wrap { position: relative; z-index: 1; max-width: 760px; margin: 0 auto; padding: 108px 40px 96px; }
 
+    .breadcrumb { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .12em; margin-bottom: 28px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .breadcrumb a { color: var(--muted); text-decoration: none; transition: color .2s; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb span { color: var(--wire-2); }
+    .breadcrumb .current { color: var(--accent); }
     .intro-line { font-family: var(--font-mono); font-size: 10px; color: var(--accent); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
     .intro-line::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--accent); opacity: .5; }
 
     .page-title { font-family: var(--font-display); font-size: clamp(32px, 5vw, 62px); font-weight: 900; line-height: .95; letter-spacing: -.02em; text-transform: uppercase; margin-bottom: 32px; color: var(--text); }
-    .page-title span { -webkit-text-stroke: 1px rgba(0,180,255,.35); -webkit-text-fill-color: transparent; display: block; }
+    .page-title span { -webkit-text-stroke: 1px rgba(225,0,26,.35); -webkit-text-fill-color: transparent; display: block; }
 
     .meta-row { display: flex; align-items: center; gap: 12px; margin-bottom: 48px; flex-wrap: wrap; }
-    .meta-badge { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; padding: 4px 10px; border: 1px solid rgba(0,180,255,.3); color: var(--accent); background: rgba(0,180,255,.05); border-radius: 2px; }
-    .meta-badge.purple { border-color: rgba(155,89,245,.3); color: var(--purple); background: rgba(155,89,245,.05); }
+    .meta-badge { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; padding: 4px 10px; border: 1px solid rgba(225,0,26,.3); color: var(--accent); background: rgba(225,0,26,.05); border-radius: 2px; }
+    .meta-badge.purple { border-color: rgba(42,90,255,.3); color: var(--purple); background: rgba(42,90,255,.05); }
     .meta-year { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .15em; }
 
     .body-section { margin-bottom: 52px; }
     .body-section h2 { font-family: var(--font-mono); font-size: 11px; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); margin-bottom: 20px; padding-bottom: 10px; border-bottom: 1px solid var(--wire-2); }
-    .body-section h2.purple { color: var(--purple); border-bottom-color: rgba(155,89,245,.2); }
+    .body-section h2.purple { color: var(--purple); border-bottom-color: rgba(42,90,255,.2); }
     .body-section p { font-family: var(--font-body); font-size: 15px; line-height: 1.85; color: #aac8e8; font-weight: 300; margin-bottom: 16px; }
     .body-section p:last-child { margin-bottom: 0; }
 
-    code { font-family: var(--font-mono); font-size: 12.5px; background: rgba(0,180,255,.07); border: 1px solid rgba(0,180,255,.22); padding: 1px 7px; border-radius: 2px; color: var(--accent); white-space: nowrap; }
+    code { font-family: var(--font-mono); font-size: 12.5px; background: rgba(225,0,26,.07); border: 1px solid rgba(225,0,26,.22); padding: 1px 7px; border-radius: 2px; color: var(--accent); white-space: nowrap; }
 
     /* CHAIN DIAGRAM */
     .chain { display: flex; align-items: center; flex-wrap: wrap; gap: 0; margin: 28px 0; }
-    .chain-node { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; padding: 8px 14px; border: 1px solid rgba(0,180,255,.25); color: var(--accent); background: rgba(0,180,255,.04); border-radius: 2px; white-space: nowrap; }
+    .chain-node { font-family: var(--font-mono); font-size: 11px; letter-spacing: .1em; text-transform: uppercase; padding: 8px 14px; border: 1px solid rgba(225,0,26,.25); color: var(--accent); background: rgba(225,0,26,.04); border-radius: 2px; white-space: nowrap; }
     .chain-arrow { font-family: var(--font-mono); font-size: 12px; color: var(--muted); padding: 0 8px; opacity: .5; }
 
     /* ELI5 */
-    .tldr-box { margin-top: 52px; background: rgba(0,180,255,.03); border: 1px solid rgba(0,180,255,.15); border-left: 3px solid var(--accent); border-radius: 2px; padding: 22px 26px; }
+    .tldr-box { margin-top: 52px; background: rgba(225,0,26,.03); border: 1px solid rgba(225,0,26,.15); border-left: 3px solid var(--accent); border-radius: 2px; padding: 22px 26px; }
     .tldr-label { font-family: var(--font-mono); font-size: 9px; letter-spacing: .22em; text-transform: uppercase; color: var(--accent); margin-bottom: 14px; display: flex; align-items: center; gap: 8px; }
     .tldr-label::before { content: '//'; color: var(--muted); }
     .tldr-steps { display: flex; flex-direction: column; gap: 10px; }
@@ -75,7 +96,7 @@
 
     .tags-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 52px; padding-top: 24px; border-top: 1px solid var(--wire-1); }
     .tag { font-family: var(--font-mono); font-size: 10px; letter-spacing: .12em; text-transform: uppercase; padding: 4px 10px; border: 1px solid var(--wire-2); color: var(--muted); border-radius: 2px; transition: border-color .2s, color .2s; }
-    .tag:hover { border-color: rgba(0,180,255,.3); color: var(--accent); }
+    .tag:hover { border-color: rgba(225,0,26,.3); color: var(--accent); }
 
     .page-nav { display: flex; justify-content: space-between; align-items: center; margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--wire-1); font-family: var(--font-mono); font-size: 10px; letter-spacing: .14em; text-transform: uppercase; }
     .page-nav a { color: var(--muted); text-decoration: none; transition: color .2s; }
@@ -96,211 +117,168 @@
       footer { padding: 16px 20px; flex-direction: column; gap: 6px; text-align: center; }
     }
   </style>
-</head>
-<body>
+<style>
+/* === INTERACTIVE SECTIONS (shared) === */
+.xsec { border-bottom: 1px solid var(--wire-2); }
+.xsec-head { width: 100%; display: flex; align-items: center; gap: 14px; background: none; border: none; cursor: pointer; padding: 20px 0; text-align: left; font-family: var(--font-mono); color: var(--text); }
+.xsec-num { font-size: 10px; color: var(--accent); opacity: .55; min-width: 20px; letter-spacing: .05em; }
+.xsec-title { flex: 1; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--text); transition: color .2s; }
+.xsec-chev { font-size: 10px; color: var(--muted); transition: transform .25s ease; }
+.xsec[data-open="false"] .xsec-chev { transform: rotate(-90deg); }
+.xsec-body { overflow: hidden; max-height: 3000px; transition: max-height .4s cubic-bezier(.4,0,.2,1), opacity .3s ease, padding .3s ease; opacity: 1; padding-bottom: 22px; }
+.xsec[data-open="false"] .xsec-body { max-height: 0; opacity: 0; padding-bottom: 0; }
+.xsec-head:hover .xsec-title { color: var(--accent); }
+.xsec-head:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
 
-<canvas id="bg-canvas"></canvas>
+/* progress dot-nav */
+.xdots { position: fixed; right: 22px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 11px; z-index: 400; }
+.xdot { width: 6px; height: 6px; border-radius: 50%; background: var(--wire-2); display: block; transition: background .25s, transform .25s, box-shadow .25s; cursor: pointer; }
+.xdot:hover { background: var(--muted); }
+.xdot.active { background: var(--accent); transform: scale(1.7); box-shadow: 0 0 6px var(--accent); }
+@media (max-width: 900px) { .xdots { display: none; } }
+
+/* jump-to pill */
+.xjump { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(225,0,26,.3); background: rgba(225,0,26,.05); border-radius: 999px; padding: 7px 16px; text-decoration: none; margin: 4px 0 28px; transition: background .2s, border-color .2s; }
+.xjump:hover { background: rgba(225,0,26,.12); border-color: var(--accent); }
+.xjump::before { content: '↓'; }
+</style></head>
+<body>
+<div id="bg-carbon"></div>
 <div class="cur-dot" id="curDot"></div>
 <div class="cur-ring" id="curRing"></div>
-
 <nav class="topbar">
-  <div class="tb-left"><span class="tb-dot"></span><span id="clock">--:--:--</span></div>
-  <div class="tb-right">
-    <a href="./systems.html" class="tb-link back">← systems</a>
-    <a href="./index.html#research" class="tb-link">Research</a>
-    <a href="./index.html#projects" class="tb-link">Projects</a>
-    <a href="./index.html#contact" class="tb-link">Contact</a>
-  </div>
-</nav>
-
-<div class="page-wrap">
-
-  <div class="reveal">
-    <div class="intro-line">Firmware Analysis</div>
-    <h1 class="page-title">Volume Restructuring<span>&amp; Firmware Security</span></h1>
-    <div class="meta-row">
-      <span class="meta-badge purple">Firmware Analysis</span>
-      <span class="meta-year">2026</span>
-    </div>
-  </div>
-
-  <div class="body-section reveal" style="transition-delay:.08s;">
-    <h2>Overview</h2>
-    <p>Two investigations. One involved a Linux partition that should have been easy to expand and wasn't. The other involved an old Android device with a locked bootloader and a boot trust chain that needed to be understood before anything could be flashed.</p>
-    <p>They ended up in the same page because they share the same basic shape: both required getting underneath the operating system and reasoning about structure that's normally invisible. The disk investigation worked at the sector level. The Android investigation worked at the firmware level. Neither could be solved from the OS layer down.</p>
-  </div>
-
-  <!-- PART 01 -->
-  <div class="body-section reveal" style="transition-delay:.11s;">
-    <h2>Volume Restructuring</h2>
-    <p>The starting situation: a dual-boot drive with an <code>ext4</code> Linux partition and an NTFS Windows volume sitting on the same disk. The goal was to expand the Linux partition. There was unallocated space. This should have taken five minutes.</p>
-    <p>Every partition tool tried either refused outright or claimed the operation was impossible. GParted bailed. The Windows disk manager wouldn't touch it. Nothing would move the NTFS boundary left to free up the space adjacent to the Linux partition.</p>
-    <p>The reason, once actually looked at, was NTFS metadata placement. NTFS doesn't just store file data where it fits. It places structural metadata at specific sectors across the volume, notably <code>$MFT</code> mirror copies, which are backup copies of the Master File Table written at fixed offsets into the partition. Standard tools refuse to move these because if you relocate them incorrectly, the NTFS volume is silently corrupted. The failure mode is not "error message." The failure mode is data loss you don't notice until it's too late. So every tool just says no.</p>
-    <p>The approach was to stop using tools that couldn't reason about the problem and start working at the sector level directly. First, map the partition table using <code>GPT</code> geometry to understand the actual sector layout. Second, identify exactly which sectors held the immovable metadata blocks and what they were. Third, determine whether the required boundary movement would actually touch those sectors, and if so, how to neutralize the constraint safely before adjusting anything.</p>
-    <p>The metadata blocks were identified, handled correctly, and the GPT geometry was reconstructed to reflect the new partition boundaries. The Linux partition expanded by around 60% on a live system with no data loss.</p>
-    <p>The Lego Batman game ran fine. That was the point of this entire operation, and it was worth it.</p>
-    <p>The reason standard tools refuse this operation is sound. If you do not know exactly which sectors you are moving and what happens if the move is wrong, you should not attempt it. The tools are not being overcautious. They are protecting you from a failure mode that looks like success right up until it isn't. Working at the sector level requires being certain, not confident.</p>
-  </div>
-
-  <!-- PART 02 -->
-  <div class="body-section reveal" style="transition-delay:.14s;">
-    <h2 class="purple">Firmware Security Analysis</h2>
-    <p>A MediaTek device with Android Verified Boot enabled, a locked bootloader, and an outdated Android version that vendor support had abandoned. The goal was to flash a custom Generic System Image to get a usable OS on the device.</p>
-    <p>The naive approach: find the unlock command, run it, flash the image. That did not work here. This device had a layered verification chain where each stage checks the cryptographic signature of the next before handing off control. You cannot simply bypass the last stage. You have to understand the whole chain first.</p>
-
-    <p>The chain on a MediaTek device looks like this:</p>
-    <div class="chain">
-      <span class="chain-node">BROM</span>
-      <span class="chain-arrow">→</span>
-      <span class="chain-node">Preloader</span>
-      <span class="chain-arrow">→</span>
-      <span class="chain-node">LK (Little Kernel)</span>
-      <span class="chain-arrow">→</span>
-      <span class="chain-node">Kernel</span>
-      <span class="chain-arrow">→</span>
-      <span class="chain-node">Android</span>
-    </div>
-
-    <p><code>BROM</code> is the Boot ROM burned into the chip at manufacture. It is read-only and cannot be modified. It loads and verifies the Preloader. The Preloader loads and verifies the Little Kernel. The LK loads and verifies the kernel. Android Verified Boot then sits on top of that, checking the system partition against a <code>vbmeta</code> image before allowing the OS to start. Every link in this chain has to hold or the device refuses to continue.</p>
-    <p>The approach was to map the full chain before touching anything. The actual intervention involved patching the <code>vbmeta</code> image that AVB checks against to disable verification flags, then using <code>fastbootd</code> rather than standard fastboot. The distinction matters: standard fastboot runs in the bootloader and has limited partition access. <code>fastbootd</code> is a userspace implementation with access to logical partitions that standard fastboot cannot reach. Flashing a GSI requires it.</p>
-    <p>Two additional problems appeared during the process, and both had to be diagnosed before the main operation could continue. The device kept dropping the diagnostic connection partway through the flash sequence, producing <code>BROM-level</code> handshake timing failures.</p>
-    <p>Separately, <code>Preloader VCOM</code> sync was unstable, causing the flash tool to lose the device mid-transfer. <code>SP Flash Tool</code> on Linux was the only tool with enough access to the preloader layer to actually see what was happening at the connection level.</p>
-    <p>The GSI was flashed. The device accepted it. Getting the OS fully functional after that is still unfinished work. Some things take longer than one session.</p>
-  </div>
-
-  <!-- KEY FINDINGS -->
-  <div class="body-section reveal" style="transition-delay:.17s;">
-    <h2>Key Findings</h2>
-    <p>NTFS metadata placement is a real constraint, not a tool limitation. The tools that refuse partition boundary moves near <code>$MFT</code> mirrors are correct to refuse. Working around that requires sector-level awareness, not a better tool.</p>
-    <p>Android Verified Boot is a chain, not a lock. Trying to bypass any single stage without understanding what's upstream and downstream of it will fail. The BROM cannot be modified. Everything above it can be, but only if the full chain is understood first.</p>
-    <p>Connection stability at the preloader layer is a real debugging problem independent of firmware logic. A flash that keeps dropping the device is a transport problem, not a verification problem. They look similar from the outside and require different fixes.</p>
-    <p><code>fastbootd</code> and standard <code>fastboot</code> are not interchangeable. Standard fastboot lives in the bootloader. <code>fastbootd</code> runs in recovery and has access to the logical partition layer. Knowing which one you need before starting saves time.</p>
-  </div>
-
-  <!-- LESSONS LEARNED -->
-  <div class="body-section reveal" style="transition-delay:.2s;">
-    <h2>Lessons Learned</h2>
-    <p>Both investigations required the same mental shift: stop trying to solve the problem from the layer where it's visible, and start understanding the layer below it. The partition tools were saying no at the filesystem level. The answer was at the sector level. The Android bootloader was rejecting flashes at the OS level. The answer was in the chain between BROM and LK.</p>
-    <p>Constraints that look arbitrary usually aren't. Standard tools refusing to touch NTFS metadata is not overcaution. AVB existing at every stage of a boot chain is not paranoia. Both are protecting against failure modes that are genuinely catastrophic if they happen. Understanding why the constraint exists makes it much easier to work with it correctly instead of just working around it.</p>
-    <p>Incomplete outcomes are still worth documenting. The Android device work is unfinished. That's fine. The investigation produced real understanding of how MediaTek boot chains work, how AVB is structured, and what <code>SP Flash Tool</code> can actually see at the preloader layer. That's useful independent of whether the final OS came up.</p>
-  </div>
-
-  <!-- ELI5 -->
-  <div class="tldr-box reveal" style="transition-delay:.23s;">
-    <div class="tldr-label">ELI5 tldr</div>
-    <div class="tldr-steps">
-      <div class="tldr-step">
-        <span class="tldr-num">01</span>
-        <span>The disk is a parking lot. Someone parked in the one spot needed for the expansion, and they used a boot that couldn't just be removed. Had to figure out how the boot worked, remove it properly, and repaint the lot lines. Lego Batman played fine afterward.</span>
-      </div>
-      <div class="tldr-step">
-        <span class="tldr-num">02</span>
-        <span>The phone had a bouncer at every single door who checked ID before letting you into the next room. Couldn't just bribe the last bouncer. Had to get the right stamp at every stage in the right order before the final door would open.</span>
-      </div>
-      <div class="tldr-step">
-        <span class="tldr-num">03</span>
-        <span>The bouncer also kept losing his walkie-talkie mid-conversation. That was a separate problem and had to be fixed first before any of the actual door work could happen.</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="tags-row reveal" style="transition-delay:.26s;">
-    <span class="tag">GPT Geometry</span>
-    <span class="tag">ext4</span>
-    <span class="tag">NTFS Sector Analysis</span>
-    <span class="tag">Android AVB</span>
-    <span class="tag">MediaTek</span>
-    <span class="tag">BROM</span>
-    <span class="tag">Preloader</span>
-    <span class="tag">fastbootd</span>
-    <span class="tag">SP Flash Tool</span>
-    <span class="tag">vbmeta</span>
-  </div>
-
-  <div class="page-nav reveal" style="transition-delay:.29s;">
-    <a href="./visor-evaluation.html">← Visor BootManager Evaluation</a>
-    <a href="./simulyn-deployment.html" class="next">Simulyn Docker Deployment →</a>
-  </div>
-
+<div class="tb-left"><span class="tb-dot"></span><span id="clock">--:--:--</span></div>
+<div class="tb-right">
+<a class="tb-link back" href="./systems.html">← systems</a>
+<a class="tb-link" href="./index.html#dashboard">Projects</a>
+<a class="tb-link" href="./index.html#contact">Contact</a>
 </div>
+</nav>
+<div class="page-wrap">
+<div class="reveal">
+<div class="breadcrumb">
+<a href="./index.html">Home</a>
+<span>/</span>
+<a href="./systems.html">Systems Research</a>
+<span>/</span>
+<span class="current">Volume Restructuring</span>
+</div>
+<div class="intro-line">firmware analysis · volume restructuring</div>
+<h1 class="page-title">Volume Restructuring<span>&amp; Firmware Security</span></h1>
+<div class="meta-row">
+<span class="meta-badge purple">Firmware Analysis</span>
+<span class="meta-year">2026</span>
+</div>
+</div>
+<a class="xjump" href="#sec-key-findings">Jump to Key Findings</a><div class="reveal xsec" data-open="true" data-title="Overview" id="sec-overview" style="transition-delay:.08s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">01</span><span class="xsec-title">Overview</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 
+<p>Two investigations. One involved a Linux partition that should have been easy to expand and wasn't. The other involved an old Android device with a locked bootloader and a boot trust chain that needed to be understood before anything could be flashed.</p>
+<p>They ended up in the same page because they share the same basic shape: both required getting underneath the operating system and reasoning about structure that's normally invisible. The disk investigation worked at the sector level. The Android investigation worked at the firmware level. Neither could be solved from the OS layer down.</p>
+</div></div>
+<!-- PART 01 -->
+<div class="reveal xsec" data-open="true" data-title="Volume Restructuring" id="sec-volume-restructuring" style="transition-delay:.11s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">02</span><span class="xsec-title">Volume Restructuring</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+
+<p>The starting situation: a dual-boot drive with an <code>ext4</code> Linux partition and an NTFS Windows volume sitting on the same disk. The goal was to expand the Linux partition. There was unallocated space. This should have taken five minutes.</p>
+<p>Every partition tool tried either refused outright or claimed the operation was impossible. GParted bailed. The Windows disk manager wouldn't touch it. Nothing would move the NTFS boundary left to free up the space adjacent to the Linux partition.</p>
+<p>The reason, once actually looked at, was NTFS metadata placement. NTFS doesn't just store file data where it fits. It places structural metadata at specific sectors across the volume, notably <code>$MFT</code> mirror copies, which are backup copies of the Master File Table written at fixed offsets into the partition. Standard tools refuse to move these because if you relocate them incorrectly, the NTFS volume is silently corrupted. The failure mode is not "error message." The failure mode is data loss you don't notice until it's too late. So every tool just says no.</p>
+<p>The approach was to stop using tools that couldn't reason about the problem and start working at the sector level directly. First, map the partition table using <code>GPT</code> geometry to understand the actual sector layout. Second, identify exactly which sectors held the immovable metadata blocks and what they were. Third, determine whether the required boundary movement would actually touch those sectors, and if so, how to neutralize the constraint safely before adjusting anything.</p>
+<p>The metadata blocks were identified, handled correctly, and the GPT geometry was reconstructed to reflect the new partition boundaries. The Linux partition expanded by around 60% on a live system with no data loss.</p>
+<p>The Lego Batman game ran fine. That was the point of this entire operation, and it was worth it.</p>
+<p>The reason standard tools refuse this operation is sound. If you do not know exactly which sectors you are moving and what happens if the move is wrong, you should not attempt it. The tools are not being overcautious. They are protecting you from a failure mode that looks like success right up until it isn't. Working at the sector level requires being certain, not confident.</p>
+</div></div>
+<!-- PART 02 -->
+<div class="reveal xsec" data-open="true" data-title="Firmware Security Analysis" id="sec-firmware-security-analysis" style="transition-delay:.14s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">03</span><span class="xsec-title">Firmware Security Analysis</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+
+<p>A MediaTek device with Android Verified Boot enabled, a locked bootloader, and an outdated Android version that vendor support had abandoned. The goal was to flash a custom Generic System Image to get a usable OS on the device.</p>
+<p>The naive approach: find the unlock command, run it, flash the image. That did not work here. This device had a layered verification chain where each stage checks the cryptographic signature of the next before handing off control. You cannot simply bypass the last stage. You have to understand the whole chain first.</p>
+<p>The chain on a MediaTek device looks like this:</p>
+<div class="chain">
+<span class="chain-node">BROM</span>
+<span class="chain-arrow">→</span>
+<span class="chain-node">Preloader</span>
+<span class="chain-arrow">→</span>
+<span class="chain-node">LK (Little Kernel)</span>
+<span class="chain-arrow">→</span>
+<span class="chain-node">Kernel</span>
+<span class="chain-arrow">→</span>
+<span class="chain-node">Android</span>
+</div>
+<p><code>BROM</code> is the Boot ROM burned into the chip at manufacture. It is read-only and cannot be modified. It loads and verifies the Preloader. The Preloader loads and verifies the Little Kernel. The LK loads and verifies the kernel. Android Verified Boot then sits on top of that, checking the system partition against a <code>vbmeta</code> image before allowing the OS to start. Every link in this chain has to hold or the device refuses to continue.</p>
+<p>The approach was to map the full chain before touching anything. The actual intervention involved patching the <code>vbmeta</code> image that AVB checks against to disable verification flags, then using <code>fastbootd</code> rather than standard fastboot. The distinction matters: standard fastboot runs in the bootloader and has limited partition access. <code>fastbootd</code> is a userspace implementation with access to logical partitions that standard fastboot cannot reach. Flashing a GSI requires it.</p>
+<p>Two additional problems appeared during the process, and both had to be diagnosed before the main operation could continue. The device kept dropping the diagnostic connection partway through the flash sequence, producing <code>BROM-level</code> handshake timing failures.</p>
+<p>Separately, <code>Preloader VCOM</code> sync was unstable, causing the flash tool to lose the device mid-transfer. <code>SP Flash Tool</code> on Linux was the only tool with enough access to the preloader layer to actually see what was happening at the connection level.</p>
+<p>The GSI was flashed. The device accepted it. Getting the OS fully functional after that is still unfinished work. Some things take longer than one session.</p>
+</div></div>
+<!-- KEY FINDINGS -->
+<div class="reveal xsec" data-open="true" data-title="Key Findings" id="sec-key-findings" style="transition-delay:.17s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">04</span><span class="xsec-title">Key Findings</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+
+<p>NTFS metadata placement is a real constraint, not a tool limitation. The tools that refuse partition boundary moves near <code>$MFT</code> mirrors are correct to refuse. Working around that requires sector-level awareness, not a better tool.</p>
+<p>Android Verified Boot is a chain, not a lock. Trying to bypass any single stage without understanding what's upstream and downstream of it will fail. The BROM cannot be modified. Everything above it can be, but only if the full chain is understood first.</p>
+<p>Connection stability at the preloader layer is a real debugging problem independent of firmware logic. A flash that keeps dropping the device is a transport problem, not a verification problem. They look similar from the outside and require different fixes.</p>
+<p><code>fastbootd</code> and standard <code>fastboot</code> are not interchangeable. Standard fastboot lives in the bootloader. <code>fastbootd</code> runs in recovery and has access to the logical partition layer. Knowing which one you need before starting saves time.</p>
+</div></div>
+<!-- LESSONS LEARNED -->
+<div class="reveal xsec" data-open="true" data-title="Lessons Learned" id="sec-lessons-learned" style="transition-delay:.2s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">05</span><span class="xsec-title">Lessons Learned</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+
+<p>Both investigations required the same mental shift: solve the problem one layer below where it's visible, not at the layer where it's failing. And incomplete outcomes are still worth documenting: the Android work never finished, but the investigation produced real understanding of MediaTek boot chains, AVB structure, and what <code>SP Flash Tool</code> can see at the preloader layer independent of whether the OS came up.</p>
+</div></div>
+<!-- ELI5 -->
+<div class="tldr-box reveal" style="transition-delay:.23s;">
+<div class="tldr-label">ELI5 tldr</div>
+<div class="tldr-steps">
+<div class="tldr-step">
+<span class="tldr-num">01</span>
+<span>The disk is a parking lot. Someone parked in the one spot needed for the expansion, and they used a boot that couldn't just be removed. Had to figure out how the boot worked, remove it properly, and repaint the lot lines. Lego Batman played fine afterward.</span>
+</div>
+<div class="tldr-step">
+<span class="tldr-num">02</span>
+<span>The phone had a bouncer at every single door who checked ID before letting you into the next room. Couldn't just bribe the last bouncer. Had to get the right stamp at every stage in the right order before the final door would open.</span>
+</div>
+<div class="tldr-step">
+<span class="tldr-num">03</span>
+<span>The bouncer also kept losing his walkie-talkie mid-conversation. That was a separate problem and had to be fixed first before any of the actual door work could happen.</span>
+</div>
+</div>
+</div>
+<div class="tags-row reveal" style="transition-delay:.26s;">
+<span class="tag">GPT Geometry</span>
+<span class="tag">ext4</span>
+<span class="tag">NTFS Sector Analysis</span>
+<span class="tag">Android AVB</span>
+<span class="tag">MediaTek</span>
+<span class="tag">BROM</span>
+<span class="tag">Preloader</span>
+<span class="tag">fastbootd</span>
+<span class="tag">SP Flash Tool</span>
+<span class="tag">vbmeta</span>
+</div>
+<div class="page-nav reveal" style="transition-delay:.29s;">
+<a href="./visor-evaluation.html">← Visor BootManager Evaluation</a>
+<a class="next" href="./simulyn-deployment.html">Simulyn Docker Deployment →</a>
+</div>
+</div>
 <footer>
-  <span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
-  <a href="./systems.html">systems ↗</a>
-  <a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
+<span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
+<a href="./systems.html">systems ↗</a>
+<a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
 </footer>
-
 <script>
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
-let W, H;
-const mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
-function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-resize();
-window.addEventListener('resize', resize);
-document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-
-const WORLD_H = 3200, NODE_COUNT = 210, CONNECT_DIST = 150;
-const nodes = Array.from({length: NODE_COUNT}, () => ({
-  x: Math.random() * window.innerWidth, y: Math.random() * WORLD_H,
-  vx: (Math.random()-.5)*.55, vy: (Math.random()-.5)*.55,
-  r: Math.random()*2+1,
-  color: Math.random()>.5 ? '#00b4ff' : Math.random()>.7 ? '#9b59f5' : '#0090d4',
-  pulse: Math.random()*Math.PI*2, pulseSpeed: .02+Math.random()*.025
-}));
-const LABELS = ['GPT','MFT','BROM','AVB','NTFS','VBMETA','PRELOADER','EFI','FASTBOOTD','LK','ext4','SECTOR'];
-const floaters = Array.from({length:12},(_,i)=>({
-  text: LABELS[i%LABELS.length], x: Math.random()*window.innerWidth, y: Math.random()*WORLD_H,
-  vy: -(Math.random()*.2+.07), opacity: Math.random()*.15+.04
-}));
-
-function draw() {
-  const sy = window.scrollY;
-  ctx.clearRect(0,0,W,H);
-  const mg = ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,200);
-  mg.addColorStop(0,'rgba(0,180,255,0.05)'); mg.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=mg; ctx.fillRect(0,0,W,H);
-  ctx.save(); ctx.translate(0,-sy);
-  const wxm=mouse.x, wym=mouse.y+sy;
-  for(const n of nodes){
-    n.pulse+=n.pulseSpeed;
-    const dx=n.x-wxm,dy=n.y-wym,dist=Math.sqrt(dx*dx+dy*dy);
-    if(dist<150&&dist>0){const f=(150-dist)/150;n.vx+=(dx/dist)*f;n.vy+=(dy/dist)*f;}
-    const spd=Math.sqrt(n.vx*n.vx+n.vy*n.vy);
-    if(spd>2){n.vx*=2/spd;n.vy*=2/spd;}
-    n.vx*=.993;n.vy*=.993;n.x+=n.vx;n.y+=n.vy;
-    if(n.x<0){n.x=0;n.vx*=-1;} if(n.x>W){n.x=W;n.vx*=-1;}
-    if(n.y<0){n.y=0;n.vy*=-1;} if(n.y>WORLD_H){n.y=WORLD_H;n.vy*=-1;}
-    if(n.y<sy-160||n.y>sy+H+160)continue;
-    for(const m of nodes){
-      if(m===n||m.y<sy-160||m.y>sy+H+160)continue;
-      const ex=n.x-m.x,ey=n.y-m.y,ed=Math.sqrt(ex*ex+ey*ey);
-      if(ed<CONNECT_DIST){
-        const alpha=(1-ed/CONNECT_DIST)*.4;
-        const isPurp=n.color==='#9b59f5'||m.color==='#9b59f5';
-        ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);
-        ctx.strokeStyle=isPurp?`rgba(155,89,245,${alpha*.9})`:`rgba(0,180,255,${alpha})`;
-        ctx.lineWidth=.6;ctx.stroke();
-      }
-    }
-    const pa=.55+Math.sin(n.pulse)*.3, pr=n.r+Math.sin(n.pulse)*.5;
-    ctx.beginPath();ctx.arc(n.x,n.y,pr,0,Math.PI*2);
-    ctx.fillStyle=n.color==='#9b59f5'?`rgba(155,89,245,${pa})`:n.color==='#0090d4'?`rgba(0,144,212,${pa})`:`rgba(0,180,255,${pa})`;
-    ctx.fill();
+(function carbonBg(){
+  const el=document.getElementById('bg-carbon');
+  if(!el) return;
+  let mx=0,my=0,tx=0,ty=0;
+  window.addEventListener('mousemove',(e)=>{
+    mx=(e.clientX/window.innerWidth-0.5)*30;
+    my=(e.clientY/window.innerHeight-0.5)*30;
+  });
+  function frame(){
+    tx += (mx-tx)*0.04; ty += (my-ty)*0.04;
+    const scrollShift = window.scrollY*0.06;
+    el.style.transform = `translate3d(${tx}px, ${ty+scrollShift}px, 0)`;
+    requestAnimationFrame(frame);
   }
-  ctx.font='9px JetBrains Mono,monospace';
-  for(const f of floaters){
-    f.y+=f.vy;
-    if(f.y<0){f.y=WORLD_H;f.x=Math.random()*W;}
-    if(f.y<sy-20||f.y>sy+H+20)continue;
-    ctx.fillStyle=`rgba(0,180,255,${f.opacity})`;
-    ctx.fillText(f.text,f.x,f.y);
-  }
-  ctx.restore();
-  requestAnimationFrame(draw);
-}
-draw();
-
+  frame();
+})();
 const dot=document.getElementById('curDot'), ring=document.getElementById('curRing');
 let mx=0,my=0,rx=0,ry=0;
 document.addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;});
@@ -319,5 +297,59 @@ const obs=new IntersectionObserver(entries=>{
 },{threshold:.06});
 document.querySelectorAll('.reveal').forEach(el=>obs.observe(el));
 </script>
-</body>
+<script>
+(function interactiveSections(){
+  // collapsibles
+  document.querySelectorAll('.xsec-head').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const sec=btn.closest('.xsec');
+      const open = sec.getAttribute('data-open')==='true';
+      sec.setAttribute('data-open', open?'false':'true');
+      btn.setAttribute('aria-expanded', String(!open));
+    });
+  });
+
+  // progress dot-nav, built from .xsec sections that have an id
+  const secs = Array.from(document.querySelectorAll('.xsec[id]'));
+  if(secs.length > 1){
+    const nav=document.createElement('nav');
+    nav.className='xdots';
+    nav.setAttribute('aria-label','Section navigation');
+    secs.forEach(s=>{
+      const dot=document.createElement('a');
+      dot.className='xdot';
+      dot.href='#'+s.id;
+      dot.title=s.dataset.title||'';
+      dot.addEventListener('click',(e)=>{
+        e.preventDefault();
+        if(s.getAttribute('data-open')==='false'){ s.setAttribute('data-open','true'); }
+        s.scrollIntoView({behavior:'smooth',block:'start'});
+      });
+      nav.appendChild(dot);
+    });
+    document.body.appendChild(nav);
+    const dots=Array.from(nav.children);
+    const obs=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        const i=secs.indexOf(e.target);
+        if(e.isIntersecting) dots.forEach((d,j)=>d.classList.toggle('active', j===i));
+      });
+    },{rootMargin:'-45% 0px -45% 0px'});
+    secs.forEach(s=>obs.observe(s));
+  }
+
+  // jump-to pill
+  document.querySelectorAll('.xjump').forEach(a=>{
+    a.addEventListener('click',(e)=>{
+      const id=a.getAttribute('href');
+      const target=id&&document.querySelector(id);
+      if(target){
+        e.preventDefault();
+        if(target.getAttribute('data-open')==='false') target.setAttribute('data-open','true');
+        target.scrollIntoView({behavior:'smooth',block:'start'});
+      }
+    });
+  });
+})();
+</script></body>
 </html>

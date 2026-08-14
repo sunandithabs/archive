@@ -1,28 +1,30 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Kernel Reconstruction & Linux Recovery — Systems Research</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
-  <style>
+<meta charset="utf-8"/>
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23060a14'/%3E%3Crect x='1' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='3' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='7' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='1' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='5' width='2' height='2' fill='%23e1001a'/%3E%3C/svg%3E">
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<title>Kernel Reconstruction & Linux Recovery · Systems Research</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&amp;family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<style>
     :root {
-      --black: #00010a;
-      --panel: #02040f;
-      --wire-1: #080e20;
-      --wire-2: #0c1430;
-      --accent: #00b4ff;
-      --accent2: #0090d4;
-      --purple: #9b59f5;
+      --black: #060a14;
+      --panel: #0a1020;
+      --wire-1: #141d33;
+      --wire-2: #1e2a48;
+      --accent: #e1001a;
+      --accent2: #3fd0ff;
+      --purple: #2a5aff;
       --green: #25d076;
       --amber: #ffb547;
       --red: #e8002d;
-      --text: #c8e4ff;
-      --muted: #6090b8;
-      --font-mono: "JetBrains Mono", ui-monospace, monospace;
-      --font-display: "Syne", sans-serif;
+      --text: #f2f4f8;
+      --muted: #7a88a8;
+      --font-mono: 'Space Mono', ui-monospace, monospace;
+      --font-display: 'Fraunces', sans-serif;
       --font-body: "DM Sans", system-ui, sans-serif;
     }
 
@@ -46,10 +48,24 @@
       pointer-events: none; z-index: 9000;
     }
 
-    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    #bg-carbon {
+      position: fixed; inset: -60px; z-index: 0; pointer-events: none;
+      background-color: #060a14;
+      background-image:
+        linear-gradient(27deg, #0c1324 5px, transparent 5px) 0 5px,
+        linear-gradient(207deg, #0c1324 5px, transparent 5px) 10px 0,
+        linear-gradient(27deg, #141d33 5px, transparent 5px) 0 10px,
+        linear-gradient(207deg, #141d33 5px, transparent 5px) 10px 5px,
+        linear-gradient(90deg, #0a1020 10px, transparent 10px),
+        linear-gradient(#0d1526 25%, #0a1020 25%, #0a1020 50%, transparent 50%, transparent 75%, #0d1526 75%, #0d1526);
+      background-size: 20px 20px;
+      opacity: .55;
+      will-change: transform;
+    }
+    #bg-carbon::after{ content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%, rgba(225,6,0,.05), transparent 60%); }
 
     .cur-dot { position: fixed; z-index: 9999; pointer-events: none; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); transform: translate(-50%,-50%); box-shadow: 0 0 8px var(--accent); transition: transform .1s; }
-    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(0,180,255,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
+    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(225,0,26,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
 
     /* TOPBAR */
     .topbar {
@@ -79,8 +95,8 @@
     .tb-link::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:1px; background:var(--accent); transform:scaleX(0); transition:transform .2s; transform-origin:left; }
     .tb-link:hover { color: var(--accent); }
     .tb-link:hover::after { transform: scaleX(1); }
-    .tb-link.back { color: var(--accent); border: 1px solid rgba(0,180,255,.25); padding: 2px 10px; font-size: 9px; }
-    .tb-link.back:hover { background: rgba(0,180,255,.08); }
+    .tb-link.back { color: var(--accent); border: 1px solid rgba(225,0,26,.25); padding: 2px 10px; font-size: 9px; }
+    .tb-link.back:hover { background: rgba(225,0,26,.08); }
     .tb-link.back::after { display: none; }
 
     /* PAGE */
@@ -92,6 +108,11 @@
     }
 
     /* HEADER BLOCK */
+    .breadcrumb { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .12em; margin-bottom: 28px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .breadcrumb a { color: var(--muted); text-decoration: none; transition: color .2s; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb span { color: var(--wire-2); }
+    .breadcrumb .current { color: var(--accent); }
     .intro-line {
       font-family: var(--font-mono); font-size: 10px;
       color: var(--accent); letter-spacing: .22em; text-transform: uppercase;
@@ -111,7 +132,7 @@
       color: var(--text);
     }
     .page-title span {
-      -webkit-text-stroke: 1px rgba(0,180,255,.35);
+      -webkit-text-stroke: 1px rgba(225,0,26,.35);
       -webkit-text-fill-color: transparent;
       display: block;
     }
@@ -127,9 +148,9 @@
       font-family: var(--font-mono); font-size: 10px;
       letter-spacing: .18em; text-transform: uppercase;
       padding: 4px 10px;
-      border: 1px solid rgba(0,180,255,.3);
+      border: 1px solid rgba(225,0,26,.3);
       color: var(--accent);
-      background: rgba(0,180,255,.05);
+      background: rgba(225,0,26,.05);
       border-radius: 2px;
     }
     .meta-year {
@@ -166,8 +187,8 @@
     code {
       font-family: var(--font-mono);
       font-size: 12.5px;
-      background: rgba(0,180,255,.07);
-      border: 1px solid rgba(0,180,255,.22);
+      background: rgba(225,0,26,.07);
+      border: 1px solid rgba(225,0,26,.22);
       padding: 1px 7px;
       border-radius: 2px;
       color: var(--accent);
@@ -198,8 +219,8 @@
     /* ELI5 BOX */
     .tldr-box {
       margin-top: 52px;
-      background: rgba(0,180,255,.03);
-      border: 1px solid rgba(0,180,255,.15);
+      background: rgba(225,0,26,.03);
+      border: 1px solid rgba(225,0,26,.15);
       border-left: 3px solid var(--accent);
       border-radius: 2px;
       padding: 22px 26px;
@@ -240,7 +261,7 @@
       border-radius: 2px;
       transition: border-color .2s, color .2s;
     }
-    .tag:hover { border-color: rgba(0,180,255,.3); color: var(--accent); }
+    .tag:hover { border-color: rgba(225,0,26,.3); color: var(--accent); }
 
     /* NAV BETWEEN PAGES */
     .page-nav {
@@ -286,245 +307,190 @@
       footer { padding: 16px 20px; flex-direction: column; gap: 6px; text-align: center; }
     }
   </style>
-</head>
-<body>
+<style>
+/* === INTERACTIVE SECTIONS (shared) === */
+.xsec { border-bottom: 1px solid var(--wire-2); }
+.xsec-head { width: 100%; display: flex; align-items: center; gap: 14px; background: none; border: none; cursor: pointer; padding: 20px 0; text-align: left; font-family: var(--font-mono); color: var(--text); }
+.xsec-num { font-size: 10px; color: var(--accent); opacity: .55; min-width: 20px; letter-spacing: .05em; }
+.xsec-title { flex: 1; font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--text); transition: color .2s; }
+.xsec-chev { font-size: 10px; color: var(--muted); transition: transform .25s ease; }
+.xsec[data-open="false"] .xsec-chev { transform: rotate(-90deg); }
+.xsec-body { overflow: hidden; max-height: 3000px; transition: max-height .4s cubic-bezier(.4,0,.2,1), opacity .3s ease, padding .3s ease; opacity: 1; padding-bottom: 22px; }
+.xsec[data-open="false"] .xsec-body { max-height: 0; opacity: 0; padding-bottom: 0; }
+.xsec-head:hover .xsec-title { color: var(--accent); }
+.xsec-head:focus-visible { outline: 1px solid var(--accent); outline-offset: 2px; }
 
-<canvas id="bg-canvas"></canvas>
+/* progress dot-nav */
+.xdots { position: fixed; right: 22px; top: 50%; transform: translateY(-50%); display: flex; flex-direction: column; gap: 11px; z-index: 400; }
+.xdot { width: 6px; height: 6px; border-radius: 50%; background: var(--wire-2); display: block; transition: background .25s, transform .25s, box-shadow .25s; cursor: pointer; }
+.xdot:hover { background: var(--muted); }
+.xdot.active { background: var(--accent); transform: scale(1.7); box-shadow: 0 0 6px var(--accent); }
+@media (max-width: 900px) { .xdots { display: none; } }
+
+/* jump-to pill */
+.xjump { display: inline-flex; align-items: center; gap: 8px; font-family: var(--font-mono); font-size: 10px; letter-spacing: .1em; text-transform: uppercase; color: var(--accent); border: 1px solid rgba(225,0,26,.3); background: rgba(225,0,26,.05); border-radius: 999px; padding: 7px 16px; text-decoration: none; margin: 4px 0 28px; transition: background .2s, border-color .2s; }
+.xjump:hover { background: rgba(225,0,26,.12); border-color: var(--accent); }
+.xjump::before { content: '↓'; }
+</style></head>
+<body>
+<div id="bg-carbon"></div>
 <div class="cur-dot" id="curDot"></div>
 <div class="cur-ring" id="curRing"></div>
-
 <nav class="topbar">
-  <div class="tb-left">
-    <span class="tb-dot"></span>
-    <span id="clock">--:--:--</span>
-  </div>
-  <div class="tb-right">
-    <a href="./systems.html" class="tb-link back">← systems</a>
-    <a href="./index.html#bice" class="tb-link">Research</a>
-    <a href="./index.html#dashboard" class="tb-link">Projects</a>
-    <a href="./index.html#contact" class="tb-link">Contact</a>
-  </div>
+<div class="tb-left"><span class="tb-dot"></span><span id="clock">--:--:--</span></div>
+<div class="tb-right">
+<a class="tb-link back" href="./systems.html">← systems</a>
+<a class="tb-link" href="./index.html#dashboard">Projects</a>
+<a class="tb-link" href="./index.html#contact">Contact</a>
+</div>
 </nav>
-
 <div class="page-wrap">
+<div class="reveal">
+<div class="breadcrumb">
+<a href="./index.html">Home</a>
+<span>/</span>
+<a href="./systems.html">Systems Research</a>
+<span>/</span>
+<span class="current">Kernel Reconstruction</span>
+</div>
+<div class="intro-line">system recovery · linux internals</div>
+<h1 class="page-title">Kernel Reconstruction<span>&amp; Linux Recovery</span></h1>
+<div class="meta-row">
+<span class="meta-badge">System Recovery</span>
+<span class="meta-year">2025</span>
+</div>
+</div>
+<!-- OVERVIEW -->
+<div class="reveal xsec" data-open="true" data-title="Overview" id="sec-overview" style="transition-delay:.08s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">01</span><span class="xsec-title">Overview</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 
-  <div class="reveal">
-    <div class="intro-line">System Recovery</div>
-    <h1 class="page-title">Kernel Reconstruction<span>&amp; Linux Recovery</span></h1>
-    <div class="meta-row">
-      <span class="meta-badge">System Recovery</span>
-      <span class="meta-year">2025</span>
-    </div>
-  </div>
-
-  <!-- OVERVIEW -->
-  <div class="body-section reveal" style="transition-delay:.08s;">
-    <h2>Overview</h2>
-    <p>
+<p>
       Two separate boot failures, a few months apart. Different root causes, same basic lesson: the thing that looks broken usually isn't the actual problem. This documents both incidents, what each one actually was, and how they got fixed.
     </p>
-    <p>
+<p>
       The first happened during initial setup. The second dropped in after a routine package update, the kind you run without thinking. Both required getting past the visible symptom before any real debugging could start.
     </p>
-  </div>
+</div></div>
+<!-- INCIDENT 01 -->
+<div class="reveal xsec" data-open="true" data-title="Incident 01: The Chroot Rebuild" id="sec-incident-01-the-chroot-rebuild" style="transition-delay:.12s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">02</span><span class="xsec-title">Incident 01: The Chroot Rebuild</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 
-  <!-- INCIDENT 01 -->
-  <div class="body-section reveal" style="transition-delay:.12s;">
-    <h2>Incident 01: The Chroot Rebuild</h2>
-
-    <div class="incident-label">Problem</div>
-    <p>
+<div class="incident-label">Problem</div>
+<p>
       Fresh dual-boot setup using <code>Ventoy</code>. Installation worked. Then, during bootloader configuration afterward, something broke and Linux stopped booting entirely. On startup: a display manager crash. Hard stop, no desktop, no logs in view.
     </p>
-    <p>
+<p>
       The obvious read was a graphics or display stack problem. That's what it looked like. It was not that.
     </p>
-
-    <div class="incident-label">Investigation</div>
-    <p>
+<div class="incident-label">Investigation</div>
+<p>
       Booted from a live USB. Mounted the broken root partition, then used <code>chroot</code> to enter the non-booting system from inside the live environment. This is the move when you need to run commands against a broken install as if you were logged into it normally. From there, the actual error logs were accessible.
     </p>
-    <p>
+<p>
       The display manager was crashing, yes. But it was crashing because it couldn't load. And it couldn't load because a proprietary GPU driver was conflicting at a lower level, corrupting the init sequence before the display stack even had a chance to start. The display manager was just the first visible casualty.
     </p>
-    <p>
+<p>
       The wrong assumption: display manager broken, fix the display manager. The right read: something upstream of the display manager is poisoning the boot. Finding that required getting inside the system and actually reading what was failing and why.
     </p>
-
-    <div class="incident-label">Resolution</div>
-    <p>
+<div class="incident-label">Resolution</div>
+<p>
       Rebuilt <code>initramfs</code> from inside the chroot to regenerate the early userspace without the conflicting driver state. Regenerated <code>vmlinuz</code>. Repaired the <code>EFI System Partition</code> entries, then rebuilt <code>GRUB</code> from scratch to make sure the bootloader was pointing at a clean kernel image. System came back up clean on next boot.
     </p>
-  </div>
+</div></div>
+<!-- INCIDENT 02 -->
+<div class="reveal xsec" data-open="true" data-title="Incident 02: BusyBox at Dawn" id="sec-incident-02-busybox-at-dawn" style="transition-delay:.16s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">03</span><span class="xsec-title">Incident 02: BusyBox at Dawn</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 
-  <!-- INCIDENT 02 -->
-  <div class="body-section reveal" style="transition-delay:.16s;">
-    <h2>Incident 02: BusyBox at Dawn</h2>
-
-    <div class="incident-label">Problem</div>
-    <p>
+<div class="incident-label">Problem</div>
+<p>
       A few months later. Ran a package update before going to sleep, which is a fine idea until it isn't. Next morning: instead of a desktop, a <code>BusyBox</code> shell. No display. No cursor. No wifi. Just a minimal emergency shell sitting there.
     </p>
-    <p>
+<p>
       The error logs pointed at an I/O failure. Which suggested storage corruption, maybe a bad write during the update. That's the obvious read. It was also wrong.
     </p>
-
-    <div class="incident-label">Investigation</div>
-    <p>
+<div class="incident-label">Investigation</div>
+<p>
       The I/O failure wasn't random corruption. The SSD was becoming intermittently invisible during boot, which made everything downstream look like a read error. The real cause was a <code>VMD/Intel RST</code> kernel incompatibility: the storage controller driver was loading in the wrong sequence during init, meaning the kernel was trying to access the drive before the controller responsible for it had finished initializing.
     </p>
-    <p>
+<p>
       This one was harder to find because the error output was genuinely misleading. An I/O failure that appears randomly and inconsistently looks like hardware or filesystem damage. It took ruling out actual corruption first, then tracing back through what was loading when, before the sequencing issue became visible.
     </p>
-    <p>
-      <code>VMD</code> (Volume Management Device) is an Intel storage controller architecture used in modern NVMe configurations. When the kernel module for it loads late or out of order, the SSD can appear absent during early boot. The symptom is indistinguishable from a dead drive unless you know to look at the module load sequence.
+<p>
+<code>VMD</code> (Volume Management Device) is an Intel storage controller architecture used in modern NVMe configurations. When the kernel module for it loads late or out of order, the SSD can appear absent during early boot. The symptom is indistinguishable from a dead drive unless you know to look at the module load sequence.
     </p>
-
-    <div class="incident-label">Resolution</div>
-    <p>
+<div class="incident-label">Resolution</div>
+<p>
       Fixed by reordering boot-time kernel modules in the init configuration to ensure the VMD controller driver loaded before the storage access sequence began. Rebuilt manually, confirmed the drive was consistently visible across several reboots, and came back up clean.
     </p>
-  </div>
+</div></div>
+<!-- LESSONS LEARNED -->
+<div class="reveal xsec" data-open="true" data-title="Lessons Learned" id="sec-lessons-learned" style="transition-delay:.2s;"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">04</span><span class="xsec-title">Lessons Learned</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 
-  <!-- LESSONS LEARNED -->
-  <div class="body-section reveal" style="transition-delay:.2s;">
-    <h2>Lessons Learned</h2>
-    <p>
+<p>
       Both failures had the same structure. A visible thing breaks. The visible thing is not the broken thing. The broken thing is one layer underneath it, and the error output doesn't tell you that directly.
     </p>
-    <p>
+<p>
       In the first incident, the display manager crash was real but downstream. In the second, the I/O failure was real but the cause was a sequencing problem, not data corruption. Fixing the thing you can see first is almost always wrong. Getting inside the system and asking what failed before this failed is the actual work.
     </p>
-    <p>
+<p>
       The chroot workflow is worth knowing well. When a system won't boot, you still need to run commands against it. A live USB plus <code>chroot</code> is how you do that without reinstalling. It's not complicated, but you have to know it exists before you need it.
     </p>
-    <p>
+<p>
       The VMD issue is also worth filing away. Modern NVMe storage on Intel platforms can behave this way after kernel updates. If a drive seems to disappear intermittently at boot after an update, module load order is worth checking before assuming hardware failure.
     </p>
-  </div>
-
-  <!-- ELI5 -->
-  <div class="tldr-box reveal" style="transition-delay:.24s;">
-    <div class="tldr-label">ELI5 tldr</div>
-    <div class="tldr-steps">
-      <div class="tldr-step">
-        <span class="tldr-num">01</span>
-        <span>The front door of a building was stuck. Everyone assumed the door was broken. The lock mechanism behind the wall was broken. The door was just the first thing that fell over when it failed.</span>
-      </div>
-      <div class="tldr-step">
-        <span class="tldr-num">02</span>
-        <span>Went in through the emergency entrance, found the actual broken part, rebuilt it from the inside, and left through the front door like nothing happened.</span>
-      </div>
-      <div class="tldr-step">
-        <span class="tldr-num">03</span>
-        <span>Second time: the computer couldn't reliably find its own drive because two things were trying to start in the wrong order, like a key trying to work a lock that hasn't been installed yet. Fixed the order. Drive stayed visible. Problem gone.</span>
-      </div>
-    </div>
-  </div>
-
-  <div class="tags-row reveal" style="transition-delay:.28s;">
-    <span class="tag">Linux Internals</span>
-    <span class="tag">chroot</span>
-    <span class="tag">initramfs</span>
-    <span class="tag">GRUB/EFI</span>
-    <span class="tag">VMD/Intel RST</span>
-    <span class="tag">BusyBox Recovery</span>
-    <span class="tag">Ventoy</span>
-    <span class="tag">Kernel Module Sequencing</span>
-  </div>
-
-  <div class="page-nav reveal" style="transition-delay:.32s;">
-    <a href="./systems.html">← All Investigations</a>
-    <a href="./visor-evaluation.html" class="next">Visor BootManager Evaluation →</a>
-  </div>
-
+</div></div>
+<!-- ELI5 -->
+<div class="tldr-box reveal" style="transition-delay:.24s;">
+<div class="tldr-label">ELI5 tldr</div>
+<div class="tldr-steps">
+<div class="tldr-step">
+<span class="tldr-num">01</span>
+<span>The front door of a building was stuck. Everyone assumed the door was broken. The lock mechanism behind the wall was broken. The door was just the first thing that fell over when it failed.</span>
 </div>
-
+<div class="tldr-step">
+<span class="tldr-num">02</span>
+<span>Went in through the emergency entrance, found the actual broken part, rebuilt it from the inside, and left through the front door like nothing happened.</span>
+</div>
+<div class="tldr-step">
+<span class="tldr-num">03</span>
+<span>Second time: the computer couldn't reliably find its own drive because two things were trying to start in the wrong order, like a key trying to work a lock that hasn't been installed yet. Fixed the order. Drive stayed visible. Problem gone.</span>
+</div>
+</div>
+</div>
+<div class="tags-row reveal" style="transition-delay:.28s;">
+<span class="tag">Linux Internals</span>
+<span class="tag">chroot</span>
+<span class="tag">initramfs</span>
+<span class="tag">GRUB/EFI</span>
+<span class="tag">VMD/Intel RST</span>
+<span class="tag">BusyBox Recovery</span>
+<span class="tag">Ventoy</span>
+<span class="tag">Kernel Module Sequencing</span>
+</div>
+<div class="page-nav reveal" style="transition-delay:.32s;">
+<a href="./systems.html">← All Investigations</a>
+<a class="next" href="./visor-evaluation.html">Visor BootManager Evaluation →</a>
+</div>
+</div>
 <footer>
-  <span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
-  <a href="./systems.html">systems ↗</a>
-  <a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
+<span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
+<a href="./systems.html">systems ↗</a>
+<a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
 </footer>
-
 <script>
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
-let W, H;
-const mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
-function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-resize();
-window.addEventListener('resize', resize);
-document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-
-const WORLD_H = 3000, NODE_COUNT = 200, CONNECT_DIST = 150;
-const nodes = Array.from({length: NODE_COUNT}, () => ({
-  x: Math.random() * window.innerWidth,
-  y: Math.random() * WORLD_H,
-  vx: (Math.random()-.5)*.55, vy: (Math.random()-.5)*.55,
-  r: Math.random()*2+1,
-  color: Math.random()>.5 ? '#00b4ff' : Math.random()>.7 ? '#9b59f5' : '#0090d4',
-  pulse: Math.random()*Math.PI*2,
-  pulseSpeed: .02+Math.random()*.025
-}));
-
-const LABELS = ['KPROBE','INITRAMFS','BROM','CHROOT','EFI','VBMETA','eBPF','VMD','GRUB','SYN','BUSYBOX','RST','VMLINUZ'];
-const floaters = Array.from({length:12},(_,i)=>({
-  text: LABELS[i%LABELS.length],
-  x: Math.random()*window.innerWidth,
-  y: Math.random()*WORLD_H,
-  vy: -(Math.random()*.2+.07),
-  opacity: Math.random()*.15+.04
-}));
-
-function draw() {
-  const sy = window.scrollY;
-  ctx.clearRect(0,0,W,H);
-  const mg = ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,200);
-  mg.addColorStop(0,'rgba(0,180,255,0.05)');
-  mg.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=mg; ctx.fillRect(0,0,W,H);
-  ctx.save(); ctx.translate(0,-sy);
-  const wxm=mouse.x, wym=mouse.y+sy;
-  for(const n of nodes){
-    n.pulse+=n.pulseSpeed;
-    const dx=n.x-wxm,dy=n.y-wym,dist=Math.sqrt(dx*dx+dy*dy);
-    if(dist<150&&dist>0){const f=(150-dist)/150*1.0;n.vx+=(dx/dist)*f;n.vy+=(dy/dist)*f;}
-    const spd=Math.sqrt(n.vx*n.vx+n.vy*n.vy);
-    if(spd>2){n.vx*=2/spd;n.vy*=2/spd;}
-    n.vx*=.993;n.vy*=.993;n.x+=n.vx;n.y+=n.vy;
-    if(n.x<0){n.x=0;n.vx*=-1;} if(n.x>W){n.x=W;n.vx*=-1;}
-    if(n.y<0){n.y=0;n.vy*=-1;} if(n.y>WORLD_H){n.y=WORLD_H;n.vy*=-1;}
-    if(n.y<sy-160||n.y>sy+H+160)continue;
-    for(const m of nodes){
-      if(m===n)continue;
-      if(m.y<sy-160||m.y>sy+H+160)continue;
-      const ex=n.x-m.x,ey=n.y-m.y,ed=Math.sqrt(ex*ex+ey*ey);
-      if(ed<CONNECT_DIST){
-        const alpha=(1-ed/CONNECT_DIST)*.4;
-        const isPurp=n.color==='#9b59f5'||m.color==='#9b59f5';
-        ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);
-        ctx.strokeStyle=isPurp?`rgba(155,89,245,${alpha*.9})`:`rgba(0,180,255,${alpha})`;
-        ctx.lineWidth=.6;ctx.stroke();
-      }
-    }
-    const pa=.55+Math.sin(n.pulse)*.3, pr=n.r+Math.sin(n.pulse)*.5;
-    ctx.beginPath();ctx.arc(n.x,n.y,pr,0,Math.PI*2);
-    ctx.fillStyle=n.color==='#9b59f5'?`rgba(155,89,245,${pa})`:n.color==='#0090d4'?`rgba(0,144,212,${pa})`:`rgba(0,180,255,${pa})`;
-    ctx.fill();
+(function carbonBg(){
+  const el=document.getElementById('bg-carbon');
+  if(!el) return;
+  let mx=0,my=0,tx=0,ty=0;
+  window.addEventListener('mousemove',(e)=>{
+    mx=(e.clientX/window.innerWidth-0.5)*30;
+    my=(e.clientY/window.innerHeight-0.5)*30;
+  });
+  function frame(){
+    tx += (mx-tx)*0.04; ty += (my-ty)*0.04;
+    const scrollShift = window.scrollY*0.06;
+    el.style.transform = `translate3d(${tx}px, ${ty+scrollShift}px, 0)`;
+    requestAnimationFrame(frame);
   }
-  ctx.font='9px JetBrains Mono,monospace';
-  for(const f of floaters){
-    f.y+=f.vy;
-    if(f.y<0){f.y=WORLD_H;f.x=Math.random()*W;}
-    if(f.y<sy-20||f.y>sy+H+20)continue;
-    ctx.fillStyle=`rgba(0,180,255,${f.opacity})`;
-    ctx.fillText(f.text,f.x,f.y);
-  }
-  ctx.restore();
-  requestAnimationFrame(draw);
-}
-draw();
-
+  frame();
+})();
 const dot = document.getElementById('curDot');
 const ring = document.getElementById('curRing');
 let mx=0,my=0,rx=0,ry=0;
@@ -554,5 +520,59 @@ const revealObs = new IntersectionObserver(entries => {
 },{threshold:.06});
 document.querySelectorAll('.reveal').forEach(el=>revealObs.observe(el));
 </script>
-</body>
+<script>
+(function interactiveSections(){
+  // collapsibles
+  document.querySelectorAll('.xsec-head').forEach(btn=>{
+    btn.addEventListener('click',()=>{
+      const sec=btn.closest('.xsec');
+      const open = sec.getAttribute('data-open')==='true';
+      sec.setAttribute('data-open', open?'false':'true');
+      btn.setAttribute('aria-expanded', String(!open));
+    });
+  });
+
+  // progress dot-nav, built from .xsec sections that have an id
+  const secs = Array.from(document.querySelectorAll('.xsec[id]'));
+  if(secs.length > 1){
+    const nav=document.createElement('nav');
+    nav.className='xdots';
+    nav.setAttribute('aria-label','Section navigation');
+    secs.forEach(s=>{
+      const dot=document.createElement('a');
+      dot.className='xdot';
+      dot.href='#'+s.id;
+      dot.title=s.dataset.title||'';
+      dot.addEventListener('click',(e)=>{
+        e.preventDefault();
+        if(s.getAttribute('data-open')==='false'){ s.setAttribute('data-open','true'); }
+        s.scrollIntoView({behavior:'smooth',block:'start'});
+      });
+      nav.appendChild(dot);
+    });
+    document.body.appendChild(nav);
+    const dots=Array.from(nav.children);
+    const obs=new IntersectionObserver((entries)=>{
+      entries.forEach(e=>{
+        const i=secs.indexOf(e.target);
+        if(e.isIntersecting) dots.forEach((d,j)=>d.classList.toggle('active', j===i));
+      });
+    },{rootMargin:'-45% 0px -45% 0px'});
+    secs.forEach(s=>obs.observe(s));
+  }
+
+  // jump-to pill
+  document.querySelectorAll('.xjump').forEach(a=>{
+    a.addEventListener('click',(e)=>{
+      const id=a.getAttribute('href');
+      const target=id&&document.querySelector(id);
+      if(target){
+        e.preventDefault();
+        if(target.getAttribute('data-open')==='false') target.setAttribute('data-open','true');
+        target.scrollIntoView({behavior:'smooth',block:'start'});
+      }
+    });
+  });
+})();
+</script></body>
 </html>

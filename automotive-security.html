@@ -3,24 +3,38 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Automotive Security — Sunanditha B S</title>
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%2300010a'/%3E%3Crect x='1' y='1' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='5' y='1' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='9' y='1' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='13' y='1' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='3' y='3' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='7' y='3' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='1' y='5' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='5' y='5' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='9' y='5' width='2' height='2' fill='%2300b4ff'/%3E%3Crect x='13' y='5' width='2' height='2' fill='%2300b4ff'/%3E%3C/svg%3E">
+  <title>Automotive Security · Sunanditha B S</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23060a14'/%3E%3Crect x='1' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='3' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='7' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='1' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='5' width='2' height='2' fill='%23e1001a'/%3E%3C/svg%3E">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --black: #00010a; --panel: #02040f; --wire-1: #080e20; --wire-2: #0c1430;
-      --accent: #00b4ff; --accent2: #0090d4; --green: #1d9e75;
-      --text: #c8e4ff; --muted: #6090b8;
-      --font-mono: "JetBrains Mono", ui-monospace, monospace;
-      --font-display: "Syne", sans-serif;
+      --black: #060a14; --panel: #0a1020; --wire-1: #141d33; --wire-2: #1e2a48;
+      --accent: #e1001a; --accent2: #3fd0ff; --green: #1d9e75;
+      --text: #f2f4f8; --muted: #7a88a8;
+      --font-mono: 'Space Mono', ui-monospace, monospace;
+      --font-display: 'Fraunces', sans-serif;
       --font-body: "DM Sans", system-ui, sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body { background: var(--black); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.6; }
-    #bg-canvas { position: fixed; top:0; left:0; width:100%; height:100%; z-index:0; pointer-events:none; }
+    #bg-carbon {
+      position: fixed; inset: -60px; z-index: 0; pointer-events: none;
+      background-color: #060a14;
+      background-image:
+        linear-gradient(27deg, #0c1324 5px, transparent 5px) 0 5px,
+        linear-gradient(207deg, #0c1324 5px, transparent 5px) 10px 0,
+        linear-gradient(27deg, #141d33 5px, transparent 5px) 0 10px,
+        linear-gradient(207deg, #141d33 5px, transparent 5px) 10px 5px,
+        linear-gradient(90deg, #0a1020 10px, transparent 10px),
+        linear-gradient(#0d1526 25%, #0a1020 25%, #0a1020 50%, transparent 50%, transparent 75%, #0d1526 75%, #0d1526);
+      background-size: 20px 20px;
+      opacity: .55;
+      will-change: transform;
+    }
+    #bg-carbon::after{ content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%, rgba(225,6,0,.05), transparent 60%); }
 
     .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 500; height: 40px; background: rgba(2,4,15,.94); border-bottom: 1px solid var(--wire-2); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); backdrop-filter: blur(12px); }
     .tb-left { display: flex; gap: 14px; align-items: center; }
@@ -28,12 +42,17 @@
     .tb-right { display: flex; gap: 22px; }
     .tb-link { color: var(--muted); text-decoration: none; letter-spacing: .12em; text-transform: uppercase; font-size: 10px; }
     .tb-link:hover { color: var(--accent); }
-    .tb-link.back { color: var(--accent); border: 1px solid rgba(0,180,255,.25); padding: 2px 10px; font-size: 9px; }
-    .tb-link.back:hover { background: rgba(0,180,255,.08); }
+    .tb-link.back { color: var(--accent); border: 1px solid rgba(225,0,26,.25); padding: 2px 10px; font-size: 9px; }
+    .tb-link.back:hover { background: rgba(225,0,26,.08); }
 
     .page-wrap { position: relative; z-index: 1; max-width: 780px; margin: 0 auto; padding: 108px 40px 96px; }
     footer { position: relative; z-index: 1; }
 
+    .breadcrumb { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .12em; margin-bottom: 28px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .breadcrumb a { color: var(--muted); text-decoration: none; transition: color .2s; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb span { color: var(--wire-2); }
+    .breadcrumb .current { color: var(--accent); }
     .intro-line { font-family: var(--font-mono); font-size: 10px; color: var(--accent); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
     .intro-line::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--accent); opacity: .5; }
 
@@ -43,7 +62,7 @@
 
     .proj-grid { display: grid; grid-template-columns: 1fr; gap: 2px; }
     .proj-card { display: block; background: var(--panel); border: 1px solid var(--wire-2); border-radius: 2px; padding: 26px 28px; text-decoration: none; color: inherit; transition: border-color .2s, transform .2s; }
-    .proj-card:hover { border-color: rgba(0,180,255,.35); transform: translateY(-2px); }
+    .proj-card:hover { border-color: rgba(225,0,26,.35); transform: translateY(-2px); }
     .proj-cat { font-family: var(--font-mono); font-size: 9px; letter-spacing: .2em; text-transform: uppercase; color: var(--green); margin-bottom: 12px; }
     .proj-title { font-family: var(--font-display); font-weight: 800; font-size: 19px; letter-spacing: .01em; text-transform: uppercase; color: var(--text); margin-bottom: 8px; }
     .proj-title span { color: var(--muted); font-weight: 400; font-size: 12.5px; text-transform: none; letter-spacing: normal; }
@@ -82,7 +101,7 @@
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
+<div id="bg-carbon"></div>
 
 <nav class="topbar">
   <div class="tb-left"><span class="tb-dot"></span><span>archive</span></div>
@@ -95,17 +114,22 @@
 
 <div class="page-wrap">
 
-  <div class="intro-line">Archive Category</div>
+  <div class="breadcrumb">
+<a href="./index.html">Home</a>
+<span>/</span>
+<span class="current">Automotive Security</span>
+</div>
+<div class="intro-line">automotive security · archive category</div>
   <h1 class="page-title">Automotive Security</h1>
   <p class="page-sub">ECU trust chains, UDS SecurityAccess, and CAN bus intrusion detection. Three projects, one thread: what it takes to trust a message on a bus that was never built to question anything.</p>
 
   <svg viewBox="0 0 400 40" style="width:100%;max-width:400px;margin-bottom:48px;overflow:visible;" aria-hidden="true">
-    <line x1="20" y1="20" x2="380" y2="20" stroke="#0c1430" stroke-width="2"/>
-    <circle cx="20" cy="20" r="4" fill="#00b4ff"/>
-    <circle cx="380" cy="20" r="4" fill="#00b4ff"/>
-    <text x="10" y="12" font-family="JetBrains Mono,monospace" font-size="9" fill="#6090b8">0x7E0</text>
-    <text x="355" y="12" font-family="JetBrains Mono,monospace" font-size="9" fill="#6090b8">0x7E8</text>
-    <circle r="3.5" fill="#00b4ff">
+    <line x1="20" y1="20" x2="380" y2="20" stroke="var(--wire-2)" stroke-width="2"/>
+    <circle cx="20" cy="20" r="4" fill="var(--accent)"/>
+    <circle cx="380" cy="20" r="4" fill="var(--accent)"/>
+    <text x="10" y="12" font-family="Space Mono,monospace" font-size="9" fill="var(--muted)">0x7E0</text>
+    <text x="355" y="12" font-family="Space Mono,monospace" font-size="9" fill="var(--muted)">0x7E8</text>
+    <circle r="3.5" fill="var(--accent)">
       <animateMotion dur="2.4s" repeatCount="indefinite" path="M20,20 L380,20 L20,20"/>
     </circle>
   </svg>
@@ -151,149 +175,22 @@
 
 <script>
 /* CANVAS */
-const canvas=document.getElementById('bg-canvas');
-const ctx=canvas.getContext('2d');
-let W,H,mouse={x:window.innerWidth/2,y:window.innerHeight/2};
-function resize(){W=canvas.width=window.innerWidth;H=canvas.height=window.innerHeight;}
-resize();
-window.addEventListener('resize',resize);
-document.addEventListener('mousemove',e=>{mouse.x=e.clientX;mouse.y=e.clientY;});
-
-const WORLD_H=6000,NODE_COUNT=820,CONNECT_DIST=170;
-
-function randColor(){
-  const r=Math.random();
-  if(r<.35)return '#00b4ff';
-  if(r<.65)return '#9b59f5';
-  if(r<.90)return '#0090d4';
-  return '#040818';
-}
-
-// Evenly distribute nodes across the full world using grid jitter so they never cluster at borders
-const nodes=Array.from({length:NODE_COUNT},(_,i)=>{
-  const cols=Math.ceil(Math.sqrt(NODE_COUNT*(window.innerWidth/WORLD_H)));
-  const rows=Math.ceil(NODE_COUNT/Math.max(cols,1));
-  const col=i%cols, row=Math.floor(i/cols);
-  const cellW=(window.innerWidth||1200)/cols;
-  const cellH=WORLD_H/rows;
-  const x=col*cellW + cellW*0.1 + Math.random()*cellW*0.8;
-  const y=row*cellH + cellH*0.1 + Math.random()*cellH*0.8;
-  const angle=Math.random()*Math.PI*2;
-  const speed=0.08+Math.random()*0.12;
-  return {
-    x, y,
-    vx:Math.cos(angle)*speed,
-    vy:Math.sin(angle)*speed,
-    r:Math.random()*3.2+1.8,
-    color:randColor(),
-    pulse:Math.random()*Math.PI*2,
-    pulseSpeed:.004+Math.random()*.005,
-    // per-node phase offsets so the shared flow field feels individual, not synced
-    fpx:Math.random()*1000,
-    fpy:Math.random()*1000,
-    wanderAngle:Math.random()*Math.PI*2
-  };
-});
-
-const DATA_LABELS=['SYN_FLOOD','ANOMALY','PKT_LOSS','ENTROPY:0.87','DRIFT:+2.4σ','BASELINE','Z-SCORE','TRUST:0.62','POLICY_CHK','IOT_DEV_07','443/tcp','RECON','LOG_PARSE','HONEYPOT','ALERT:LOW'];
-const floaters=Array.from({length:22},(_,i)=>({text:DATA_LABELS[i%DATA_LABELS.length],x:Math.random()*window.innerWidth,y:Math.random()*WORLD_H,vy:-(Math.random()*.18+.05),opacity:Math.random()*.14+.04}));
-
-function draw(){
-  const sy=window.scrollY;
-  ctx.clearRect(0,0,W,H);
-  const mg=ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,260);
-  mg.addColorStop(0,'rgba(0,180,255,0.07)');mg.addColorStop(.5,'rgba(0,180,255,0.025)');mg.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=mg;ctx.fillRect(0,0,W,H);
-  ctx.save();ctx.translate(0,-sy);
-  const wxm=mouse.x,wym=mouse.y+sy;
-
-  const flowT=performance.now()*0.00006;
-  for(const n of nodes){
-    n.pulse+=n.pulseSpeed;
-
-    // Organic flow field: smooth, continuously-shifting current. No fixed waypoints,
-    // so motion never "decides" to head somewhere and snap on arrival)
-    const fx=Math.sin((n.y+n.fpy)*0.0021+flowT*1.3)+Math.sin((n.x-n.fpx)*0.0014-flowT*0.8)*0.6;
-    const fy=Math.cos((n.x+n.fpx)*0.0019-flowT*1.1)+Math.cos((n.y-n.fpy)*0.0016+flowT*0.7)*0.6;
-    n.vx+=fx*0.0052;
-    n.vy+=fy*0.0052;
-
-    // Per-node wander on top of the shared current keeps each node's path individual
-    n.wanderAngle+=(Math.random()-.5)*0.07;
-    n.vx+=Math.cos(n.wanderAngle)*0.0032;
-    n.vy+=Math.sin(n.wanderAngle)*0.0032;
-
-    // Mouse influence: gentle repulsion
-    const dx=n.x-wxm,dy=n.y-wym,dist=Math.sqrt(dx*dx+dy*dy);
-    if(dist<240&&dist>0){
-      const proximity=1-dist/240;
-      const force=proximity*proximity*0.9;
-      n.vx+=(dx/dist)*force;
-      n.vy+=(dy/dist)*force;
-    }
-
-    // Speed cap: slow and dreamy
-    const spd=Math.sqrt(n.vx*n.vx+n.vy*n.vy);
-    if(spd>0.85){n.vx*=0.85/spd;n.vy*=0.85/spd;}
-    // Damping keeps motion smooth and persistent
-    n.vx*=0.994;n.vy*=0.994;
-    n.x+=n.vx;n.y+=n.vy;
-
-    // Soft edge easing: a wide field that gently curves nodes back well before
-    // the true edge, strength rising smoothly (eased, not a fixed-distance snap),
-    // so nothing ever clamps to a single pixel line or visibly "hits a wall"
-    const mx=Math.max(W*0.16,140), my=220;
-    if(n.x<mx){const p=1-n.x/mx; n.vx+=p*p*0.05;}
-    if(n.x>W-mx){const p=1-(W-n.x)/mx; n.vx-=p*p*0.05;}
-    if(n.y<my){const p=1-n.y/my; n.vy+=p*p*0.05;}
-    if(n.y>WORLD_H-my){const p=1-(WORLD_H-n.y)/my; n.vy-=p*p*0.05;}
-    // failsafe only at true canvas extremes. Prevents disappearing offscreen,
-    // never visibly triggered because the soft field above turns nodes back first
-    if(n.x<-40)n.x=-40; if(n.x>W+40)n.x=W+40;
-    if(n.y<-40)n.y=-40; if(n.y>WORLD_H+40)n.y=WORLD_H+40;
-
-    if(n.y<sy-200||n.y>sy+H+200)continue;
-
-    // Draw connections
-    for(const m of nodes){
-      if(m===n)continue;
-      if(m.y<sy-200||m.y>sy+H+200)continue;
-      const ex=n.x-m.x,ey=n.y-m.y,ed=Math.sqrt(ex*ex+ey*ey);
-      if(ed<CONNECT_DIST){
-        const alpha=(1-ed/CONNECT_DIST)*.38;
-        const bothPurp=n.color==='#9b59f5'&&m.color==='#9b59f5';
-        const eitherPurp=n.color==='#9b59f5'||m.color==='#9b59f5';
-        const eitherDark=n.color==='#0090d4'||m.color==='#0090d4';
-        ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);
-        if(bothPurp)        ctx.strokeStyle=`rgba(155,89,245,${alpha*1.1})`;
-        else if(eitherPurp) ctx.strokeStyle=`rgba(100,60,210,${alpha*.85})`;
-        else if(eitherDark) ctx.strokeStyle=`rgba(0,130,200,${alpha*.8})`;
-        else                ctx.strokeStyle=`rgba(0,180,255,${alpha*.7})`;
-        ctx.lineWidth=.65;ctx.stroke();
-      }
-    }
-
-    // Draw node
-    const pa=.7+Math.sin(n.pulse)*.3,pr=n.r+Math.sin(n.pulse)*.7;
-    ctx.beginPath();ctx.arc(n.x,n.y,pr,0,Math.PI*2);
-    if(n.color==='#040818'){ctx.shadowBlur=0;ctx.fillStyle=`rgba(4,8,24,${pa*.6})`;}
-    else if(n.color==='#9b59f5'){ctx.shadowBlur=10;ctx.shadowColor='rgba(155,89,245,.55)';ctx.fillStyle=`rgba(155,89,245,${pa})`;}
-    else if(n.color==='#0090d4'){ctx.shadowBlur=8;ctx.shadowColor='rgba(0,144,212,.5)';ctx.fillStyle=`rgba(0,144,212,${pa})`;}
-    else {ctx.shadowBlur=10;ctx.shadowColor='rgba(0,180,255,.55)';ctx.fillStyle=`rgba(0,180,255,${pa})`;}
-    ctx.fill();
-    ctx.shadowBlur=0;
+(function carbonBg(){
+  const el=document.getElementById('bg-carbon');
+  if(!el) return;
+  let mx=0,my=0,tx=0,ty=0;
+  window.addEventListener('mousemove',(e)=>{
+    mx=(e.clientX/window.innerWidth-0.5)*30;
+    my=(e.clientY/window.innerHeight-0.5)*30;
+  });
+  function frame(){
+    tx += (mx-tx)*0.04; ty += (my-ty)*0.04;
+    const scrollShift = window.scrollY*0.06;
+    el.style.transform = `translate3d(${tx}px, ${ty+scrollShift}px, 0)`;
+    requestAnimationFrame(frame);
   }
-
-  ctx.font='9px JetBrains Mono,monospace';
-  for(const f of floaters){
-    f.y+=f.vy;if(f.y<0){f.y=WORLD_H;f.x=Math.random()*W;}
-    if(f.y<sy-20||f.y>sy+H+20)continue;
-    ctx.fillStyle=`rgba(0,180,255,${f.opacity})`;ctx.fillText(f.text,f.x,f.y);
-  }
-  ctx.restore();
-  requestAnimationFrame(draw);
-}
-draw();
+  frame();
+})();
 </script>
 </body>
 </html>

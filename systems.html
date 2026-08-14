@@ -2,27 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="utf-8">
+<link rel="icon" href="data:image/svg+xml,%3Csvg xmlns=%27http://www.w3.org/2000/svg%27 viewBox=%270 0 16 16%27%3E%3Crect width=%2716%27 height=%2716%27 fill=%27%23060a14%27/%3E%3Crect x=%271%27 y=%271%27 width=%272%27 height=%272%27 fill=%27%23e1001a%27/%3E%3Crect x=%275%27 y=%271%27 width=%272%27 height=%272%27 fill=%27%23e1001a%27/%3E%3Crect x=%279%27 y=%271%27 width=%272%27 height=%272%27 fill=%27%23e1001a%27/%3E%3Crect x=%2713%27 y=%271%27 width=%272%27 height=%272%27 fill=%27%23e1001a%27/%3E%3Crect x=%273%27 y=%273%27 width=%272%27 height=%272%27 fill=%27%23e1001a%27/%3E%3Crect x=%277%27 y=%273%27 width=%272%27 height=%272%27 fill=%27%23e1001a%27/%3E%3Crect x=%2711%27 y=%273%27 width=%272%27 height=%272%27 fill=%27%23e1001a%27/%3E%3Crect x=%271%27 y=%275%27 width=%272%27 height=%272%27 fill=%27%23e1001a%27/%3E%3Crect x=%275%27 y=%275%27 width=%272%27 height=%272%27 fill=%27%23e1001a%27/%3E%3Crect x=%279%27 y=%275%27 width=%272%27 height=%272%27 fill=%27%23e1001a%27/%3E%3Crect x=%2713%27 y=%275%27 width=%272%27 height=%272%27 fill=%27%23e1001a%27/%3E%3C/svg%3E">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Systems Research</title>
+  <title>Systems Research · Sunanditha B S</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700;800;900&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=JetBrains+Mono:ital,wght@0,300;0,400;0,600;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
   <style>
     :root {
-      --black: #00010a;
-      --panel: #02040f;
-      --wire-1: #080e20;
-      --wire-2: #0c1430;
-      --accent: #00b4ff;
-      --accent2: #0090d4;
-      --purple: #9b59f5;
+      --black: #060a14;
+      --panel: #0a1020;
+      --wire-1: #141d33;
+      --wire-2: #1e2a48;
+      --accent: #e1001a;
+      --accent2: #3fd0ff;
+      --purple: #2a5aff;
       --green: #25d076;
       --amber: #ffb547;
       --red: #e8002d;
-      --text: #c8e4ff;
-      --muted: #6090b8;
-      --font-mono: "JetBrains Mono", ui-monospace, monospace;
-      --font-display: "Syne", sans-serif;
+      --text: #f2f4f8;
+      --muted: #7a88a8;
+      --font-mono: 'Space Mono', ui-monospace, monospace;
+      --font-display: 'Fraunces', sans-serif;
       --font-body: "DM Sans", system-ui, sans-serif;
     }
 
@@ -46,10 +47,24 @@
       pointer-events: none; z-index: 9000;
     }
 
-    #bg-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
+    #bg-carbon {
+      position: fixed; inset: -60px; z-index: 0; pointer-events: none;
+      background-color: #060a14;
+      background-image:
+        linear-gradient(27deg, #0c1324 5px, transparent 5px) 0 5px,
+        linear-gradient(207deg, #0c1324 5px, transparent 5px) 10px 0,
+        linear-gradient(27deg, #141d33 5px, transparent 5px) 0 10px,
+        linear-gradient(207deg, #141d33 5px, transparent 5px) 10px 5px,
+        linear-gradient(90deg, #0a1020 10px, transparent 10px),
+        linear-gradient(#0d1526 25%, #0a1020 25%, #0a1020 50%, transparent 50%, transparent 75%, #0d1526 75%, #0d1526);
+      background-size: 20px 20px;
+      opacity: .55;
+      will-change: transform;
+    }
+    #bg-carbon::after{ content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%, rgba(225,6,0,.05), transparent 60%); }
 
     .cur-dot { position: fixed; z-index: 9999; pointer-events: none; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); transform: translate(-50%,-50%); box-shadow: 0 0 8px var(--accent); transition: transform .1s; }
-    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(0,180,255,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
+    .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(225,0,26,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
 
     /* TOPBAR */
     .topbar {
@@ -79,8 +94,8 @@
     .tb-link::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:1px; background:var(--accent); transform:scaleX(0); transition:transform .2s; transform-origin:left; }
     .tb-link:hover { color: var(--accent); }
     .tb-link:hover::after { transform: scaleX(1); }
-    .tb-link.back { color: var(--accent); border: 1px solid rgba(0,180,255,.25); padding: 2px 10px; font-size: 9px; }
-    .tb-link.back:hover { background: rgba(0,180,255,.08); }
+    .tb-link.back { color: var(--accent); border: 1px solid rgba(225,0,26,.25); padding: 2px 10px; font-size: 9px; }
+    .tb-link.back:hover { background: rgba(225,0,26,.08); }
     .tb-link.back::after { display: none; }
 
     /* PAGE */
@@ -91,6 +106,11 @@
       padding: 100px 40px 80px;
     }
 
+    .breadcrumb { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .12em; margin-bottom: 28px; display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+    .breadcrumb a { color: var(--muted); text-decoration: none; transition: color .2s; }
+    .breadcrumb a:hover { color: var(--accent); }
+    .breadcrumb span { color: var(--wire-2); }
+    .breadcrumb .current { color: var(--accent); }
     .intro-line {
       font-family: var(--font-mono); font-size: 10px;
       color: var(--accent); letter-spacing: .22em; text-transform: uppercase;
@@ -110,7 +130,7 @@
       color: var(--text);
     }
     .page-title span {
-      -webkit-text-stroke: 1px rgba(0,180,255,.35);
+      -webkit-text-stroke: 1px rgba(225,0,26,.35);
       -webkit-text-fill-color: transparent;
       display: block;
     }
@@ -124,7 +144,7 @@
       line-height: 1.75;
       margin-bottom: 64px;
       padding-left: 20px;
-      border-left: 2px solid rgba(0,180,255,.25);
+      border-left: 2px solid rgba(225,0,26,.25);
       font-style: italic;
     }
 
@@ -173,8 +193,8 @@
     .card.note::before {
       background: linear-gradient(90deg, transparent, var(--purple), transparent);
     }
-    .card:hover { border-color: rgba(0,180,255,.28); box-shadow: 0 0 36px rgba(0,180,255,.04); }
-    .card.note:hover { border-color: rgba(155,89,245,.28); box-shadow: 0 0 36px rgba(155,89,245,.04); }
+    .card:hover { border-color: rgba(225,0,26,.28); box-shadow: 0 0 36px rgba(225,0,26,.04); }
+    .card.note:hover { border-color: rgba(42,90,255,.28); box-shadow: 0 0 36px rgba(42,90,255,.04); }
     .card:hover::before { opacity: .7; }
 
     .card-meta {
@@ -187,15 +207,15 @@
       font-family: var(--font-mono); font-size: 10px;
       letter-spacing: .18em; text-transform: uppercase;
       padding: 3px 9px;
-      border: 1px solid rgba(0,180,255,.3);
+      border: 1px solid rgba(225,0,26,.3);
       color: var(--accent);
-      background: rgba(0,180,255,.05);
+      background: rgba(225,0,26,.05);
       border-radius: 2px;
     }
     .card-badge.purple {
-      border-color: rgba(155,89,245,.3);
+      border-color: rgba(42,90,255,.3);
       color: var(--purple);
-      background: rgba(155,89,245,.05);
+      background: rgba(42,90,255,.05);
     }
 
     .card-title {
@@ -244,8 +264,8 @@
       border-radius: 2px;
       transition: border-color .2s, color .2s;
     }
-    .card:hover .tag { border-color: rgba(0,180,255,.18); }
-    .card.note:hover .tag { border-color: rgba(155,89,245,.18); }
+    .card:hover .tag { border-color: rgba(225,0,26,.18); }
+    .card.note:hover .tag { border-color: rgba(42,90,255,.18); }
 
     .card-link {
       font-family: var(--font-mono);
@@ -293,7 +313,7 @@
 </head>
 <body>
 
-<canvas id="bg-canvas"></canvas>
+<div id="bg-carbon"></div>
 <div class="cur-dot" id="curDot"></div>
 <div class="cur-ring" id="curRing"></div>
 
@@ -313,7 +333,12 @@
 <div class="page-wrap">
 
   <div class="reveal">
-    <div class="intro-line">low-level engineering</div>
+    <div class="breadcrumb">
+<a href="./index.html">Home</a>
+<span>/</span>
+<span class="current">Systems Research</span>
+</div>
+<div class="intro-line">low-level engineering</div>
     <h1 class="page-title">Systems<span>Research</span></h1>
     <p class="framing">
       Investigations, recoveries, and things that needed fixing at the layer nobody wanted to touch.
@@ -440,6 +465,24 @@
     </div>
   </div>
 
+  <div class="card note reveal" style="transition-delay:.45s;">
+    <div class="card-meta">
+      <span class="card-badge purple">Log</span>
+    </div>
+    <h2 class="card-title">Arch Linux Migration &amp; Hyprland Rice</h2>
+    <p class="card-summary">Full migration to Arch Linux with a Hyprland compositor, dual-booted alongside an existing Windows install. Bootloader coexistence, driver setup, and a shell layer built up piece by piece rather than dropped in from a dotfiles repo.</p>
+    <div class="card-footer">
+      <div class="card-tags">
+        <span class="tag">Arch Linux</span>
+        <span class="tag">Hyprland</span>
+        <span class="tag">Wayland</span>
+        <span class="tag">Dual Boot</span>
+        <span class="tag">GRUB/EFI</span>
+      </div>
+      <a href="./arch_writeup.html" class="card-link">Read Notes</a>
+    </div>
+  </div>
+
 </div>
 
 <footer>
@@ -449,84 +492,22 @@
 </footer>
 
 <script>
-const canvas = document.getElementById('bg-canvas');
-const ctx = canvas.getContext('2d');
-let W, H;
-const mouse = { x: window.innerWidth/2, y: window.innerHeight/2 };
-function resize() { W = canvas.width = window.innerWidth; H = canvas.height = window.innerHeight; }
-resize();
-window.addEventListener('resize', resize);
-document.addEventListener('mousemove', e => { mouse.x = e.clientX; mouse.y = e.clientY; });
-
-const WORLD_H = 4000, NODE_COUNT = 280, CONNECT_DIST = 160;
-const nodes = Array.from({length: NODE_COUNT}, () => ({
-  x: Math.random() * window.innerWidth,
-  y: Math.random() * WORLD_H,
-  vx: (Math.random()-.5)*.6, vy: (Math.random()-.5)*.6,
-  r: Math.random()*2.2+1.1,
-  color: Math.random()>.5 ? '#00b4ff' : Math.random()>.7 ? '#9b59f5' : '#0090d4',
-  pulse: Math.random()*Math.PI*2,
-  pulseSpeed: .02+Math.random()*.025
-}));
-
-const LABELS = ['KPROBE','INITRAMFS','BROM','AVB','GPT','EFI','VBMETA','CHROOT','eBPF','DRIFT','TRUST','VMD','FASTBOOT','GRUB','SYN'];
-const floaters = Array.from({length:14},(_,i)=>({
-  text: LABELS[i%LABELS.length],
-  x: Math.random()*window.innerWidth,
-  y: Math.random()*WORLD_H,
-  vy: -(Math.random()*.2+.07),
-  opacity: Math.random()*.18+.05
-}));
-
-function draw() {
-  const sy = window.scrollY;
-  ctx.clearRect(0,0,W,H);
-  const mg = ctx.createRadialGradient(mouse.x,mouse.y,0,mouse.x,mouse.y,200);
-  mg.addColorStop(0,'rgba(0,180,255,0.06)');
-  mg.addColorStop(1,'rgba(0,0,0,0)');
-  ctx.fillStyle=mg; ctx.fillRect(0,0,W,H);
-  ctx.save(); ctx.translate(0,-sy);
-  const wxm=mouse.x, wym=mouse.y+sy;
-  for(const n of nodes){
-    n.pulse+=n.pulseSpeed;
-    const dx=n.x-wxm,dy=n.y-wym,dist=Math.sqrt(dx*dx+dy*dy);
-    if(dist<170&&dist>0){const f=(170-dist)/170*1.1;n.vx+=(dx/dist)*f;n.vy+=(dy/dist)*f;}
-    const spd=Math.sqrt(n.vx*n.vx+n.vy*n.vy);
-    if(spd>2.2){n.vx*=2.2/spd;n.vy*=2.2/spd;}
-    n.vx*=.993;n.vy*=.993;n.x+=n.vx;n.y+=n.vy;
-    if(n.x<0){n.x=0;n.vx*=-1;} if(n.x>W){n.x=W;n.vx*=-1;}
-    if(n.y<0){n.y=0;n.vy*=-1;} if(n.y>WORLD_H){n.y=WORLD_H;n.vy*=-1;}
-    if(n.y<sy-160||n.y>sy+H+160)continue;
-    for(const m of nodes){
-      if(m===n)continue;
-      if(m.y<sy-160||m.y>sy+H+160)continue;
-      const ex=n.x-m.x,ey=n.y-m.y,ed=Math.sqrt(ex*ex+ey*ey);
-      if(ed<CONNECT_DIST){
-        const alpha=(1-ed/CONNECT_DIST)*.45;
-        const isPurp = n.color==='#9b59f5'||m.color==='#9b59f5';
-        ctx.beginPath();ctx.moveTo(n.x,n.y);ctx.lineTo(m.x,m.y);
-        ctx.strokeStyle=isPurp?`rgba(155,89,245,${alpha*.9})`:`rgba(0,180,255,${alpha})`;
-        ctx.lineWidth=.7;ctx.stroke();
-      }
-    }
-    const pa=.6+Math.sin(n.pulse)*.35, pr=n.r+Math.sin(n.pulse)*.6;
-    ctx.beginPath();ctx.arc(n.x,n.y,pr,0,Math.PI*2);
-    ctx.fillStyle=n.color==='#9b59f5'?`rgba(155,89,245,${pa})`:n.color==='#0090d4'?`rgba(0,144,212,${pa})`:`rgba(0,180,255,${pa})`;
-    ctx.fill();
+(function carbonBg(){
+  const el=document.getElementById('bg-carbon');
+  if(!el) return;
+  let mx=0,my=0,tx=0,ty=0;
+  window.addEventListener('mousemove',(e)=>{
+    mx=(e.clientX/window.innerWidth-0.5)*30;
+    my=(e.clientY/window.innerHeight-0.5)*30;
+  });
+  function frame(){
+    tx += (mx-tx)*0.04; ty += (my-ty)*0.04;
+    const scrollShift = window.scrollY*0.06;
+    el.style.transform = `translate3d(${tx}px, ${ty+scrollShift}px, 0)`;
+    requestAnimationFrame(frame);
   }
-  ctx.font='9px JetBrains Mono,monospace';
-  for(const f of floaters){
-    f.y+=f.vy;
-    if(f.y<0){f.y=WORLD_H;f.x=Math.random()*W;}
-    if(f.y<sy-20||f.y>sy+H+20)continue;
-    ctx.fillStyle=`rgba(0,180,255,${f.opacity})`;
-    ctx.fillText(f.text,f.x,f.y);
-  }
-  ctx.restore();
-  requestAnimationFrame(draw);
-}
-draw();
-
+  frame();
+})();
 // CURSOR
 const dot = document.getElementById('curDot');
 const ring = document.getElementById('curRing');
