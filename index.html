@@ -7,20 +7,20 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23060a14'/%3E%3Crect x='1' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='3' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='7' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='1' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='5' width='2' height='2' fill='%23e1001a'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
   --black: #060a14;
-  --panel: #0a1020;
-  --wire: #141d33;
-  --wire2: #1e2a48;
+  --panel: #0d1526;
+  --wire: #1a2540;
+  --wire2: #2a3c66;
   --green: #e1001a;
   --green2: #7a0010;
   --blue: #2a5aff;
   --accent: #e1001a;
   --cyan: #3fd0ff;
   --text: #f2f4f8;
-  --muted: #7a88a8;
+  --muted: #98a7c8;
   --f1red: #e1001a;
   --f1purple: #3fd0ff;
   --mono: 'Space Mono', ui-monospace, monospace;
@@ -123,12 +123,12 @@ body::after {
 
 /* HERO */
 #hero {
-  min-height: 100vh;
+  min-height: 112vh;
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 340px;
+  grid-template-columns: minmax(0, 1fr) 460px;
   align-items: center;
-  padding: 80px 60px 60px;
-  gap: 48px;
+  padding: 90px 60px 70px;
+  gap: 56px;
   overflow: hidden;
   position: relative;
 }
@@ -162,7 +162,7 @@ body::after {
 @keyframes cursor-blink { 50%{ border-color:transparent } }
 .hero-name {
   font-family: var(--display);
-  font-size: clamp(44px, 6.8vw, 92px);
+  font-size: clamp(40px, 6.2vw, 84px);
   font-weight: 900;
   line-height: .95;
   letter-spacing: -.02em;
@@ -176,12 +176,12 @@ body::after {
 }
 .hero-name::before,.hero-name::after { display:none; }
 .hero-name.is-glitching { animation: glitch-skew 0.15s steps(1) forwards; }
-.name-main { display: block; color: var(--text); font-family:'Anton',sans-serif; font-weight:400; letter-spacing:-.01em; }
+.name-main { display: block; color: var(--text); font-family:'Space Grotesk',sans-serif; font-weight:800; }
 .name-stroke {
   display: block;
-  font-family: 'Bodoni Moda', serif;
+  font-family: 'Space Grotesk', sans-serif;
   font-style: normal;
-  font-weight: 600;
+  font-weight: 500;
   text-transform: none;
   color: var(--green);
   -webkit-text-fill-color: var(--green);
@@ -202,22 +202,25 @@ body::after {
 
 /* TELEMETRY GAUGES */
 
-/* DOT MATRIX 24 — animated pixel-light grid masked to the number, same wave/glow motion as the archive pages' dot canvas, in blue */
+/* DOT MATRIX 24 — fixed background, index only */
 #bg-dotnum {
-  position: fixed; right: -30px; bottom: -50px; z-index: 1; pointer-events: none;
-  width: min(980px, 92vw);
-  height: 420px;
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 760 340'%3E%3Ctext x='97%25' y='53%25' text-anchor='end' dominant-baseline='middle' font-family='Arial Black, Helvetica, sans-serif' font-weight='900' font-size='400'%3E24%3C/text%3E%3C/svg%3E");
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 760 340'%3E%3Ctext x='97%25' y='53%25' text-anchor='end' dominant-baseline='middle' font-family='Arial Black, Helvetica, sans-serif' font-weight='900' font-size='400'%3E24%3C/text%3E%3C/svg%3E");
+  position: fixed; right: -110px; bottom: -70px; z-index: 1; pointer-events: none;
+  width: min(1180px, 96vw);
+  height: 520px;
+  background-image: radial-gradient(circle, var(--cyan) 1.7px, transparent 1.9px);
+  background-size: 13px 13px;
+  background-color: transparent;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 760 340'%3E%3Ctext x='50%25' y='53%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial Black, Helvetica, sans-serif' font-weight='900' font-size='340'%3E24%3C/text%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 760 340'%3E%3Ctext x='50%25' y='53%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial Black, Helvetica, sans-serif' font-weight='900' font-size='340'%3E24%3C/text%3E%3C/svg%3E");
   -webkit-mask-size: contain; mask-size: contain;
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-  -webkit-mask-position: right center; mask-position: right center;
-  opacity: .55;
-  filter: drop-shadow(0 0 18px rgba(63,208,255,.5));
+  -webkit-mask-position: center; mask-position: center;
+  opacity: .58;
+  filter: drop-shadow(0 0 20px rgba(63,208,255,.55));
   will-change: transform;
 }
 @media (max-width: 720px) {
-  #bg-dotnum { width: 100vw; height: 240px; right: -10px; bottom: -20px; opacity: .34; }
+  #bg-dotnum { width: 92vw; height: 220px; right: -30px; bottom: -20px; opacity: .32; }
 }
 .hero-bio strong { color:var(--text); font-weight:500; }
 .quick-scan { font-family:var(--mono); font-size:11px; background:rgba(225,0,26,.03); border:1px solid var(--wire2); border-left:2px solid rgba(225,0,26,.35); padding:14px 18px; margin-bottom:24px; line-height:1.9; color:var(--muted); border-radius:0 6px 6px 0; }
@@ -229,16 +232,16 @@ body::after {
 .ttag:hover { border-color:var(--green); color:var(--green); }
 .ttag:hover::before { transform:scaleX(1); }
 .hero-actions { display:flex; gap:10px; }
-.hbtn { font-family:var(--mono); font-size:11px; padding:12px 22px; text-decoration:none; letter-spacing:.12em; text-transform:uppercase; transition:box-shadow .25s cubic-bezier(.2,.8,.2,1), background .25s cubic-bezier(.2,.8,.2,1), color .25s cubic-bezier(.2,.8,.2,1), border-color .25s cubic-bezier(.2,.8,.2,1); clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px)); position:relative; display:inline-block; }
+.hbtn { font-family:var(--mono); font-size:12.5px; font-weight:700; padding:14px 26px; text-decoration:none; letter-spacing:.14em; text-transform:uppercase; transition:box-shadow .25s cubic-bezier(.2,.8,.2,1), background .25s cubic-bezier(.2,.8,.2,1), color .25s cubic-bezier(.2,.8,.2,1), border-color .25s cubic-bezier(.2,.8,.2,1); clip-path:polygon(0 0,calc(100% - 10px) 0,100% 10px,100% 100%,10px 100%,0 calc(100% - 10px)); position:relative; display:inline-block; }
 .hbtn span.btn-inner { display:block; transition:transform .2s cubic-bezier(.23,1,.32,1); pointer-events:none; }
 .ripple { position:fixed; border-radius:50%; width:6px; height:6px; border:1px solid var(--green); transform:translate(-50%,-50%) scale(1); pointer-events:none; z-index:9997; animation:ripple-out .6s ease-out forwards; }
 @keyframes ripple-out { 0%{ transform:translate(-50%,-50%) scale(1); opacity:.8; } 100%{ transform:translate(-50%,-50%) scale(18); opacity:0; } }
-.hbtn-primary { background:var(--green); color:#000; font-weight:600; }
+.hbtn-primary { background:#ff1a35; color:#000; font-weight:700; box-shadow:0 0 16px rgba(225,0,26,.35); }
 .hbtn-primary:hover { background:#e1001a; box-shadow:0 6px 24px rgba(225,0,26,.28),0 0 16px rgba(225,0,26,.22); }
 .hbtn-ghost { border:1px solid var(--wire2); color:var(--muted); }
 .hbtn-ghost:hover { border-color:var(--green); color:var(--green); box-shadow:0 4px 18px rgba(225,0,26,.14); }
-.hbtn-resume { border:1px solid rgba(63,208,255,.4); color:var(--text); background:rgba(63,208,255,.08); }
-.hbtn-resume:hover { border-color:var(--f1purple); background:rgba(63,208,255,.18); box-shadow:0 6px 22px rgba(63,208,255,.22),0 0 14px rgba(63,208,255,.2); }
+.hbtn-resume { border:1px solid rgba(63,208,255,.7); color:#eaf8ff; background:rgba(63,208,255,.16); }
+.hbtn-resume:hover { border-color:var(--f1purple); background:rgba(63,208,255,.28); box-shadow:0 6px 22px rgba(63,208,255,.32),0 0 18px rgba(63,208,255,.3); }
 
 .hero-right {
   width: 100%;
@@ -275,34 +278,34 @@ body::after {
 .race-widget {
   border: 1px solid var(--wire2);
   border-radius: 10px;
-  padding: 16px 18px 18px;
+  padding: 22px 24px 24px;
   position: relative;
   z-index: 3;
 }
-.race-header { font-family:var(--mono); font-size:9px; color:var(--muted); letter-spacing:.2em; text-transform:uppercase; padding-bottom:9px; border-bottom:1px solid var(--wire); margin-bottom:12px; display:flex; align-items:center; justify-content:space-between; }
+.race-header { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:.2em; text-transform:uppercase; padding-bottom:11px; border-bottom:1px solid var(--wire); margin-bottom:16px; display:flex; align-items:center; justify-content:space-between; }
 .race-header span { color:var(--green); }
 .race-live { display:flex; align-items:center; gap:5px; color:var(--green); }
 .race-live .sdot { margin-right:0; }
-.race-track-wrap { width:100%; aspect-ratio:17/11; margin-bottom:14px; }
+.race-track-wrap { width:100%; aspect-ratio:17/12; margin-bottom:18px; }
 .race-track-wrap svg { width:100%; height:100%; display:block; }
-.race-lap { font-family:var(--mono); font-size:9px; color:var(--muted); letter-spacing:.08em; text-align:right; margin:-8px 0 12px; }
+.race-lap { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:.08em; text-align:right; margin:-10px 0 16px; }
 .race-lap span { color:var(--cyan); }
-.race-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
+.race-stats { display:grid; grid-template-columns:repeat(3,1fr); gap:11px; margin-bottom:16px; }
 .race-stat.wide { grid-column:span 1; }
-.race-stat { flex:1; background:var(--wire); border-radius:6px; padding:8px 10px; text-align:center; }
-.race-stat-label { display:block; font-family:var(--mono); font-size:8px; color:var(--muted); letter-spacing:.16em; margin-bottom:2px; text-transform:uppercase; }
-.race-stat-val { font-family:var(--display); font-size:20px; font-weight:800; color:var(--text); line-height:1; }
+.race-stat { flex:1; background:var(--wire); border-radius:6px; padding:12px 12px; text-align:center; }
+.race-stat-label { display:block; font-family:var(--mono); font-size:9px; color:var(--muted); letter-spacing:.16em; margin-bottom:3px; text-transform:uppercase; }
+.race-stat-val { font-family:var(--display); font-size:26px; font-weight:800; color:var(--text); line-height:1; }
 .race-stat-val.blue { color:#3fd0ff; }
 .race-stat-val.red { color:var(--green); }
-.race-stat-val.small { font-size:14px; }
+.race-stat-val.small { font-size:18px; }
 .race-stat-val.tyre-soft { color:var(--green); }
-.tele-bar-row { display:flex; align-items:center; gap:10px; margin-bottom:8px; }
-.tele-bar-label { font-family:var(--mono); font-size:9px; color:var(--muted); letter-spacing:.1em; width:58px; flex-shrink:0; }
-.tele-bar-track { flex:1; height:7px; background:var(--wire); border-radius:6px; overflow:hidden; }
+.tele-bar-row { display:flex; align-items:center; gap:12px; margin-bottom:11px; }
+.tele-bar-label { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:.1em; width:64px; flex-shrink:0; }
+.tele-bar-track { flex:1; height:9px; background:var(--wire); border-radius:6px; overflow:hidden; }
 .tele-bar-fill { height:100%; border-radius:6px; width:0%; }
 .tele-bar-fill.throttle { background:linear-gradient(90deg,var(--green),#3fd0ff); transition:width .18s ease-out; }
 .tele-bar-fill.brake { background:linear-gradient(90deg,#3fd0ff,var(--green)); transition:width .18s ease-out; }
-.tele-bar-pct { font-family:var(--mono); font-size:10px; color:var(--text); width:32px; text-align:right; flex-shrink:0; }
+.tele-bar-pct { font-family:var(--mono); font-size:11px; color:var(--text); width:36px; text-align:right; flex-shrink:0; }
 
 
 /* SECTION CHROME */
@@ -336,23 +339,22 @@ body::after {
 .race-widget {
   background-image:
     repeating-linear-gradient(
-      45deg,
-      rgba(255,255,255,.05) 0,
-      rgba(255,255,255,.05) 2px,
-      rgba(0,0,0,.16) 2px,
-      rgba(0,0,0,.16) 4px
+      0deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.038) 2px,
+      rgba(255,255,255,0.038) 3px
     ),
     repeating-linear-gradient(
-      -45deg,
-      rgba(255,255,255,.035) 0,
-      rgba(255,255,255,.035) 2px,
-      rgba(0,0,0,.11) 2px,
-      rgba(0,0,0,.11) 4px
+      90deg,
+      transparent,
+      transparent 2px,
+      rgba(255,255,255,0.02) 2px,
+      rgba(255,255,255,0.02) 3px
     );
-  background-size: 6px 6px;
   background-color: var(--panel);
 }
-.bice-hero-card { background-image:repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0, rgba(255,255,255,.05) 2px, rgba(0,0,0,.16) 2px, rgba(0,0,0,.16) 4px), repeating-linear-gradient(-45deg, rgba(255,255,255,.035) 0, rgba(255,255,255,.035) 2px, rgba(0,0,0,.11) 2px, rgba(0,0,0,.11) 4px); background-size:6px 6px; background-color:var(--panel); border:1px solid var(--wire2); border-radius:6px; padding:44px; position:relative; overflow:hidden; margin-top:44px; transition:border-color .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s cubic-bezier(.2,.8,.2,1); transform-style:preserve-3d; }
+.bice-hero-card { background-image:repeating-linear-gradient(45deg, rgba(255,255,255,.025) 0, rgba(255,255,255,.025) 2px, transparent 2px, transparent 4px), repeating-linear-gradient(-45deg, rgba(255,255,255,.02) 0, rgba(255,255,255,.02) 2px, transparent 2px, transparent 4px); background-size:6px 6px; background-color:var(--panel); border:1px solid var(--wire2); border-radius:6px; padding:44px; position:relative; overflow:hidden; margin-top:44px; transition:border-color .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s cubic-bezier(.2,.8,.2,1); transform-style:preserve-3d; }
 .bice-hero-card::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--green),transparent); opacity:0; transition:opacity .4s; }
 .bice-hero-card:hover { border-color:rgba(225,0,26,.35); box-shadow:0 12px 36px rgba(0,0,0,.45),0 0 28px rgba(225,0,26,.06); }
 .bice-hero-card:hover::before { opacity:.7; }
@@ -462,10 +464,10 @@ body::after {
 .tk-card:hover::after { right:0; }
 .tk-flag { position:absolute; top:0; right:0; width:26px; height:26px; opacity:0; transition:opacity .25s; background-image:linear-gradient(45deg,var(--muted) 25%,transparent 25%),linear-gradient(-45deg,var(--muted) 25%,transparent 25%),linear-gradient(45deg,transparent 75%,var(--muted) 75%),linear-gradient(-45deg,transparent 75%,var(--muted) 75%); background-size:8px 8px; background-position:0 0,0 4px,4px -4px,-4px 0; }
 .tk-card:hover .tk-flag { opacity:.5; }
-.grid-pos { display:inline-block; font-family:var(--mono); font-size:10px; font-weight:700; letter-spacing:.05em; color:var(--black); background:var(--green); padding:1px 6px; border-radius:6px; margin-right:8px; box-shadow:0 0 8px rgba(225,0,26,.4); vertical-align:middle; }
+.grid-pos { display:inline-block; font-family:var(--mono); font-size:12px; font-weight:800; letter-spacing:.05em; color:var(--black); background:var(--green); padding:2px 8px; border-radius:6px; margin-right:9px; box-shadow:0 0 8px rgba(225,0,26,.4); vertical-align:middle; }
 .tk-telem { font-family:var(--mono); font-size:9.5px; letter-spacing:.1em; color:var(--muted); opacity:0; max-height:0; overflow:hidden; transition:opacity .25s, max-height .25s; }
 .tk-card:hover .tk-telem { opacity:.85; max-height:20px; margin-top:6px; }
-.tk-cat { font-family:var(--mono); font-size:9px; color:var(--muted); letter-spacing:.2em; text-transform:uppercase; margin-bottom:14px; padding-bottom:10px; border-bottom:1px solid var(--wire2); }
+.tk-cat { font-family:var(--display); font-size:15px; font-weight:800; color:var(--text); letter-spacing:.04em; text-transform:uppercase; margin-bottom:16px; padding-bottom:12px; border-bottom:1px solid var(--wire2); }
 .tk-items { display:flex; flex-direction:column; gap:8px; }
 .tk-item { font-family:var(--body); font-size:14px; color:#f2f4f8; font-weight:300; padding:6px 0; border-bottom:1px solid rgba(8,14,32,.8); display:flex; align-items:center; gap:8px; }
 .tk-item::before { content:''; display:inline-block; width:4px; height:4px; border-radius:50%; background:var(--accent); opacity:.5; flex-shrink:0; }
@@ -518,6 +520,8 @@ body::after {
 .ct-term-output { flex:1; padding:16px; font-size:11px; line-height:1.9; min-height:160px; max-height:220px; overflow-y:auto; color:var(--muted); }
 .ct-term-output::-webkit-scrollbar{width:4px} .ct-term-output::-webkit-scrollbar-thumb{background:var(--wire2)}
 .to-green{color:var(--green)} .to-blue{color:var(--blue)} .to-amber{color:#3fd0ff} .to-red{color:#3fd0ff} .to-dim{color:#7a88a8}
+.ct-term-hint { font-family:var(--mono); font-size:10px; color:var(--muted); letter-spacing:.04em; padding:9px 16px; border-top:1px solid var(--wire); background:rgba(0,0,0,.18); }
+.ct-term-hint .to-green { color:var(--green); }
 .ct-term-input-row { display:flex; align-items:center; gap:8px; padding:12px 16px; border-top:1px solid var(--wire); background:rgba(0,0,0,.3); }
 .ct-term-prompt { color:var(--green); font-size:12px; flex-shrink:0; }
 .ct-term-input { flex:1; background:transparent; border:none; outline:none; font-family:var(--mono); font-size:12px; color:var(--text); caret-color:var(--green); }
@@ -644,7 +648,7 @@ footer .g { color:var(--green); }
 <div id="crt-turn-on"></div>
 
 <div id="bg-carbon"></div>
-<canvas id="bg-dotnum" aria-hidden="true"></canvas>
+<div id="bg-dotnum" aria-hidden="true"></div>
 <div class="noise-overlay"></div>
 <div class="pit-flash" id="pitFlash"></div>
 <div id="cur-dot"></div>
@@ -704,30 +708,19 @@ footer .g { color:var(--green); }
 
     <div class="race-track-wrap">
       <svg viewBox="0 0 340 220" shape-rendering="geometricPrecision">
-        <defs>
-          <pattern id="finishCheckers" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(90 0 0)">
-            <rect width="4" height="4" fill="#e8ecf5"/>
-            <rect width="2" height="2" fill="#0a1020"/>
-            <rect x="2" y="2" width="2" height="2" fill="#0a1020"/>
-          </pattern>
-        </defs>
-        <path id="trackPath" d="M40,195 L235,195 C260,195 275,185 278,165 L300,150 L315,115 C312,90 292,85 300,68 L280,75 C280,55 260,45 235,50 L175,38 L155,55 L165,68 L130,58 L108,75 C90,88 65,80 62,60 C60,45 45,50 45,68 C40,80 55,85 47,95 C40,103 46,108 48,105 L68,118 L48,135 C35,143 30,160 38,175 L40,195 Z"
+        <path id="trackPath" d="M30,200 C46.7,204.2 95.8,199.2 120,200 C144.2,200.8 160.0,205.8 175,205 C190.0,204.2 201.7,200.8 210,195 C218.3,189.2 224.2,177.5 225,170 C225.8,162.5 220.0,154.2 215,150 C210.0,145.8 200.8,149.2 195,145 C189.2,140.8 180.0,131.7 180,125 C180.0,118.3 187.5,109.2 195,105 C202.5,100.8 215.8,99.2 225,100 C234.2,100.8 241.7,110.0 250,110 C258.3,110.0 267.5,105.8 275,100 C282.5,94.2 293.3,83.3 295,75 C296.7,66.7 291.7,56.7 285,50 C278.3,43.3 263.3,35.0 255,35 C246.7,35.0 241.7,48.3 235,50 C228.3,51.7 220.8,49.2 215,45 C209.2,40.8 207.5,29.2 200,25 C192.5,20.8 178.3,18.3 170,20 C161.7,21.7 152.5,29.2 150,35 C147.5,40.8 157.5,50.0 155,55 C152.5,60.0 142.5,65.0 135,65 C127.5,65.0 116.7,60.8 110,55 C103.3,49.2 102.5,35.0 95,30 C87.5,25.0 72.5,22.5 65,25 C57.5,27.5 50.8,38.3 50,45 C49.2,51.7 60.8,59.2 60,65 C59.2,70.8 51.7,76.7 45,80 C38.3,83.3 25.0,80.0 20,85 C15.0,90.0 12.5,103.3 15,110 C17.5,116.7 29.2,120.0 35,125 C40.8,130.0 50.0,135.0 50,140 C50.0,145.0 40.0,149.2 35,155 C30.0,160.8 20.8,167.5 20,175 C19.2,182.5 13.3,195.8 30,200 Z"
           fill="none" stroke="#232c4a" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M40,195 L235,195 C260,195 275,185 278,165 L300,150 L315,115 C312,90 292,85 300,68 L280,75 C280,55 260,45 235,50 L175,38 L155,55 L165,68 L130,58 L108,75 C90,88 65,80 62,60 C60,45 45,50 45,68 C40,80 55,85 47,95 C40,103 46,108 48,105 L68,118 L48,135 C35,143 30,160 38,175 L40,195 Z"
+        <path d="M30,200 C46.7,204.2 95.8,199.2 120,200 C144.2,200.8 160.0,205.8 175,205 C190.0,204.2 201.7,200.8 210,195 C218.3,189.2 224.2,177.5 225,170 C225.8,162.5 220.0,154.2 215,150 C210.0,145.8 200.8,149.2 195,145 C189.2,140.8 180.0,131.7 180,125 C180.0,118.3 187.5,109.2 195,105 C202.5,100.8 215.8,99.2 225,100 C234.2,100.8 241.7,110.0 250,110 C258.3,110.0 267.5,105.8 275,100 C282.5,94.2 293.3,83.3 295,75 C296.7,66.7 291.7,56.7 285,50 C278.3,43.3 263.3,35.0 255,35 C246.7,35.0 241.7,48.3 235,50 C228.3,51.7 220.8,49.2 215,45 C209.2,40.8 207.5,29.2 200,25 C192.5,20.8 178.3,18.3 170,20 C161.7,21.7 152.5,29.2 150,35 C147.5,40.8 157.5,50.0 155,55 C152.5,60.0 142.5,65.0 135,65 C127.5,65.0 116.7,60.8 110,55 C103.3,49.2 102.5,35.0 95,30 C87.5,25.0 72.5,22.5 65,25 C57.5,27.5 50.8,38.3 50,45 C49.2,51.7 60.8,59.2 60,65 C59.2,70.8 51.7,76.7 45,80 C38.3,83.3 25.0,80.0 20,85 C15.0,90.0 12.5,103.3 15,110 C17.5,116.7 29.2,120.0 35,125 C40.8,130.0 50.0,135.0 50,140 C50.0,145.0 40.0,149.2 35,155 C30.0,160.8 20.8,167.5 20,175 C19.2,182.5 13.3,195.8 30,200 Z"
           fill="none" stroke="#333f66" stroke-width="1" opacity=".6"/>
-        <path d="M40,195 L235,195 C260,195 275,185 278,165 L300,150 L315,115 C312,90 292,85 300,68 L280,75 C280,55 260,45 235,50 L175,38 L155,55 L165,68 L130,58 L108,75 C90,88 65,80 62,60 C60,45 45,50 45,68 C40,80 55,85 47,95 C40,103 46,108 48,105 L68,118 L48,135 C35,143 30,160 38,175 L40,195 Z"
+        <path d="M30,200 C46.7,204.2 95.8,199.2 120,200 C144.2,200.8 160.0,205.8 175,205 C190.0,204.2 201.7,200.8 210,195 C218.3,189.2 224.2,177.5 225,170 C225.8,162.5 220.0,154.2 215,150 C210.0,145.8 200.8,149.2 195,145 C189.2,140.8 180.0,131.7 180,125 C180.0,118.3 187.5,109.2 195,105 C202.5,100.8 215.8,99.2 225,100 C234.2,100.8 241.7,110.0 250,110 C258.3,110.0 267.5,105.8 275,100 C282.5,94.2 293.3,83.3 295,75 C296.7,66.7 291.7,56.7 285,50 C278.3,43.3 263.3,35.0 255,35 C246.7,35.0 241.7,48.3 235,50 C228.3,51.7 220.8,49.2 215,45 C209.2,40.8 207.5,29.2 200,25 C192.5,20.8 178.3,18.3 170,20 C161.7,21.7 152.5,29.2 150,35 C147.5,40.8 157.5,50.0 155,55 C152.5,60.0 142.5,65.0 135,65 C127.5,65.0 116.7,60.8 110,55 C103.3,49.2 102.5,35.0 95,30 C87.5,25.0 72.5,22.5 65,25 C57.5,27.5 50.8,38.3 50,45 C49.2,51.7 60.8,59.2 60,65 C59.2,70.8 51.7,76.7 45,80 C38.3,83.3 25.0,80.0 20,85 C15.0,90.0 12.5,103.3 15,110 C17.5,116.7 29.2,120.0 35,125 C40.8,130.0 50.0,135.0 50,140 C50.0,145.0 40.0,149.2 35,155 C30.0,160.8 20.8,167.5 20,175 C19.2,182.5 13.3,195.8 30,200 Z"
           fill="none" stroke="#5a6884" stroke-width="1" stroke-dasharray="3 4" opacity=".7"/>
-        <g id="finishLine">
-          <rect x="38" y="188.5" width="4" height="13" fill="url(#finishCheckers)" stroke="#0a1020" stroke-width="0.4"/>
-          <text x="40" y="182" font-family="var(--mono)" font-size="5.5" fill="#e8ecf5" text-anchor="middle" letter-spacing=".5">FINISH</text>
-        </g>
-        <text x="285" y="150" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">TURN 1</text>
-        <text x="300" y="140" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">BACK STR</text>
-        <text x="285" y="80" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">HAIRPIN 2</text>
-        <text x="128" y="35" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">ESSES</text>
-        <text x="15" y="50" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">HAIRPIN</text>
-        <text x="10" y="98" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">CHICANE 2</text>
-        <text x="10" y="122" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">CHICANE</text>
+        <text x="200" y="215" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">T1</text>
+        <text x="230" y="182" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">HAIRPIN</text>
+        <text x="255" y="118" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">BACK STR</text>
+        <text x="298" y="65" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">TURN 4</text>
+        <text x="200" y="18" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">ESSES</text>
+        <text x="115" y="42" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">CHICANE</text>
+        <text x="30" y="105" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">HAIRPIN 2</text>
         <g id="raceCar" shape-rendering="crispEdges">
           <rect x="-16" y="-5" width="1" height="2" fill="#0a0a0a"/>
           <rect x="-16" y="3" width="1" height="2" fill="#0a0a0a"/>
@@ -746,6 +739,31 @@ footer .g { color:var(--green); }
           <rect x="8.3" y="-0.7" width="1.5" height="1.4" fill="#ffd400"/>
           <rect x="9.6" y="-4.5" width="1.6" height="9" fill="#e1001a"/>
           <rect x="9.6" y="-0.7" width="1.6" height="1.4" fill="#ffd400"/>
+          <rect x="11.2" y="-4.5" width="1" height="1.8" fill="#0a0a0a"/>
+          <rect x="11.2" y="2.7" width="1" height="1.8" fill="#0a0a0a"/>
+          <rect x="6" y="-6.6" width="3" height="2.6" fill="#0a0a0a"/>
+          <rect x="6" y="4" width="3" height="2.6" fill="#0a0a0a"/>
+          <rect x="-11" y="-6.6" width="3.2" height="2.6" fill="#0a0a0a"/>
+          <rect x="-11" y="4" width="3.2" height="2.6" fill="#0a0a0a"/>
+        </g>
+        <g id="raceCar2" shape-rendering="crispEdges">
+          <rect x="-16" y="-5" width="1" height="2" fill="#0a0a0a"/>
+          <rect x="-16" y="3" width="1" height="2" fill="#0a0a0a"/>
+          <rect x="-15" y="-5" width="2" height="10" fill="#3fd0ff"/>
+          <rect x="-15" y="-0.7" width="2" height="1.4" fill="#ffffff"/>
+          <rect x="-13" y="-4" width="4" height="8" fill="#f4f7fb"/>
+          <rect x="-10" y="-4.5" width="8" height="9" fill="#f4f7fb"/>
+          <rect x="-9" y="-4.5" width="2" height="1.6" fill="#3fd0ff"/>
+          <rect x="-9" y="2.9" width="2" height="1.6" fill="#3fd0ff"/>
+          <rect x="-3" y="-1.8" width="5" height="3.6" fill="#111111"/>
+          <rect x="-1.3" y="-1" width="1.8" height="2" fill="#ffffff"/>
+          <rect x="-2.4" y="-4.8" width="1.6" height="1.8" fill="#c8dcf0"/>
+          <rect x="-2.4" y="3" width="1.6" height="1.8" fill="#c8dcf0"/>
+          <rect x="2" y="-2" width="4.5" height="4" fill="#f4f7fb"/>
+          <rect x="6.2" y="-1.2" width="2.3" height="2.4" fill="#f4f7fb"/>
+          <rect x="8.3" y="-0.7" width="1.5" height="1.4" fill="#ffffff"/>
+          <rect x="9.6" y="-4.5" width="1.6" height="9" fill="#3fd0ff"/>
+          <rect x="9.6" y="-0.7" width="1.6" height="1.4" fill="#ffffff"/>
           <rect x="11.2" y="-4.5" width="1" height="1.8" fill="#0a0a0a"/>
           <rect x="11.2" y="2.7" width="1" height="1.8" fill="#0a0a0a"/>
           <rect x="6" y="-6.6" width="3" height="2.6" fill="#0a0a0a"/>
@@ -794,28 +812,28 @@ footer .g { color:var(--green); }
     <div class="tk-telem">TRUST_CHAIN: X.509 → A/B → VERIFIED</div>
   </a>
 
-  <div class="tm-col-label reveal" style="margin-top:48px;">explore the archive</div>
+  <div class="tm-col-label reveal" style="margin-top:48px;font-size:11px;letter-spacing:.22em;">explore the archive</div>
   <div class="archive-grid reveal">
     <a href="./automotive-security.html" class="tk-card">
       <div class="tk-flag"></div>
       <div class="tk-cat"><span class="grid-pos">P1</span>Automotive Security</div>
-      <div style="font-size:12.5px;color:#7a88a8;line-height:1.6;margin:8px 0 14px;">ECU trust chains, UDS SecurityAccess, CAN bus intrusion detection.</div>
-      <div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:var(--green)"><span class="sdot"></span>3 Entries</div></div>
+      <div style="font-size:14.5px;color:#a8bcdc;line-height:1.65;margin:8px 0 14px;">ECU trust chains, UDS SecurityAccess, CAN bus intrusion detection.</div>
+      <div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:var(--green);font-size:13.5px;font-weight:600;"><span class="sdot"></span>3 Entries</div></div>
     </a>
     <a href="./systems.html" class="tk-card">
       <div class="tk-cat"><span class="grid-pos">P2</span>Systems Research</div>
-      <div style="font-size:12.5px;color:#7a88a8;line-height:1.6;margin:8px 0 14px;">Linux, telemetry, recovery, architecture, experiments, debugging.</div>
-<div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:var(--green)"><span class="sdot"></span>7 Entries</div></div>
+      <div style="font-size:14.5px;color:#a8bcdc;line-height:1.65;margin:8px 0 14px;">Linux, telemetry, recovery, architecture, experiments, debugging.</div>
+<div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:var(--green);font-size:13.5px;font-weight:600;"><span class="sdot"></span>7 Entries</div></div>
     </a>
     <a href="./threat-intel.html" class="tk-card">
       <div class="tk-cat"><span class="grid-pos">P3</span>Threat Intelligence</div>
-      <div style="font-size:12.5px;color:#7a88a8;line-height:1.6;margin:8px 0 14px;">Threat actor profiles, ransomware groups, TTP analysis, campaign tracking.</div>
-      <div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:var(--green)"><span class="sdot"></span>4 Entries</div></div>
+      <div style="font-size:14.5px;color:#a8bcdc;line-height:1.65;margin:8px 0 14px;">Threat actor profiles, ransomware groups, TTP analysis, campaign tracking.</div>
+      <div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:var(--green);font-size:13.5px;font-weight:600;"><span class="sdot"></span>4 Entries</div></div>
     </a>
     <a href="./publications.html" class="tk-card">
       <div class="tk-cat"><span class="grid-pos">P4</span>Publications</div>
-      <div style="font-size:12.5px;color:#7a88a8;line-height:1.6;margin:8px 0 14px;">Research papers, whitepapers, technical reports.</div>
-      <div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:var(--green)"><span class="sdot"></span>2 Entries</div></div>
+      <div style="font-size:14.5px;color:#a8bcdc;line-height:1.65;margin:8px 0 14px;">Research papers, whitepapers, technical reports.</div>
+      <div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:var(--green);font-size:13.5px;font-weight:600;"><span class="sdot"></span>2 Entries</div></div>
     </a>
   </div>
 
@@ -838,13 +856,13 @@ footer .g { color:var(--green); }
     <div class="sc-divider"></div>
   </div>
 
-  <div class="bice-hero-card reveal">
+  <div class="bice-hero-card reveal" onclick="location.href='./excalibur.html'" style="cursor:pointer;">
     <div class="bhc-name"><span class="accent">EXCALIBUR</span> · Lifecycle Threat Model<br>for Adaptive CAN IDS</div>
     <div class="bhc-sub">Adaptive, online-learning intrusion detection is showing up on the CAN bus, and it keeps learning after it ships. Nobody has asked what happens if an attacker reaches it during the moment it's still calibrating.<br><br>EXCALIBUR names that window as an attacker-reachable surface and tests it with a bounded-budget timing attack against a live IDS, run on real vehicle CAN traffic across multiple sessions and targets. What it finds, and what it doesn't, is on the project page.</div>
     <div class="bhc-links">
-      <a href="https://doi.org/10.13140/RG.2.2.29872.52489" class="bhc-link primary" rel="noopener" target="_blank">View Paper (DOI) ↗</a>
-      <a href="#dashboard" class="bhc-link">View All Projects →</a>
-      <a href="#contact" class="bhc-link">Technical Inquiry</a>
+      <a href="https://doi.org/10.13140/RG.2.2.29872.52489" class="bhc-link primary" rel="noopener" target="_blank" onclick="event.stopPropagation()">View Paper (DOI) ↗</a>
+      <a href="#dashboard" class="bhc-link" onclick="event.stopPropagation()">View All Projects →</a>
+      <a href="#contact" class="bhc-link" onclick="event.stopPropagation()">Technical Inquiry</a>
     </div>
   </div>
 </section>
@@ -857,13 +875,8 @@ footer .g { color:var(--green); }
   </div>
   <div class="contact-grid reveal">
     <div class="ct-transmit">
-      <div class="ct-header">Transmission channel open</div>
-      <div class="ping-wrap">
-        <div class="ping-target">ping <span>sunanditha24@gmail.com</span></div>
-        <div class="ping-bars"><div class="ping-bar"></div><div class="ping-bar"></div><div class="ping-bar"></div><div class="ping-bar"></div><div class="ping-bar"></div></div>
-        <span style="font-family:var(--mono);font-size:10px;color:var(--green)">LIVE</span>
-      </div>
-      <a href="mailto:sunanditha24@gmail.com" class="ct-email-big">sunanditha24@gmail.com</a>
+      <div class="ct-header">Contact</div>
+      <div style="font-size:14px;color:var(--text);line-height:1.6;margin-bottom:22px;">Final year student (Information Science &amp; Engineering) at RNSIT, graduating 2027.</div>
       <div style="font-family:var(--mono);font-size:10px;color:var(--muted);letter-spacing:.15em;text-transform:uppercase;margin-bottom:12px;">areas of interest</div>
       <div class="ct-roles">
         <div class="ct-role">Automotive Security</div>
@@ -872,6 +885,7 @@ footer .g { color:var(--green); }
         <div class="ct-role">Boot &amp; Firmware Integrity</div>
         <div class="ct-role">Behavioral Drift Detection</div>
       </div>
+      <a href="mailto:sunanditha24@gmail.com" class="ct-email-big">sunanditha24@gmail.com</a>
       <div class="ct-socials">
         <a href="https://github.com/sunandithabs" class="ct-soc" target="_blank">GitHub ↗</a>
         <a href="https://linkedin.com/in/sunanditha-b-s" class="ct-soc" target="_blank">LinkedIn ↗</a>
@@ -888,6 +902,7 @@ footer .g { color:var(--green); }
         <div>Availability: <span class="to-green">Open to Collaboration &amp; Internships</span></div>
         <div>Focus: <span class="to-green">Automotive ECUs &amp; Boot Integrity</span></div>
       </div>
+      <div class="ct-term-hint">try these commands: <span class="to-green">facts</span>, <span class="to-green">research</span>, <span class="to-green">roadmap</span>, <span class="to-green">ecu</span></div>
       <div class="ct-term-input-row">
         <span class="ct-term-prompt">❯</span>
         <input class="ct-term-input" id="termInput" type="text" placeholder="say something..." maxlength="120" autocomplete="off" spellcheck="false">
@@ -930,56 +945,26 @@ footer .g { color:var(--green); }
   frame();
 })();
 
-/* DOT MATRIX 24 — animated pixel-light grid, masked to the numeral, same wave+hover-glow motion as the archive pages' dot canvas but in blue */
+/* DOT MATRIX 24 — slow drift + occasional flicker, like a scoreboard idling */
 (function dotNumBg(){
-  const canvas=document.getElementById('bg-dotnum');
-  if(!canvas) return;
-  const ctx=canvas.getContext('2d');
-  const br=59, bg=208, bb=255; // #3fd0ff — pixel light color
-  const spacing=13;
-  let w,h,cols,rows,dpr;
-  let mx=-9999,my=-9999;
-  function resize(){
-    const rect=canvas.getBoundingClientRect();
-    dpr=Math.min(window.devicePixelRatio||1,2);
-    w=rect.width; h=rect.height;
-    canvas.width=w*dpr; canvas.height=h*dpr;
-    canvas.style.width=w+'px'; canvas.style.height=h+'px';
-    ctx.setTransform(dpr,0,0,dpr,0,0);
-    cols=Math.ceil(w/spacing)+1;
-    rows=Math.ceil(h/spacing)+1;
-  }
-  window.addEventListener('resize',resize);
-  resize();
+  const el=document.getElementById('bg-dotnum');
+  if(!el) return;
+  let mx=0,my=0,tx=0,ty=0;
   window.addEventListener('mousemove',(e)=>{
-    const rect=canvas.getBoundingClientRect();
-    mx=e.clientX-rect.left; my=e.clientY-rect.top;
+    mx=(e.clientX/window.innerWidth-0.5)*14;
+    my=(e.clientY/window.innerHeight-0.5)*14;
   });
-  window.addEventListener('mouseleave',()=>{ mx=-9999; my=-9999; });
-  let sweepT=Math.random()*1000;
   function frame(){
-    ctx.clearRect(0,0,w,h);
-    sweepT+=0.5;
-    for(let i=0;i<cols;i++){
-      const x=i*spacing;
-      for(let j=0;j<rows;j++){
-        const y=j*spacing;
-        const dx=x-mx, dy=y-my;
-        const dist=Math.sqrt(dx*dx+dy*dy);
-        const glow=Math.max(0,1-dist/150);
-        const wave=Math.sin((x*0.6+y-sweepT*3)*0.025)*0.5+0.5;
-        const idle=wave*0.14;
-        const alpha=Math.min(0.95,glow*0.85+idle+0.16);
-        const r=1.2+glow*1.8;
-        ctx.beginPath();
-        ctx.arc(x,y,r,0,Math.PI*2);
-        ctx.fillStyle=`rgba(${br},${bg},${bb},${alpha.toFixed(3)})`;
-        ctx.fill();
-      }
-    }
+    tx += (mx-tx)*0.03; ty += (my-ty)*0.03;
+    el.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
     requestAnimationFrame(frame);
   }
   frame();
+  function flicker(){
+    el.style.opacity = (0.34 + Math.random()*0.12).toFixed(2);
+    setTimeout(flicker, 2200 + Math.random()*2600);
+  }
+  flicker();
 })();
 const bootLines=[
 {t:'<span class="dim">ECU BOOTLOADER v4.2.1 — SUNANDITHA_ARCHIVE/research</span>',d:150},
@@ -1043,7 +1028,7 @@ window.addEventListener('scroll',updateLap);updateLap();
   const rpmEl=document.getElementById('raceRpm'), lapTimeEl=document.getElementById('raceLapTime');
   const tyreEl=document.getElementById('raceTyre'), posEl=document.getElementById('racePos');
   const lapEl=document.getElementById('raceLap');
-  const pathEl=document.getElementById('trackPath'), carEl=document.getElementById('raceCar');
+  const pathEl=document.getElementById('trackPath'), carEl=document.getElementById('raceCar'), carEl2=document.getElementById('raceCar2');
   if(!tFill || !pathEl || !carEl) return;
 
   /* ---- 1. ONE-TIME TRACK MODEL: sample the path, compute curvature + a
@@ -1156,6 +1141,11 @@ window.addEventListener('scroll',updateLap);updateLap();
     while(da>180) da-=360; while(da<-180) da+=360;
     displayAngle += da*0.35; // light damping — car tracks the road heading closely, no floaty lag
     carEl.setAttribute('transform', `translate(${pose.x},${pose.y}) rotate(${displayAngle})`);
+
+    if (carEl2){
+      const pose2 = poseAt(distanceTraveled - totalLen*0.34); // trailing car, fixed gap behind leader
+      carEl2.setAttribute('transform', `translate(${pose2.x},${pose2.y}) rotate(${pose2.a})`);
+    }
 
     tFill.style.width = throttle.toFixed(0)+'%'; tPct.textContent = throttle.toFixed(0)+'%';
     bFill.style.width = brake.toFixed(0)+'%'; bPct.textContent = brake.toFixed(0)+'%';

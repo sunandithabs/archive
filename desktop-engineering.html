@@ -11,9 +11,9 @@
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
 <style>
     :root {
-      --black: #060a14; --panel: #0a1020; --wire-1: #141d33; --wire-2: #1e2a48;
+      --black: #060a14; --panel: #0d1526; --wire-1: #1a2540; --wire-2: #2a3c66;
       --accent: #e1001a; --accent2: #3fd0ff; --purple: #2a5aff; --green: #25d076;
-      --amber: #ffb547; --red: #e8002d; --text: #f2f4f8; --muted: #7a88a8;
+      --amber: #ffb547; --red: #e8002d; --text: #f2f4f8; --muted: #98a7c8;
       --font-mono: 'Space Mono', ui-monospace, monospace;
       --font-display: 'Space Grotesk', sans-serif;
       --font-body: "Space Grotesk", system-ui, sans-serif;
@@ -51,7 +51,7 @@
     .intro-line { font-family: var(--font-mono); font-size: 10px; color: var(--purple); letter-spacing: .22em; text-transform: uppercase; margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
     .intro-line::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--purple); opacity: .5; }
     .page-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(40px, 7vw, 84px); font-weight: 900; line-height: .95; letter-spacing: -.02em; text-transform: uppercase; margin-bottom: 28px; color: var(--text); }
-    .page-title span { -webkit-text-stroke: 1.75px rgba(42,90,255,.85); -webkit-text-fill-color: transparent; display: block; }
+    .page-title span { -webkit-text-stroke: 1px rgba(42,90,255,.35); -webkit-text-fill-color: transparent; display: block; }
     .framing { font-family: var(--font-body); font-size: 15px; color: var(--muted); font-weight: 300; max-width: 560px; line-height: 1.75; margin-bottom: 64px; padding-left: 20px; border-left: 2px solid rgba(42,90,255,.25); font-style: italic; }
     .section-label { font-family: var(--font-mono); font-size: 10px; letter-spacing: .22em; text-transform: uppercase; color: var(--muted); margin-bottom: 20px; margin-top: 56px; display: flex; align-items: center; gap: 14px; }
     .section-label::after { content: ''; flex: 1; height: 1px; background: var(--wire-2); }
