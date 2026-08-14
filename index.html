@@ -7,7 +7,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23060a14'/%3E%3Crect x='1' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='3' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='7' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='1' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='5' width='2' height='2' fill='%23e1001a'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
   --black: #060a14;
@@ -24,8 +24,8 @@
   --f1red: #e1001a;
   --f1purple: #3fd0ff;
   --mono: 'Space Mono', ui-monospace, monospace;
-  --display: 'DM Sans', sans-serif;
-  --body: 'DM Sans', system-ui, sans-serif;
+  --display: 'Space Grotesk', sans-serif;
+  --body: 'Space Grotesk', system-ui, sans-serif;
 }
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { scroll-behavior: smooth; overflow-x: hidden; }
@@ -176,7 +176,7 @@ body::after {
 }
 .hero-name::before,.hero-name::after { display:none; }
 .hero-name.is-glitching { animation: glitch-skew 0.15s steps(1) forwards; }
-.name-main { display: block; color: var(--text); font-family:'DM Sans',sans-serif; font-weight:800; }
+.name-main { display: block; color: var(--text); font-family:'Space Grotesk',sans-serif; font-weight:800; }
 .name-stroke {
   display: block;
   font-family: 'Fraunces', serif;
@@ -202,25 +202,26 @@ body::after {
 
 /* TELEMETRY GAUGES */
 
-/* DOT MATRIX 24 */
-#dot-number { padding:60px 40px 80px; display:flex; justify-content:center; }
-.dotnum-wrap { display:flex; flex-direction:column; align-items:center; gap:18px; }
-.dotnum-24 {
-  width: min(560px, 80vw);
-  height: 220px;
-  background-image: radial-gradient(circle, var(--cyan) 1.6px, transparent 1.8px);
-  background-size: 11px 11px;
+/* DOT MATRIX 24 — fixed background, index only */
+#bg-dotnum {
+  position: fixed; right: -60px; bottom: -40px; z-index: 1; pointer-events: none;
+  width: min(760px, 82vw);
+  height: 340px;
+  background-image: radial-gradient(circle, var(--cyan) 1.7px, transparent 1.9px);
+  background-size: 13px 13px;
   background-color: transparent;
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 560 220'%3E%3Ctext x='50%25' y='53%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial Black, Helvetica, sans-serif' font-weight='900' font-size='220'%3E24%3C/text%3E%3C/svg%3E");
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 560 220'%3E%3Ctext x='50%25' y='53%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial Black, Helvetica, sans-serif' font-weight='900' font-size='220'%3E24%3C/text%3E%3C/svg%3E");
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 760 340'%3E%3Ctext x='50%25' y='53%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial Black, Helvetica, sans-serif' font-weight='900' font-size='340'%3E24%3C/text%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 760 340'%3E%3Ctext x='50%25' y='53%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial Black, Helvetica, sans-serif' font-weight='900' font-size='340'%3E24%3C/text%3E%3C/svg%3E");
   -webkit-mask-size: contain; mask-size: contain;
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
   -webkit-mask-position: center; mask-position: center;
-  filter: drop-shadow(0 0 10px rgba(63,208,255,.35));
+  opacity: .4;
+  filter: drop-shadow(0 0 16px rgba(63,208,255,.45));
+  will-change: transform;
 }
-.dotnum-caption { text-align:center; }
-.dotnum-label { display:block; font-family:var(--mono); font-size:11px; letter-spacing:.22em; color:var(--cyan); }
-.dotnum-sub { display:block; font-family:var(--mono); font-size:10px; letter-spacing:.06em; color:var(--muted); margin-top:6px; }
+@media (max-width: 720px) {
+  #bg-dotnum { width: 92vw; height: 220px; right: -30px; bottom: -20px; opacity: .28; }
+}
 .hero-bio strong { color:var(--text); font-weight:500; }
 .quick-scan { font-family:var(--mono); font-size:11px; background:rgba(225,0,26,.03); border:1px solid var(--wire2); border-left:2px solid rgba(225,0,26,.35); padding:14px 18px; margin-bottom:24px; line-height:1.9; color:var(--muted); border-radius:0 6px 6px 0; }
 .qs-label { font-size:9px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
@@ -645,6 +646,7 @@ footer .g { color:var(--green); }
 <div id="crt-turn-on"></div>
 
 <div id="bg-carbon"></div>
+<div id="bg-dotnum" aria-hidden="true"></div>
 <div class="noise-overlay"></div>
 <div class="pit-flash" id="pitFlash"></div>
 <div id="cur-dot"></div>
@@ -919,7 +921,27 @@ footer .g { color:var(--green); }
   frame();
 })();
 
-/* BOOT */
+/* DOT MATRIX 24 — slow drift + occasional flicker, like a scoreboard idling */
+(function dotNumBg(){
+  const el=document.getElementById('bg-dotnum');
+  if(!el) return;
+  let mx=0,my=0,tx=0,ty=0;
+  window.addEventListener('mousemove',(e)=>{
+    mx=(e.clientX/window.innerWidth-0.5)*14;
+    my=(e.clientY/window.innerHeight-0.5)*14;
+  });
+  function frame(){
+    tx += (mx-tx)*0.03; ty += (my-ty)*0.03;
+    el.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+    requestAnimationFrame(frame);
+  }
+  frame();
+  function flicker(){
+    el.style.opacity = (0.34 + Math.random()*0.12).toFixed(2);
+    setTimeout(flicker, 2200 + Math.random()*2600);
+  }
+  flicker();
+})();
 const bootLines=[
 {t:'<span class="dim">ECU BOOTLOADER v4.2.1 — SUNANDITHA_ARCHIVE/research</span>',d:150},
 {t:'<span class="dim">Verifying secure boot signature ... OK</span>',d:150},

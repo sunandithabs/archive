@@ -7,7 +7,7 @@
 <title>Threat Intelligence · Sunanditha B S</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;0,9..144,900;1,9..144,500&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
     :root {
       --black: #060a14; --panel: #0a1020; --wire-1: #141d33; --wire-2: #1e2a48;
@@ -15,27 +15,16 @@
       --text: #f2f4f8; --muted: #7a88a8;
       --font-mono: 'Space Mono', ui-monospace, monospace;
       --font-display: 'Fraunces', sans-serif;
-      --font-body: "DM Sans", system-ui, sans-serif;
+      --font-body: "Space Grotesk", system-ui, sans-serif;
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
     body { background: var(--black); color: var(--text); font-family: var(--font-body); font-size: 15px; line-height: 1.6; overflow-x: hidden; cursor: none; }
     body::after { content: ''; position: fixed; inset: 0; background: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.05) 3px, rgba(0,0,0,0.05) 4px); pointer-events: none; z-index: 9000; }
-    #bg-carbon {
-      position: fixed; inset: -60px; z-index: 0; pointer-events: none;
-      background-color: #060a14;
-      background-image:
-        linear-gradient(27deg, #0c1324 5px, transparent 5px) 0 5px,
-        linear-gradient(207deg, #0c1324 5px, transparent 5px) 10px 0,
-        linear-gradient(27deg, #141d33 5px, transparent 5px) 0 10px,
-        linear-gradient(207deg, #141d33 5px, transparent 5px) 10px 5px,
-        linear-gradient(90deg, #0a1020 10px, transparent 10px),
-        linear-gradient(#0d1526 25%, #0a1020 25%, #0a1020 50%, transparent 50%, transparent 75%, #0d1526 75%, #0d1526);
-      background-size: 20px 20px;
-      opacity: .55;
-      will-change: transform;
+    #dotgrid-bg {
+      position: fixed; inset: 0; z-index: 0; pointer-events: none;
+      background: #060a14;
     }
-    #bg-carbon::after{ content:''; position:absolute; inset:0; background:radial-gradient(ellipse at 50% 0%, rgba(225,6,0,.05), transparent 60%); }
     .cur-dot { position: fixed; z-index: 9999; pointer-events: none; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); transform: translate(-50%,-50%); box-shadow: 0 0 8px var(--accent); }
     .cur-ring { position: fixed; z-index: 9998; pointer-events: none; width: 28px; height: 28px; border-radius: 50%; border: 1px solid rgba(225,0,26,.45); transform: translate(-50%,-50%); transition: transform .18s cubic-bezier(.2,.7,.2,1); mix-blend-mode: screen; }
     .topbar { position: fixed; top: 0; left: 0; right: 0; z-index: 500; height: 40px; background: rgba(2,4,15,.94); border-bottom: 1px solid var(--wire-2); display: flex; align-items: center; justify-content: space-between; padding: 0 32px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); backdrop-filter: blur(12px); }
@@ -116,7 +105,7 @@
 </style>
 </head>
 <body>
-<div id="bg-carbon"></div>
+<canvas id="dotgrid-bg" aria-hidden="true"></canvas>
 <div class="cur-dot" id="curDot"></div>
 <div class="cur-ring" id="curRing"></div>
 
@@ -223,18 +212,56 @@
 </footer>
 
 <script>
-(function carbonBg(){
-  const el=document.getElementById('bg-carbon');
-  if(!el) return;
-  let mx=0,my=0,tx=0,ty=0;
-  window.addEventListener('mousemove',(e)=>{
-    mx=(e.clientX/window.innerWidth-0.5)*30;
-    my=(e.clientY/window.innerHeight-0.5)*30;
-  });
+(function dotGridBg(){
+  const canvas = document.getElementById('dotgrid-bg');
+  if(!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const accentStr = getComputedStyle(document.documentElement).getPropertyValue('--accent').trim() || '#e1001a';
+  function hexToRgb(hex){
+    hex = hex.replace('#','');
+    if(hex.length===3) hex = hex.split('').map(c=>c+c).join('');
+    const n = parseInt(hex,16);
+    return [(n>>16)&255, (n>>8)&255, n&255];
+  }
+  const [ar,ag,ab] = hexToRgb(accentStr);
+  const spacing = 30;
+  let w,h,cols,rows,dpr;
+  let mx=-9999, my=-9999;
+  function resize(){
+    dpr = Math.min(window.devicePixelRatio||1, 2);
+    w = window.innerWidth; h = window.innerHeight;
+    canvas.width = w*dpr; canvas.height = h*dpr;
+    canvas.style.width = w+'px'; canvas.style.height = h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    cols = Math.ceil(w/spacing)+1;
+    rows = Math.ceil(h/spacing)+1;
+  }
+  window.addEventListener('resize', resize);
+  resize();
+  window.addEventListener('mousemove', e=>{ mx=e.clientX; my=e.clientY; });
+  window.addEventListener('mouseleave', ()=>{ mx=-9999; my=-9999; });
+  window.addEventListener('touchmove', e=>{ if(e.touches[0]){ mx=e.touches[0].clientX; my=e.touches[0].clientY; } }, {passive:true});
+  let sweepT = Math.random()*1000;
   function frame(){
-    tx += (mx-tx)*0.04; ty += (my-ty)*0.04;
-    const scrollShift = window.scrollY*0.06;
-    el.style.transform = `translate3d(${tx}px, ${ty+scrollShift}px, 0)`;
+    ctx.clearRect(0,0,w,h);
+    sweepT += 0.5;
+    for(let i=0;i<cols;i++){
+      const x = i*spacing;
+      for(let j=0;j<rows;j++){
+        const y = j*spacing;
+        const dx = x-mx, dy = y-my;
+        const dist = Math.sqrt(dx*dx+dy*dy);
+        const glow = Math.max(0, 1 - dist/150);
+        const wave = Math.sin((x*0.6+y-sweepT*3)*0.025)*0.5+0.5;
+        const idle = wave*0.10;
+        const alpha = Math.min(0.95, glow*0.85 + idle + 0.045);
+        const r = 1.1 + glow*1.7;
+        ctx.beginPath();
+        ctx.arc(x,y,r,0,Math.PI*2);
+        ctx.fillStyle = `rgba(${ar},${ag},${ab},${alpha.toFixed(3)})`;
+        ctx.fill();
+      }
+    }
     requestAnimationFrame(frame);
   }
   frame();
