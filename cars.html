@@ -54,7 +54,7 @@
     .intro-line::before { content: ''; display: inline-block; width: 32px; height: 1px; background: var(--accent); opacity: .5; }
     .page-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(40px, 6vw, 72px); font-weight: 900; line-height: .95; letter-spacing: -.02em; text-transform: uppercase; margin-bottom: 28px; color: var(--accent); text-shadow: 0 0 24px rgba(225,6,0,.5); }
     .page-title span { color: var(--text); display: block; text-shadow: none; }
-    .wu-card { background: var(--panel); border: 1px solid var(--wire-2); border-radius: 2px; padding: 48px 44px; margin-bottom: 28px; position: relative; overflow: hidden; transition: border-color .3s, box-shadow .3s; transform-style: preserve-3d; }
+    .wu-card { background-color: var(--panel); border: 1px solid var(--wire-2); border-radius: 2px; padding: 48px 44px; margin-bottom: 28px; position: relative; overflow: hidden; transition: border-color .3s, box-shadow .3s; transform-style: preserve-3d; background-image: repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0, rgba(255,255,255,.05) 2px, rgba(0,0,0,.16) 2px, rgba(0,0,0,.16) 4px), repeating-linear-gradient(-45deg, rgba(255,255,255,.035) 0, rgba(255,255,255,.035) 2px, rgba(0,0,0,.11) 2px, rgba(0,0,0,.11) 4px); background-size: 6px 6px; }
     .wu-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0; transition: opacity .4s; }
     .wu-card::after { content: '🏁'; position: absolute; top: 28px; right: 34px; font-size: 34px; opacity: .1; line-height: 1; pointer-events: none; }
     .wu-card:hover { border-color: rgba(225,6,0,.3); box-shadow: 0 0 40px rgba(225,6,0,.05); }
@@ -62,7 +62,7 @@
     .wu-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
     .wu-badge { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; padding: 4px 10px; border: 1px solid rgba(225,6,0,.3); color: var(--accent); background: rgba(225,6,0,.05); border-radius: 2px; }
     .wu-year { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .15em; }
-    .wu-title { font-family: var(--font-display); font-size: clamp(26px, 3.5vw, 40px); font-weight: 800; line-height: 1.05; text-transform: uppercase; letter-spacing: .01em; margin-bottom: 28px; }
+    .wu-title { font-family: 'Space Grotesk', sans-serif; font-size: clamp(26px, 3.5vw, 40px); font-weight: 900; line-height: 1.05; text-transform: uppercase; letter-spacing: .01em; margin-bottom: 28px; }
     .wu-body { font-family: var(--font-body); font-size: 16px; line-height: 1.85; color: #e8e4e0; font-weight: 300; }
     .wu-body p { margin-bottom: 18px; }
     .wu-body p:last-child { margin-bottom: 0; }
