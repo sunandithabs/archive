@@ -1,11 +1,10 @@
 <!DOCTYPE html>
-
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23060a14'/%3E%3Crect x='1' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='3' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='7' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='1' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='5' width='2' height='2' fill='%23e1001a'/%3E%3C/svg%3E">
 <meta content="width=device-width, initial-scale=1" name="viewport"/>
-<title>TheGentlemen · Threat Intelligence</title>
+<title>EXCALIBUR · Research</title>
 <link href="https://fonts.googleapis.com" rel="preconnect"/>
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&amp;family=Space+Mono:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
@@ -61,6 +60,8 @@
     .wu-meta { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; flex-wrap: wrap; }
     .wu-badge { font-family: var(--font-mono); font-size: 10px; letter-spacing: .18em; text-transform: uppercase; padding: 4px 10px; border: 1px solid rgba(225,0,26,.3); color: var(--accent); background: rgba(225,0,26,.05); border-radius: 2px; }
     .wu-badge.amber { border-color: rgba(255,181,71,.3); color: #ffb547; background: rgba(255,181,71,.05); }
+    .wu-badge.link { text-decoration: none; cursor: pointer; }
+    .wu-badge.link:hover { background: rgba(225,0,26,.14); }
     .wu-year { font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .15em; }
     .wu-title { font-family: var(--font-display); font-size: clamp(26px, 3.5vw, 40px); font-weight: 800; line-height: 1.05; text-transform: uppercase; letter-spacing: .01em; margin-bottom: 28px; }
     .wu-body { font-family: var(--font-body); font-size: 15px; line-height: 1.82; color: #b0d0ee; font-weight: 300; }
@@ -136,7 +137,7 @@
 <nav class="topbar">
 <div class="tb-left"><span class="tb-dot"></span><span id="clock">--:--:--</span></div>
 <div class="tb-right">
-<a class="tb-link back" href="./threat-intel.html">← threat-intel</a>
+<a class="tb-link back" href="./publications.html">← publications</a>
 <a class="tb-link" href="./index.html#dashboard">Projects</a>
 <a class="tb-link" href="./index.html#contact">Contact</a>
 </div>
@@ -146,107 +147,76 @@
 <div class="breadcrumb">
 <a href="./index.html">Home</a>
 <span>/</span>
-<a href="./threat-intel.html">Threat Intelligence</a>
+<a href="./publications.html">Publications</a>
 <span>/</span>
-<span class="current">TheGentlemen</span>
+<span class="current">EXCALIBUR</span>
 </div>
-<div class="intro-line">ransomware profile · likely qilin splinter</div>
-<h1 class="page-title">TheGentlemen<span>Ransomware Group</span></h1>
+<div class="intro-line">research summary · lifecycle threat model</div>
+<h1 class="page-title">EXCALIBUR<span>A Lifecycle Threat Model for Adaptive CAN Intrusion Detection</span></h1>
 </div>
 <div class="wu-card reveal" data-num="01">
 <div class="wu-meta">
-<span class="wu-badge">Ransomware · RaaS</span>
-<span class="wu-year">July 2025 to present</span>
+<span class="wu-badge">Research Paper</span>
+<span class="wu-year">2026</span>
+<a class="wu-badge link" href="./excalibur-paper.pdf" rel="noopener" target="_blank">Read the Paper (PDF) ↗</a>
 </div>
 <h2 class="wu-title">Overview</h2>
 <div class="wu-body">
-<div class="xsec" data-open="true" data-title="Summary" id="sec-summary"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">01</span><span class="xsec-title">Summary</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
-<p>TheGentlemen showed its earliest development activity in July 2025, with active campaigns beginning that August. Halcyon assesses the group as a likely splinter of the <code>Qilin</code> ransomware-as-a-service operation, formed after a reported payment dispute, though ASEC's own research flags that lineage as unconfirmed elsewhere. The group is suspected to run out of Russian-speaking regions and, like many RaaS crews, enforces an internal ban on targeting Russia and CIS countries.</p>
-<p>Growth has been fast: from about 27 victims across 17 countries in its first month of confirmed campaigns to nearly 300 victims across 66+ countries and 20+ industries by mid-2026 per Halcyon's tracking, against the 442-victim figure in current source notes. Halcyon describes it as one of the fastest-scaling ransomware operations currently being tracked.</p>
-</div></div><div class="xsec" data-open="true" data-title="Key Facts" id="sec-key-facts"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">02</span><span class="xsec-title">Key Facts</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
-<div class="kv-grid">
-<div class="kv-k">First observed</div><div class="kv-v">July to August 2025 (development from July, active campaigns from August)</div>
-<div class="kv-k">Victims</div><div class="kv-v">442 per source notes; external trackers reported 27 in Sept 2025, 200+ by early 2026, ~300 by May 2026</div>
-<div class="kv-k">Geography</div><div class="kv-v">US, Thailand, France per source notes; broader reporting puts footprint at 50 to 66+ countries across APAC, Europe, Americas, Middle East</div>
-<div class="kv-k">Industries</div><div class="kv-v">Manufacturing, construction, healthcare, insurance most consistent; also IT services, financial services, tech, education, energy, government</div>
-<div class="kv-k">Status</div><div class="kv-v">Active; one of the fastest-scaling RaaS operations currently tracked</div>
+<p>Adaptive CAN intrusion detectors keep learning after they ship, which means they all have a calibration window somewhere, a moment where the detector is still deciding what "normal" traffic looks like. Nobody had asked what happens if an attacker gets bus access during exactly that window. EXCALIBUR names that window as an attacker-reachable surface and backs it with a case study: a bounded-budget timestamp-drift attack against a minimal EWMA/Z-score CAN IDS, run on the real ORNL ROAD dataset across three CAN IDs, four ambient drive sessions, and a seven-point attacker-budget sweep.</p>
+<p>The headline result is a clean one. Baseline shift tracks attacker budget almost exactly, a 0.0050 ratio holding across all 70 tested points, with one deviation three orders of magnitude smaller than the shift itself. What's messier is whether the attack is visible to a defender watching flag rates, and that's where the paper spends most of its honesty.</p>
 </div>
-</div></div><div class="xsec" data-open="true" data-title="Timeline" id="sec-timeline"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">03</span><span class="xsec-title">Timeline</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
-<div class="timeline">
-<div class="tl-item"><div class="tl-date">July 2025</div><div class="tl-text">Earliest development activity (SOCRadar).</div></div>
-<div class="tl-item"><div class="tl-date">August 2025</div><div class="tl-text">First observed in active campaigns; ASEC dates initial emergence here too.</div></div>
-<div class="tl-item"><div class="tl-date">September 2025</div><div class="tl-text">Trend Micro and CSO Online report ~27 victims across 17 countries, manufacturing and construction leading.</div></div>
-<div class="tl-item"><div class="tl-date">Early 2026</div><div class="tl-text">Leak site activity tops 200 victims across 50+ countries, 20+ industries (Fortiguard, Surefire Cyber).</div></div>
-<div class="tl-item"><div class="tl-date">~May 2026</div><div class="tl-text">Halcyon reports nearly 300 victims across 66+ countries, assesses likely Qilin-splinter origin, estimates ~20-person core team.</div></div>
-<div class="tl-item"><div class="tl-date">June 4, 2026</div><div class="tl-text">Claimed attack on National Industries, an Indian automotive components manufacturer (DeXpose, HookPhish).</div></div>
-<div class="tl-item"><div class="tl-date">Present</div><div class="tl-text">442 victims recorded per source notes; activity ongoing.</div></div>
-</div>
-</div></div><div class="xsec" data-open="true" data-title="Victimology" id="sec-victimology"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">04</span><span class="xsec-title">Victimology</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
-<p>Thailand tops the victim list; Halcyon puts the US share at only ~7%, well below the ~50% typical of the broader ransomware ecosystem. Manufacturing and construction lead sector targeting, per Ankura Consulting, due to low downtime tolerance and high-value data.</p>
-</div></div><div class="xsec" data-open="true" data-title="Tradecraft: Initial Access" id="sec-tradecraft-initial-access"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">05</span><span class="xsec-title">Tradecraft: Initial Access</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
-<p>Source notes describe valid account abuse (<code>T1078</code>), spearphishing attachment delivery (<code>T1566.001</code>), and vishing (<code>T1566.004</code>); a four-technique total was referenced but only three were detailed. External reporting fills in a likely fourth: exploitation of internet-facing infrastructure, most notably FortiGate appliances via <code>CVE-2024-55591</code>, a FortiOS/FortiProxy auth bypass (<code>T1190</code>), per Surefire Cyber. Reporting also notes use of infostealer malware and initial access brokers to source credentials ahead of intrusion.</p>
-</div></div><div class="xsec" data-open="true" data-title="Tradecraft: Persistence &amp; Privilege Escalation" id="sec-tradecraft-persistence-privilege-escalat"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">06</span><span class="xsec-title">Tradecraft: Persistence &amp; Privilege Escalation</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
-<p>Registry run keys (<code>T1547.001</code>) per source notes. Privilege escalation via exploitation (<code>T1068</code>); specific vulnerability not identified in current sourcing.</p>
-</div></div><div class="xsec" data-open="true" data-title="Tradecraft: Execution &amp; Defense Evasion" id="sec-tradecraft-execution-defense-evasion"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">07</span><span class="xsec-title">Tradecraft: Execution &amp; Defense Evasion</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
-<p>PowerShell (<code>T1059.001</code>), WMI (<code>T1059.005</code> per source mapping), Python (<code>T1059.006</code>). Trend Micro documents abuse of legitimate signed drivers and custom anti-AV utilities to disable endpoint protection (<code>T1562.001</code>), alongside GPO manipulation to push payloads domain-wide (<code>T1484.001</code>).</p>
-</div></div><div class="xsec" data-open="true" data-title="Tradecraft: Lateral Movement &amp; Impact" id="sec-tradecraft-lateral-movement-impact"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">08</span><span class="xsec-title">Tradecraft: Lateral Movement &amp; Impact</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
-<p>GPO-based payload distribution via NETLOGON shares (<code>T1021.002</code>), enabling near-simultaneous infection across domain-joined machines. Runs a double-extortion model: data exfiltrated over encrypted channels before encryption, with publication threatened on a leak site if the ransom isn't paid (ASEC, Trend Micro). Exact exfiltration protocol isn't detailed in current sourcing.</p>
-</div></div><div class="xsec" data-open="true" data-title="MITRE ATT&amp;CK Mapping" id="sec-mitre-att-ck-mapping"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">09</span><span class="xsec-title">MITRE ATT&amp;CK Mapping</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
-<div class="table-scroll">
-<table class="attck-table">
-<tr><th>Tactic</th><th>Technique</th><th>ID</th></tr>
-<tr><td>Initial Access</td><td>Valid Accounts</td><td><code>T1078</code></td></tr>
-<tr><td>Initial Access</td><td>Phishing: Spearphishing Attachment</td><td><code>T1566.001</code></td></tr>
-<tr><td>Initial Access</td><td>Phishing: Spearphishing Voice</td><td><code>T1566.004</code></td></tr>
-<tr><td>Initial Access</td><td>Exploit Public-Facing Application</td><td><code>T1190</code></td></tr>
-<tr><td>Persistence</td><td>Boot/Logon Autostart: Registry Run Keys</td><td><code>T1547.001</code></td></tr>
-<tr><td>Privilege Escalation</td><td>Exploitation for Privilege Escalation</td><td><code>T1068</code></td></tr>
-<tr><td>Execution</td><td>Command and Scripting Interpreter: PowerShell</td><td><code>T1059.001</code></td></tr>
-<tr><td>Execution</td><td>Command and Scripting Interpreter (WMI, per source mapping)</td><td><code>T1059.005</code></td></tr>
-<tr><td>Execution</td><td>Command and Scripting Interpreter: Python</td><td><code>T1059.006</code></td></tr>
-<tr><td>Defense Evasion</td><td>Impair Defenses: Disable or Modify Tools</td><td><code>T1562.001</code></td></tr>
-<tr><td>Defense Evasion</td><td>Domain Policy Modification: GPO Modification</td><td><code>T1484.001</code></td></tr>
-<tr><td>Lateral Movement</td><td>Remote Services: SMB/Windows Admin Shares</td><td><code>T1021.002</code></td></tr>
-</table>
-</div>
-<p style="font-size:11.5px;color:var(--muted);">Note: source notes map WMI to T1059.005; current ATT&amp;CK lists WMI separately under T1047. Mapping kept as originally provided.</p>
-</div></div></div>
-<div class="note-box">
-<div class="note-label">analyst notes</div>
+<a class="xjump" href="#sec-status">Jump to Status</a><div class="xsec" data-open="true" data-title="Research Question" id="sec-research-question"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">01</span><span class="xsec-title">Research Question</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 <div class="wu-body">
-<p>Something that jumped out while putting this together: most of the tradecraft here scales without extra work per victim, GPO abuse and NETLOGON propagation hit every machine on a domain at once, and the credentials reportedly come from infostealers and brokers rather than the group's own phishing effort. Vishing doesn't fit that pattern, it takes an actual phone call per attempt and doesn't scale the same way. I don't have enough to prove this, but my guess is that the undocumented fourth initial access technique in the source notes isn't another mass-market option, it's probably a fallback used when the cheap stuff doesn't work, something like calling a help desk after phishing fails. Take that as a hunch, not a finding.</p>
-<p>The geography also surprised me, I'd assumed most ransomware victims were US-based. Brazil and India showing up more than expected too. Not sure what to make of it beyond flagging it, if the Qilin-splinter theory holds, it might just reflect where those affiliates were already operating.</p>
-<p>One thing I'm trying to keep in mind while reading these reports: "first observed" just means when defenders started watching, not when the people behind a group learned their craft. A name barely a year old pulling off domain-wide GPO deployment and purpose-built anti-AV tooling on day one probably isn't run by beginners, even if the brand itself is.</p>
+<p>Vehicle software update cadence is climbing toward continuous OTA delivery, and a learning component that gets initialized or reset alongside an update is turning into a routine event instead of a one-time factory step. That's motivation, not proof, nobody has shown adaptive CAN IDS recalibrate on any fixed schedule in a production vehicle. The question EXCALIBUR actually asks is narrower: if an attacker had bounded CAN bus access during a calibration window, could they shift what the detector learns as normal, and would that shift survive long enough to matter?</p>
 </div>
+</div></div><div class="xsec" data-open="true" data-title="Threat Model" id="sec-threat-model"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">02</span><span class="xsec-title">Threat Model</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<div class="wu-body">
+<p>The adversary gets CAN bus access during a single calibration window and can perturb a bounded fraction, the "budget", of frames belonging to one target CAN ID within that window only. Everything outside the window, and every other ID, stays untouched. Granting that capability is standard threat-modeling practice, it lets the paper measure what the capability would achieve, not claim it's achievable against a production vehicle today.</p>
+<p>Explicitly out of scope: ECU functional, sensor, or UDS/diagnostic calibration, physical ECU compromise, tampering with the monitoring point itself, and any claim that adaptive CAN IDS are currently deployed in production vehicles.</p>
 </div>
-<div class="wu-h3" style="margin-top:28px;">// sources</div>
-<div class="src-list">
-<a href="https://ransomwhere.org/ttps" target="_blank">ransomwhere.org/ttps</a>
-<a href="https://www.trendmicro.com/en_us/research/25/i/unmasking-the-gentlemen-ransomware.html" target="_blank">trendmicro.com: unmasking-the-gentlemen-ransomware</a>
-<a href="https://www.csoonline.com/article/4054790/ransomware-upstart-the-gentlemen-raises-the-stakes-for-ot%E2%80%91heavy-sectors.html" target="_blank">csoonline.com: ransomware-upstart-the-gentlemen</a>
-<a href="https://www.halcyon.ai/ransomware-research-reports/threat-assessment-the-gentlemen-ransomware-group" target="_blank">halcyon.ai: threat-assessment-the-gentlemen</a>
-<a href="https://industrialcyber.co/ransomware/asec-warns-of-expanding-gentlemen-ransomware-campaigns-hitting-manufacturing-and-healthcare/" target="_blank">industrialcyber.co: asec-warns-of-expanding-gentlemen-campaigns</a>
-<a href="https://socradar.io/blog/dark-web-profile-the-gentlemen-ransomware/" target="_blank">socradar.io: dark-web-profile-the-gentlemen-ransomware</a>
-<a href="https://www.fortiguard.com/threat-actor/6387/the-gentlemen-ransomware" target="_blank">fortiguard.com: threat-actor/the-gentlemen-ransomware</a>
-<a href="https://sosransomware.com/en/ransomware-groups/the-gentlemen-the-new-ransomware-of-autumn-2025/" target="_blank">sosransomware.com: the-gentlemen-new-ransomware-autumn-2025</a>
-<a href="https://www.surefirecyber.com/threat-deep-dive-the-gentlemen/" target="_blank">surefirecyber.com: threat-deep-dive-the-gentlemen</a>
-<a href="https://www.dexpose.io/thegentlemen-ransomware-attack-on-national-industries/" target="_blank">dexpose.io: thegentlemen-attack-on-national-industries</a>
+</div></div><div class="xsec" data-open="true" data-title="Case Study &amp; Attack" id="sec-case-study"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">03</span><span class="xsec-title">Case Study &amp; Attack</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<div class="wu-body">
+<p>Reference IDS is deliberately minimal: a per-ID EWMA-updated mean/std with Z-score flagging (α = 0.1, threshold 3.0). It's not meant to be a strong detector, its job is to make the calibration window measurable. The attack adds a fixed per-frame timestamp drift to a bounded fraction of a target ID's frames inside the calibration window, budget swept from 0.01 to 0.5 at a fixed drift, drift separately swept from 0.001s to 0.020s at fixed budget.</p>
+<p>Evaluated on the real ORNL ROAD dataset, three CAN IDs (125, 354, 193) across four ambient drive sessions, 70 budget-sweep points total. Two post-calibration windows get reported throughout: an early window (first 200 scored frames) where the attack's effect shows at full strength, and a full window where EWMA adaptation has time to absorb the drift.</p>
+</div>
+<div class="kv-grid">
+<div class="kv-k">Dataset</div><div class="kv-v">ORNL ROAD (real vehicle CAN traffic, 4 ambient drive sessions)</div>
+<div class="kv-k">Target IDs</div><div class="kv-v">125, 354, 193</div>
+<div class="kv-k">Detector</div><div class="kv-v">Per-ID EWMA mean/std, Z-score flagging (α=0.1, threshold=3.0)</div>
+<div class="kv-k">Sweep</div><div class="kv-v">Attacker budget 0.01–0.5 (7 points) × drift 0.001s–0.020s, 70 points total</div>
+</div>
+</div></div><div class="xsec" data-open="true" data-title="Key Results" id="sec-key-results"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">04</span><span class="xsec-title">Key Results</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<div class="wu-body">
+<p>Baseline shift is the cleanest finding. It scales linearly with both attacker budget and drift magnitude, shift/budget holds at 0.0050 across all 70 (session, target, budget) points, and a mixed-effects model pooled across every point agrees, with only one session showing a detectable deviation, roughly three orders of magnitude smaller than the shift values it sits next to.</p>
+<p>Early-window flag suppression is conditional, not universal. Wherever clean-traffic flagging isn't already near the 200-frame measurement floor, the attack suppresses the flag count monotonically as budget rises. Where clean traffic already sits at that floor, the confidence intervals on clean vs. attacked counts overlap almost completely, so the paper reports those pairs as unresolved rather than claiming an effect either way. Full-window flag rates stay close between clean and attacked traffic everywhere, consistent with EWMA adaptation absorbing the calibration-time shift over time.</p>
+</div>
+</div></div><div class="xsec" data-open="true" data-title="Mitigation" id="sec-mitigation"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">05</span><span class="xsec-title">Mitigation</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<div class="wu-body">
+<p>RobustIDS bundles three changes together: swaps the EWMA/Z-score estimator for median/MAD, caps how far any single tick can move the baseline, and raises the alert threshold from 3.0 to 5.0 with a variance floor so the MAD denominator can't collapse on low-jitter signals. On target 125's basic_long session, its full-window flag rate under attack (0.0019) sits well below the clean EWMA baseline (0.0266).</p>
+<p>The three changes were evaluated as a bundle, not in isolation, so the paper is careful not to claim which one is doing the work. Under attack, RobustIDS's early-window count rises to a flat 1/200 across nearly every budget and session, roughly one additional flagged frame out of 200, and that uptick does not scale with attacker budget the way the raw baseline shift does.</p>
+</div>
+</div></div><div class="xsec" data-open="true" data-title="Limitations" id="sec-limitations"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">06</span><span class="xsec-title">Limitations</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<div class="wu-body">
+<p>The attacker-access assumption and the calibration/post-calibration boundary are both threat-modeling premises, not evidence anyone has achieved either against a real vehicle. RobustIDS's mitigation effect is bundled across three design changes and doesn't respond to attacker budget, so it can't yet be separated from a floor artifact. Early-window counts are small (0–16 out of 200), and three of the ten evaluated pairs start at floor-level clean flagging, where this study's design genuinely can't distinguish a small real effect from no effect.</p>
+<p>Coverage is uneven too: IDs 125 and 354 are absent from the extended_long session, so only ID 193 has full four-session coverage, and the significance test and estimator comparison both draw on a single session/target pair. Two measurement bugs were caught and fixed during implementation, both from reading detector state at the wrong point in its update cycle, documented in full in the paper rather than glossed over here.</p>
+</div>
+</div></div><div class="xsec" data-open="true" data-title="Status" id="sec-status"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">07</span><span class="xsec-title">Status</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
+<div class="wu-body">
+<p>Case study complete on real CAN traffic, threat model and evaluation written up. This is a threat-modeling exercise on real data, not a demonstrated production attack, and the paper is explicit about that distinction throughout. No DOI yet, this page links straight to the PDF and will get the DOI swapped in once one exists.</p>
 </div>
 <div class="wu-tags">
-<span class="wu-tag">Qilin Splinter</span>
-<span class="wu-tag">T1078</span>
-<span class="wu-tag">T1190</span>
-<span class="wu-tag">GPO Abuse</span>
-<span class="wu-tag">NETLOGON Propagation</span>
-<span class="wu-tag">Vishing</span>
-<span class="wu-tag">FortiGate CVE-2024-55591</span>
-<span class="wu-tag">Double Extortion</span>
+<span class="wu-tag">Automotive Security</span>
+<span class="wu-tag">CAN Bus</span>
+<span class="wu-tag">Intrusion Detection</span>
+<span class="wu-tag">Data Poisoning</span>
+<span class="wu-tag">Adaptive Systems</span>
+<span class="wu-tag">ORNL ROAD Dataset</span>
 </div>
-</div>
+</div></div></div>
 </div>
 <footer>
 <span>© 2026 <span class="foot-accent">Sunanditha B S</span></span>
-<a href="./index.html">← threat-intel index</a>
+<a href="./index.html">← publications index</a>
 <a href="mailto:sunanditha24@gmail.com">sunanditha24@gmail.com</a>
 </footer>
 <script>
@@ -319,7 +289,6 @@ document.querySelectorAll('.wu-card').forEach(card=>{
 </script>
 <script>
 (function interactiveSections(){
-  // collapsibles
   document.querySelectorAll('.xsec-head').forEach(btn=>{
     btn.addEventListener('click',()=>{
       const sec=btn.closest('.xsec');
@@ -329,7 +298,6 @@ document.querySelectorAll('.wu-card').forEach(card=>{
     });
   });
 
-  // progress dot-nav, built from .xsec sections that have an id
   const secs = Array.from(document.querySelectorAll('.xsec[id]'));
   if(secs.length > 1){
     const nav=document.createElement('nav');
@@ -358,7 +326,6 @@ document.querySelectorAll('.wu-card').forEach(card=>{
     secs.forEach(s=>obs.observe(s));
   }
 
-  // jump-to pill
   document.querySelectorAll('.xjump').forEach(a=>{
     a.addEventListener('click',(e)=>{
       const id=a.getAttribute('href');
