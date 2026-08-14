@@ -7,7 +7,7 @@
 <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Crect width='16' height='16' fill='%23060a14'/%3E%3Crect x='1' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='1' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='3' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='7' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='11' y='3' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='1' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='5' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='9' y='5' width='2' height='2' fill='%23e1001a'/%3E%3Crect x='13' y='5' width='2' height='2' fill='%23e1001a'/%3E%3C/svg%3E">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Anton&family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Space+Grotesk:wght@300;400;500;600;700&family=Space+Mono:ital,wght@0,400;0,700;1,400&display=swap" rel="stylesheet">
 <style>
 :root {
   --black: #060a14;
@@ -162,7 +162,7 @@ body::after {
 @keyframes cursor-blink { 50%{ border-color:transparent } }
 .hero-name {
   font-family: var(--display);
-  font-size: clamp(40px, 6.2vw, 84px);
+  font-size: clamp(44px, 6.8vw, 92px);
   font-weight: 900;
   line-height: .95;
   letter-spacing: -.02em;
@@ -176,12 +176,12 @@ body::after {
 }
 .hero-name::before,.hero-name::after { display:none; }
 .hero-name.is-glitching { animation: glitch-skew 0.15s steps(1) forwards; }
-.name-main { display: block; color: var(--text); font-family:'Space Grotesk',sans-serif; font-weight:800; }
+.name-main { display: block; color: var(--text); font-family:'Anton',sans-serif; font-weight:400; letter-spacing:-.01em; }
 .name-stroke {
   display: block;
-  font-family: 'Space Grotesk', sans-serif;
+  font-family: 'Bodoni Moda', serif;
   font-style: normal;
-  font-weight: 500;
+  font-weight: 600;
   text-transform: none;
   color: var(--green);
   -webkit-text-fill-color: var(--green);
@@ -202,25 +202,22 @@ body::after {
 
 /* TELEMETRY GAUGES */
 
-/* DOT MATRIX 24 — fixed background, index only */
+/* DOT MATRIX 24 — animated pixel-light grid masked to the number, same wave/glow motion as the archive pages' dot canvas, in blue */
 #bg-dotnum {
-  position: fixed; right: -60px; bottom: -40px; z-index: 1; pointer-events: none;
-  width: min(760px, 82vw);
-  height: 340px;
-  background-image: radial-gradient(circle, var(--cyan) 1.7px, transparent 1.9px);
-  background-size: 13px 13px;
-  background-color: transparent;
-  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 760 340'%3E%3Ctext x='50%25' y='53%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial Black, Helvetica, sans-serif' font-weight='900' font-size='340'%3E24%3C/text%3E%3C/svg%3E");
-  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 760 340'%3E%3Ctext x='50%25' y='53%25' text-anchor='middle' dominant-baseline='middle' font-family='Arial Black, Helvetica, sans-serif' font-weight='900' font-size='340'%3E24%3C/text%3E%3C/svg%3E");
+  position: fixed; right: -30px; bottom: -50px; z-index: 1; pointer-events: none;
+  width: min(980px, 92vw);
+  height: 420px;
+  -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 760 340'%3E%3Ctext x='97%25' y='53%25' text-anchor='end' dominant-baseline='middle' font-family='Arial Black, Helvetica, sans-serif' font-weight='900' font-size='400'%3E24%3C/text%3E%3C/svg%3E");
+  mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 760 340'%3E%3Ctext x='97%25' y='53%25' text-anchor='end' dominant-baseline='middle' font-family='Arial Black, Helvetica, sans-serif' font-weight='900' font-size='400'%3E24%3C/text%3E%3C/svg%3E");
   -webkit-mask-size: contain; mask-size: contain;
   -webkit-mask-repeat: no-repeat; mask-repeat: no-repeat;
-  -webkit-mask-position: center; mask-position: center;
-  opacity: .4;
-  filter: drop-shadow(0 0 16px rgba(63,208,255,.45));
+  -webkit-mask-position: right center; mask-position: right center;
+  opacity: .55;
+  filter: drop-shadow(0 0 18px rgba(63,208,255,.5));
   will-change: transform;
 }
 @media (max-width: 720px) {
-  #bg-dotnum { width: 92vw; height: 220px; right: -30px; bottom: -20px; opacity: .28; }
+  #bg-dotnum { width: 100vw; height: 240px; right: -10px; bottom: -20px; opacity: .34; }
 }
 .hero-bio strong { color:var(--text); font-weight:500; }
 .quick-scan { font-family:var(--mono); font-size:11px; background:rgba(225,0,26,.03); border:1px solid var(--wire2); border-left:2px solid rgba(225,0,26,.35); padding:14px 18px; margin-bottom:24px; line-height:1.9; color:var(--muted); border-radius:0 6px 6px 0; }
@@ -339,22 +336,23 @@ body::after {
 .race-widget {
   background-image:
     repeating-linear-gradient(
-      0deg,
-      transparent,
-      transparent 2px,
-      rgba(255,255,255,0.038) 2px,
-      rgba(255,255,255,0.038) 3px
+      45deg,
+      rgba(255,255,255,.05) 0,
+      rgba(255,255,255,.05) 2px,
+      rgba(0,0,0,.16) 2px,
+      rgba(0,0,0,.16) 4px
     ),
     repeating-linear-gradient(
-      90deg,
-      transparent,
-      transparent 2px,
-      rgba(255,255,255,0.02) 2px,
-      rgba(255,255,255,0.02) 3px
+      -45deg,
+      rgba(255,255,255,.035) 0,
+      rgba(255,255,255,.035) 2px,
+      rgba(0,0,0,.11) 2px,
+      rgba(0,0,0,.11) 4px
     );
+  background-size: 6px 6px;
   background-color: var(--panel);
 }
-.bice-hero-card { background-image:repeating-linear-gradient(45deg, rgba(255,255,255,.025) 0, rgba(255,255,255,.025) 2px, transparent 2px, transparent 4px), repeating-linear-gradient(-45deg, rgba(255,255,255,.02) 0, rgba(255,255,255,.02) 2px, transparent 2px, transparent 4px); background-size:6px 6px; background-color:var(--panel); border:1px solid var(--wire2); border-radius:6px; padding:44px; position:relative; overflow:hidden; margin-top:44px; transition:border-color .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s cubic-bezier(.2,.8,.2,1); transform-style:preserve-3d; }
+.bice-hero-card { background-image:repeating-linear-gradient(45deg, rgba(255,255,255,.05) 0, rgba(255,255,255,.05) 2px, rgba(0,0,0,.16) 2px, rgba(0,0,0,.16) 4px), repeating-linear-gradient(-45deg, rgba(255,255,255,.035) 0, rgba(255,255,255,.035) 2px, rgba(0,0,0,.11) 2px, rgba(0,0,0,.11) 4px); background-size:6px 6px; background-color:var(--panel); border:1px solid var(--wire2); border-radius:6px; padding:44px; position:relative; overflow:hidden; margin-top:44px; transition:border-color .25s cubic-bezier(.2,.8,.2,1), box-shadow .25s cubic-bezier(.2,.8,.2,1); transform-style:preserve-3d; }
 .bice-hero-card::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--green),transparent); opacity:0; transition:opacity .4s; }
 .bice-hero-card:hover { border-color:rgba(225,0,26,.35); box-shadow:0 12px 36px rgba(0,0,0,.45),0 0 28px rgba(225,0,26,.06); }
 .bice-hero-card:hover::before { opacity:.7; }
@@ -646,7 +644,7 @@ footer .g { color:var(--green); }
 <div id="crt-turn-on"></div>
 
 <div id="bg-carbon"></div>
-<div id="bg-dotnum" aria-hidden="true"></div>
+<canvas id="bg-dotnum" aria-hidden="true"></canvas>
 <div class="noise-overlay"></div>
 <div class="pit-flash" id="pitFlash"></div>
 <div id="cur-dot"></div>
@@ -706,12 +704,23 @@ footer .g { color:var(--green); }
 
     <div class="race-track-wrap">
       <svg viewBox="0 0 340 220" shape-rendering="geometricPrecision">
+        <defs>
+          <pattern id="finishCheckers" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(90 0 0)">
+            <rect width="4" height="4" fill="#e8ecf5"/>
+            <rect width="2" height="2" fill="#0a1020"/>
+            <rect x="2" y="2" width="2" height="2" fill="#0a1020"/>
+          </pattern>
+        </defs>
         <path id="trackPath" d="M40,195 L235,195 C260,195 275,185 278,165 L300,150 L315,115 C312,90 292,85 300,68 L280,75 C280,55 260,45 235,50 L175,38 L155,55 L165,68 L130,58 L108,75 C90,88 65,80 62,60 C60,45 45,50 45,68 C40,80 55,85 47,95 C40,103 46,108 48,105 L68,118 L48,135 C35,143 30,160 38,175 L40,195 Z"
           fill="none" stroke="#232c4a" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
         <path d="M40,195 L235,195 C260,195 275,185 278,165 L300,150 L315,115 C312,90 292,85 300,68 L280,75 C280,55 260,45 235,50 L175,38 L155,55 L165,68 L130,58 L108,75 C90,88 65,80 62,60 C60,45 45,50 45,68 C40,80 55,85 47,95 C40,103 46,108 48,105 L68,118 L48,135 C35,143 30,160 38,175 L40,195 Z"
           fill="none" stroke="#333f66" stroke-width="1" opacity=".6"/>
         <path d="M40,195 L235,195 C260,195 275,185 278,165 L300,150 L315,115 C312,90 292,85 300,68 L280,75 C280,55 260,45 235,50 L175,38 L155,55 L165,68 L130,58 L108,75 C90,88 65,80 62,60 C60,45 45,50 45,68 C40,80 55,85 47,95 C40,103 46,108 48,105 L68,118 L48,135 C35,143 30,160 38,175 L40,195 Z"
           fill="none" stroke="#5a6884" stroke-width="1" stroke-dasharray="3 4" opacity=".7"/>
+        <g id="finishLine">
+          <rect x="38" y="188.5" width="4" height="13" fill="url(#finishCheckers)" stroke="#0a1020" stroke-width="0.4"/>
+          <text x="40" y="182" font-family="var(--mono)" font-size="5.5" fill="#e8ecf5" text-anchor="middle" letter-spacing=".5">FINISH</text>
+        </g>
         <text x="285" y="150" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">TURN 1</text>
         <text x="300" y="140" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">BACK STR</text>
         <text x="285" y="80" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">HAIRPIN 2</text>
@@ -921,26 +930,56 @@ footer .g { color:var(--green); }
   frame();
 })();
 
-/* DOT MATRIX 24 — slow drift + occasional flicker, like a scoreboard idling */
+/* DOT MATRIX 24 — animated pixel-light grid, masked to the numeral, same wave+hover-glow motion as the archive pages' dot canvas but in blue */
 (function dotNumBg(){
-  const el=document.getElementById('bg-dotnum');
-  if(!el) return;
-  let mx=0,my=0,tx=0,ty=0;
+  const canvas=document.getElementById('bg-dotnum');
+  if(!canvas) return;
+  const ctx=canvas.getContext('2d');
+  const br=59, bg=208, bb=255; // #3fd0ff — pixel light color
+  const spacing=13;
+  let w,h,cols,rows,dpr;
+  let mx=-9999,my=-9999;
+  function resize(){
+    const rect=canvas.getBoundingClientRect();
+    dpr=Math.min(window.devicePixelRatio||1,2);
+    w=rect.width; h=rect.height;
+    canvas.width=w*dpr; canvas.height=h*dpr;
+    canvas.style.width=w+'px'; canvas.style.height=h+'px';
+    ctx.setTransform(dpr,0,0,dpr,0,0);
+    cols=Math.ceil(w/spacing)+1;
+    rows=Math.ceil(h/spacing)+1;
+  }
+  window.addEventListener('resize',resize);
+  resize();
   window.addEventListener('mousemove',(e)=>{
-    mx=(e.clientX/window.innerWidth-0.5)*14;
-    my=(e.clientY/window.innerHeight-0.5)*14;
+    const rect=canvas.getBoundingClientRect();
+    mx=e.clientX-rect.left; my=e.clientY-rect.top;
   });
+  window.addEventListener('mouseleave',()=>{ mx=-9999; my=-9999; });
+  let sweepT=Math.random()*1000;
   function frame(){
-    tx += (mx-tx)*0.03; ty += (my-ty)*0.03;
-    el.style.transform = `translate3d(${tx}px, ${ty}px, 0)`;
+    ctx.clearRect(0,0,w,h);
+    sweepT+=0.5;
+    for(let i=0;i<cols;i++){
+      const x=i*spacing;
+      for(let j=0;j<rows;j++){
+        const y=j*spacing;
+        const dx=x-mx, dy=y-my;
+        const dist=Math.sqrt(dx*dx+dy*dy);
+        const glow=Math.max(0,1-dist/150);
+        const wave=Math.sin((x*0.6+y-sweepT*3)*0.025)*0.5+0.5;
+        const idle=wave*0.14;
+        const alpha=Math.min(0.95,glow*0.85+idle+0.16);
+        const r=1.2+glow*1.8;
+        ctx.beginPath();
+        ctx.arc(x,y,r,0,Math.PI*2);
+        ctx.fillStyle=`rgba(${br},${bg},${bb},${alpha.toFixed(3)})`;
+        ctx.fill();
+      }
+    }
     requestAnimationFrame(frame);
   }
   frame();
-  function flicker(){
-    el.style.opacity = (0.34 + Math.random()*0.12).toFixed(2);
-    setTimeout(flicker, 2200 + Math.random()*2600);
-  }
-  flicker();
 })();
 const bootLines=[
 {t:'<span class="dim">ECU BOOTLOADER v4.2.1 — SUNANDITHA_ARCHIVE/research</span>',d:150},
