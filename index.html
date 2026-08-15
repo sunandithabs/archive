@@ -313,7 +313,7 @@ body::after {
 .race-header span { color:var(--green); }
 .race-live { display:flex; align-items:center; gap:5px; color:var(--green); }
 .race-live .sdot { margin-right:0; }
-.race-track-wrap { width:100%; aspect-ratio:19/10; margin-bottom:16px; }
+.race-track-wrap { width:100%; aspect-ratio:19/10; margin-bottom:16px; position:relative; }
 .race-track-wrap svg { width:100%; height:100%; display:block; }
 .race-lap { font-family:var(--mono); font-size:9.5px; color:var(--muted); letter-spacing:.08em; text-align:right; margin:-9px 0 14px; }
 .race-lap span { color:var(--cyan); }
@@ -326,6 +326,23 @@ body::after {
 .race-stat-val.red { color:var(--green); }
 .race-stat-val.small { font-size:16px; }
 .race-stat-val.tyre-soft { color:var(--green); }
+.race-flash { position:absolute; left:50%; top:38%; transform:translate(-50%,-50%) scale(.7); font-family:var(--mono); font-size:11px; letter-spacing:.2em; color:var(--green); background:rgba(6,10,20,.85); border:1px solid var(--green); padding:4px 10px; opacity:0; pointer-events:none; z-index:5; transition:opacity .2s, transform .2s; text-transform:uppercase; }
+.race-flash.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
+.pit-box { transition:opacity .3s; }
+.drs-zone-label { opacity:.3; transition:opacity .25s; }
+.drs-zone-label.active { opacity:1; }
+#sector1Path,#sector2Path,#sector3Path { transition:opacity .3s; }
+.crowd-px { transition:opacity .6s; }
+.start-lights { position:absolute; inset:0; background:rgba(6,10,20,.92); display:flex; align-items:center; justify-content:center; z-index:8; opacity:1; transition:opacity .5s ease .3s; }
+.start-lights.done { opacity:0; pointer-events:none; }
+.sl-row { display:flex; gap:8px; padding:10px 16px; background:#0d1526; border:1px solid var(--wire2); border-radius:2px; }
+.sl-dot { width:14px; height:14px; border-radius:50%; background:#2a1010; box-shadow:inset 0 0 0 1px #4a1818; }
+.sl-dot.lit { background:#e1001a; box-shadow:0 0 10px #e1001a, inset 0 0 0 1px #ff3b3b; }
+.sl-dot.go { background:var(--green); box-shadow:0 0 12px var(--green); }
+.circuit-select { display:flex; gap:6px; }
+.circuit-btn { font-family:var(--mono); font-size:8.5px; letter-spacing:.1em; text-transform:uppercase; color:var(--muted); background:var(--wire); border:1px solid var(--wire2); border-radius:2px; padding:4px 8px; cursor:pointer; transition:color .2s, border-color .2s, background .2s; }
+.circuit-btn:hover { color:var(--text); }
+.circuit-btn.active { color:var(--green); border-color:var(--green); background:rgba(0,225,102,.08); }
 .tele-bar-row { display:flex; align-items:center; gap:11px; margin-bottom:9px; }
 .tele-bar-label { font-family:var(--mono); font-size:9.5px; color:var(--muted); letter-spacing:.1em; width:60px; flex-shrink:0; }
 .tele-bar-track {
@@ -756,25 +773,147 @@ footer .g { color:var(--green); }
   </div>
 
   <div class="race-widget reveal">
-    <div class="race-header"><span>live broadcast</span><span class="race-live"><span class="sdot"></span>ON TRACK</span></div>
+    <div class="race-header">
+      <span>live broadcast</span>
+      <div class="circuit-select" id="circuitSelect">
+        <button class="circuit-btn active" data-circuit="gp">GP CIRCUIT</button>
+        <button class="circuit-btn" data-circuit="street">STREET CCT</button>
+      </div>
+      <span class="race-live"><span class="sdot"></span>ON TRACK</span>
+    </div>
 
     <div class="race-track-wrap">
       <svg viewBox="0 0 380 220" shape-rendering="geometricPrecision">
-        <path id="trackPath" d="M50,185 L290,185 C325,185 330,155 330,120 L330,55 C330,35 310,20 285,25 C265,29 270,48 250,48 C225,48 230,22 205,20 L90,20 C55,20 35,35 32,65 C29,100 30,140 30,160 C30,175 38,185 50,185 Z"
+        <path id="trackPath" d="M40,190 L205,190 C232,190 250,178 250,158 C250,140 236,130 216,132 C198,134 197,150 212,155 C230,161 240,148 236,124 C233,100 250,84 274,80 C298,76 318,62 320,38 C321,18 302,6 283,12 C270,16 269,29 251,31 C234,33 231,19 213,16 L122,16 C92,16 66,21 56,37 C48,51 51,70 45,90 C40,108 29,118 27,138 C25,158 30,175 40,190 Z"
           fill="none" stroke="#232c4a" stroke-width="13" stroke-linecap="round" stroke-linejoin="round"/>
-        <path d="M50,185 L290,185 C325,185 330,155 330,120 L330,55 C330,35 310,20 285,25 C265,29 270,48 250,48 C225,48 230,22 205,20 L90,20 C55,20 35,35 32,65 C29,100 30,140 30,160 C30,175 38,185 50,185 Z"
+        <path d="M40,190 L205,190 C232,190 250,178 250,158 C250,140 236,130 216,132 C198,134 197,150 212,155 C230,161 240,148 236,124 C233,100 250,84 274,80 C298,76 318,62 320,38 C321,18 302,6 283,12 C270,16 269,29 251,31 C234,33 231,19 213,16 L122,16 C92,16 66,21 56,37 C48,51 51,70 45,90 C40,108 29,118 27,138 C25,158 30,175 40,190 Z"
           fill="none" stroke="#333f66" stroke-width="1" opacity=".6"/>
-        <path d="M50,185 L290,185 C325,185 330,155 330,120 L330,55 C330,35 310,20 285,25 C265,29 270,48 250,48 C225,48 230,22 205,20 L90,20 C55,20 35,35 32,65 C29,100 30,140 30,160 C30,175 38,185 50,185 Z"
+        <path d="M40,190 L205,190 C232,190 250,178 250,158 C250,140 236,130 216,132 C198,134 197,150 212,155 C230,161 240,148 236,124 C233,100 250,84 274,80 C298,76 318,62 320,38 C321,18 302,6 283,12 C270,16 269,29 251,31 C234,33 231,19 213,16 L122,16 C92,16 66,21 56,37 C48,51 51,70 45,90 C40,108 29,118 27,138 C25,158 30,175 40,190 Z"
           fill="none" stroke="#5a6884" stroke-width="1" stroke-dasharray="3 4" opacity=".7"/>
         <defs><pattern id="finishCheck" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(90)"><rect width="2" height="2" fill="#e8ecf5"/><rect x="2" y="2" width="2" height="2" fill="#e8ecf5"/><rect x="2" width="2" height="2" fill="#0a0a0a"/><rect y="2" width="2" height="2" fill="#0a0a0a"/></pattern></defs>
-        <text x="140" y="200" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">PIT STRAIGHT</text>
-        <rect x="164" y="178" width="8" height="14" fill="url(#finishCheck)"/>
-        <text x="150" y="173" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">FINISH</text>
-        <text x="332" y="145" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5" transform="rotate(90 332 145)">TURN 1</text>
-        <text x="340" y="42" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">BACK STRAIGHT</text>
-        <text x="252" y="60" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">CHICANE</text>
-        <text x="150" y="13" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">TOP STRAIGHT</text>
-        <text x="20" y="115" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5" transform="rotate(-90 20 115)">HAIRPIN</text>
+        <rect id="finishRect" x="122" y="183" width="8" height="14" fill="url(#finishCheck)"/>
+        <g id="labelsGp" data-circuit="gp">
+          <text x="100" y="200" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">PIT STRAIGHT</text>
+          <text x="108" y="178" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">FINISH</text>
+          <text x="255" y="150" font-family="var(--mono)" font-size="5.5" fill="#5a6884" letter-spacing=".5">T1</text>
+          <text x="200" y="145" font-family="var(--mono)" font-size="5.5" fill="#5a6884" letter-spacing=".5">ESSES</text>
+          <text x="290" y="70" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">BACK STRAIGHT</text>
+          <text x="326" y="26" font-family="var(--mono)" font-size="5.5" fill="#5a6884" letter-spacing=".5" transform="rotate(90 326 26)">HAIRPIN</text>
+          <text x="255" y="24" font-family="var(--mono)" font-size="5.5" fill="#5a6884" letter-spacing=".5">CHICANE</text>
+          <text x="150" y="11" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">TOP STRAIGHT</text>
+          <text x="18" y="65" font-family="var(--mono)" font-size="5.5" fill="#5a6884" letter-spacing=".5" transform="rotate(-90 18 65)">FINAL SWEEP</text>
+        </g>
+        <g id="labelsStreet" data-circuit="street" style="display:none">
+          <text x="90" y="185" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">PIT STRAIGHT</text>
+          <text x="60" y="163" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">FINISH</text>
+          <text x="290" y="145" font-family="var(--mono)" font-size="5.5" fill="#5a6884" letter-spacing=".5" transform="rotate(90 290 145)">T1</text>
+          <text x="295" y="70" font-family="var(--mono)" font-size="5.5" fill="#5a6884" letter-spacing=".5" transform="rotate(90 295 70)">HARBOUR CURVE</text>
+          <text x="180" y="48" font-family="var(--mono)" font-size="6" fill="#5a6884" letter-spacing=".5">TOP STRAIGHT</text>
+          <text x="98" y="60" font-family="var(--mono)" font-size="5.5" fill="#5a6884" letter-spacing=".5">HAIRPIN</text>
+          <text x="70" y="125" font-family="var(--mono)" font-size="5.5" fill="#5a6884" letter-spacing=".5">SWIMMING POOL</text>
+          <text x="45" y="155" font-family="var(--mono)" font-size="5.5" fill="#5a6884" letter-spacing=".5">CHICANE</text>
+        </g>
+
+        <!-- curbs: red/white pixel stripes at corner apexes, larger + brighter -->
+        <g id="curbs" data-circuit="gp">
+          <g transform="translate(244,153)"><rect x="0" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="4" y="0" width="4" height="2.6" fill="#f2f4f8"/><rect x="8" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="12" y="0" width="4" height="2.6" fill="#f2f4f8"/></g>
+          <g transform="translate(210,128) rotate(20)"><rect x="0" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="4" y="0" width="4" height="2.6" fill="#f2f4f8"/><rect x="8" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="12" y="0" width="4" height="2.6" fill="#f2f4f8"/></g>
+          <g transform="translate(313,34) rotate(70)"><rect x="0" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="4" y="0" width="4" height="2.6" fill="#f2f4f8"/><rect x="8" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="12" y="0" width="4" height="2.6" fill="#f2f4f8"/></g>
+          <g transform="translate(250,27) rotate(-10)"><rect x="0" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="4" y="0" width="4" height="2.6" fill="#f2f4f8"/><rect x="8" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="12" y="0" width="4" height="2.6" fill="#f2f4f8"/></g>
+          <g transform="translate(54,35) rotate(30)"><rect x="0" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="4" y="0" width="4" height="2.6" fill="#f2f4f8"/><rect x="8" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="12" y="0" width="4" height="2.6" fill="#f2f4f8"/></g>
+          <g transform="translate(26,136) rotate(80)"><rect x="0" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="4" y="0" width="4" height="2.6" fill="#f2f4f8"/><rect x="8" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="12" y="0" width="4" height="2.6" fill="#f2f4f8"/></g>
+        </g>
+
+        <!-- runoff: grey/gravel patches at heavy braking zones, more visible -->
+        <g id="runoff" data-circuit="gp">
+          <ellipse cx="255" cy="162" rx="17" ry="11" fill="#3a4a70" opacity=".55"/>
+          <ellipse cx="255" cy="162" rx="17" ry="11" fill="none" stroke="#5a6884" stroke-width=".6" opacity=".8"/>
+          <ellipse cx="322" cy="20" rx="15" ry="12" fill="#3a4a70" opacity=".55"/>
+          <ellipse cx="322" cy="20" rx="15" ry="12" fill="none" stroke="#5a6884" stroke-width=".6" opacity=".8"/>
+          <ellipse cx="38" cy="140" rx="13" ry="16" fill="#3a4a70" opacity=".55"/>
+          <ellipse cx="38" cy="140" rx="13" ry="16" fill="none" stroke="#5a6884" stroke-width=".6" opacity=".8"/>
+        </g>
+
+        <!-- street circuit curbs + runoff (hidden until selected) -->
+        <g id="curbsStreet" data-circuit="street" style="display:none">
+          <g transform="translate(282,166) rotate(45)"><rect x="0" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="4" y="0" width="4" height="2.6" fill="#f2f4f8"/><rect x="8" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="12" y="0" width="4" height="2.6" fill="#f2f4f8"/></g>
+          <g transform="translate(285,63) rotate(-45)"><rect x="0" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="4" y="0" width="4" height="2.6" fill="#f2f4f8"/><rect x="8" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="12" y="0" width="4" height="2.6" fill="#f2f4f8"/></g>
+          <g transform="translate(120,53)"><rect x="0" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="4" y="0" width="4" height="2.6" fill="#f2f4f8"/><rect x="8" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="12" y="0" width="4" height="2.6" fill="#f2f4f8"/></g>
+          <g transform="translate(110,120) rotate(90)"><rect x="0" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="4" y="0" width="4" height="2.6" fill="#f2f4f8"/><rect x="8" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="12" y="0" width="4" height="2.6" fill="#f2f4f8"/></g>
+          <g transform="translate(78,141) rotate(20)"><rect x="0" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="4" y="0" width="4" height="2.6" fill="#f2f4f8"/><rect x="8" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="12" y="0" width="4" height="2.6" fill="#f2f4f8"/></g>
+          <g transform="translate(58,160) rotate(-20)"><rect x="0" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="4" y="0" width="4" height="2.6" fill="#f2f4f8"/><rect x="8" y="0" width="4" height="2.6" fill="#e1001a"/><rect x="12" y="0" width="4" height="2.6" fill="#f2f4f8"/></g>
+        </g>
+        <g id="runoffStreet" data-circuit="street" style="display:none">
+          <ellipse cx="270" cy="150" rx="14" ry="11" fill="#3a4a70" opacity=".55"/>
+          <ellipse cx="270" cy="150" rx="14" ry="11" fill="none" stroke="#5a6884" stroke-width=".6" opacity=".8"/>
+          <ellipse cx="113" cy="100" rx="11" ry="14" fill="#3a4a70" opacity=".55"/>
+          <ellipse cx="113" cy="100" rx="11" ry="14" fill="none" stroke="#5a6884" stroke-width=".6" opacity=".8"/>
+          <ellipse cx="65" cy="150" rx="13" ry="10" fill="#3a4a70" opacity=".55"/>
+          <ellipse cx="65" cy="150" rx="13" ry="10" fill="none" stroke="#5a6884" stroke-width=".6" opacity=".8"/>
+        </g>
+
+        <!-- trees, pixel art clusters dotted around outside the track -->
+        <g id="trees" fill="#0f3d24">
+          <g transform="translate(360,100)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(365,130)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(355,160)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(370,75)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(358,45)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(10,40)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(8,175)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(6,110)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(4,15)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(150,3)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(170,3)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(280,3)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(300,3)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(60,3)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(80,3)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(340,180)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(320,195)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+          <g transform="translate(220,205)"><rect width="4" height="4"/><rect x="-2" y="2" width="4" height="4"/><rect x="2" y="2" width="4" height="4"/><rect x="0" y="6" width="4" height="4" fill="#22140d"/></g>
+        </g>
+
+        <!-- sector colour indicators (pathLength normalized so dasharray = % of lap) -->
+        <path id="sector1Path" d="M40,190 L205,190 C232,190 250,178 250,158 C250,140 236,130 216,132 C198,134 197,150 212,155 C230,161 240,148 236,124 C233,100 250,84 274,80 C298,76 318,62 320,38 C321,18 302,6 283,12 C270,16 269,29 251,31 C234,33 231,19 213,16 L122,16 C92,16 66,21 56,37 C48,51 51,70 45,90 C40,108 29,118 27,138 C25,158 30,175 40,190 Z" pathLength="100" fill="none" stroke="#3fd0ff" stroke-width="2.4" stroke-dasharray="33.3 66.7" stroke-dashoffset="0" opacity=".55"/>
+        <path id="sector2Path" d="M40,190 L205,190 C232,190 250,178 250,158 C250,140 236,130 216,132 C198,134 197,150 212,155 C230,161 240,148 236,124 C233,100 250,84 274,80 C298,76 318,62 320,38 C321,18 302,6 283,12 C270,16 269,29 251,31 C234,33 231,19 213,16 L122,16 C92,16 66,21 56,37 C48,51 51,70 45,90 C40,108 29,118 27,138 C25,158 30,175 40,190 Z" pathLength="100" fill="none" stroke="#ffd400" stroke-width="2.4" stroke-dasharray="33.3 66.7" stroke-dashoffset="-33.3" opacity=".3"/>
+        <path id="sector3Path" d="M40,190 L205,190 C232,190 250,178 250,158 C250,140 236,130 216,132 C198,134 197,150 212,155 C230,161 240,148 236,124 C233,100 250,84 274,80 C298,76 318,62 320,38 C321,18 302,6 283,12 C270,16 269,29 251,31 C234,33 231,19 213,16 L122,16 C92,16 66,21 56,37 C48,51 51,70 45,90 C40,108 29,118 27,138 C25,158 30,175 40,190 Z" pathLength="100" fill="none" stroke="#e1001a" stroke-width="2.4" stroke-dasharray="33.4 66.6" stroke-dashoffset="-66.6" opacity=".3"/>
+
+        <!-- DRS zone marker on back straight -->
+        <g id="drsZoneG" class="drs-zone-label">
+          <rect x="286" y="52" width="24" height="5" fill="none" stroke="#3fd0ff" stroke-width="1" transform="rotate(-32 298 54)"/>
+          <text x="298" y="47" font-family="var(--mono)" font-size="5.5" fill="#3fd0ff" letter-spacing=".4" text-anchor="middle" transform="rotate(-32 298 47)">DRS</text>
+        </g>
+
+        <!-- crowd stands, pixel art, filled by JS -->
+        <g id="crowdTop" transform="translate(90,3)"></g>
+        <g id="crowdRight" transform="translate(345,60)"></g>
+        <g id="crowdBot" transform="translate(160,203)"></g>
+        <g id="crowdHairpin" transform="translate(333,18) rotate(60)"></g>
+        <g id="crowdLeft" transform="translate(2,70) rotate(90)"></g>
+        <g id="crowdChicane" transform="translate(200,3)"></g>
+        <g id="crowdFarLeft" transform="translate(-4,150) rotate(90)"></g>
+        <g id="crowdTopFar" transform="translate(260,3)"></g>
+        <g id="crowdBotLeft" transform="translate(4,205)"></g>
+        <g id="crowdBotRight" transform="translate(300,205)"></g>
+        <g id="crowdUpperRight" transform="translate(348,95) rotate(90)"></g>
+
+        <!-- pit garage, pixel art, enlarged + bordered for visibility — drawn after crowd so it always sits on top -->
+        <g id="pitBox" transform="translate(90,196) scale(1.3)">
+          <rect x="-3" y="-2" width="40" height="20" fill="#0d1526" opacity=".85"/>
+          <rect x="-3" y="-2" width="40" height="20" fill="none" stroke="#e1001a" stroke-width=".7" opacity=".9"/>
+          <rect x="0" y="0" width="34" height="3" fill="#98a7c8"/>
+          <rect x="2" y="3" width="6" height="7" fill="#1a2540"/>
+          <rect x="2" y="3" width="6" height="7" fill="none" stroke="#e1001a" stroke-width=".7"/>
+          <rect x="10" y="3" width="6" height="7" fill="#1a2540"/>
+          <rect x="10" y="3" width="6" height="7" fill="none" stroke="#3fd0ff" stroke-width=".7"/>
+          <rect x="18" y="3" width="6" height="7" fill="#1a2540"/>
+          <rect x="18" y="3" width="6" height="7" fill="none" stroke="#ffd400" stroke-width=".7"/>
+          <rect x="26" y="3" width="6" height="7" fill="#1a2540"/>
+          <rect x="26" y="3" width="6" height="7" fill="none" stroke="#e1001a" stroke-width=".7"/>
+          <text x="17" y="16.5" font-family="var(--mono)" font-size="5.5" fill="#e1001a" text-anchor="middle" letter-spacing=".3" font-weight="bold">PIT ZONE</text>
+        </g>
+
         <g id="raceCar" shape-rendering="crispEdges">
           <rect x="-16" y="-5" width="1" height="2" fill="#0a0a0a"/>
           <rect x="-16" y="3" width="1" height="2" fill="#0a0a0a"/>
@@ -826,8 +965,18 @@ footer .g { color:var(--green); }
           <rect x="-11" y="4" width="3.2" height="2.6" fill="#0a0a0a"/>
         </g>
       </svg>
+      <div class="race-flash" id="raceFlash">OVERTAKE</div>
+      <div class="start-lights" id="startLights">
+        <div class="sl-row">
+          <span class="sl-dot" data-i="0"></span>
+          <span class="sl-dot" data-i="1"></span>
+          <span class="sl-dot" data-i="2"></span>
+          <span class="sl-dot" data-i="3"></span>
+          <span class="sl-dot" data-i="4"></span>
+        </div>
+      </div>
     </div>
-    <div class="race-lap">LAP <span id="raceLap">1</span>/10</div>
+    <div class="race-lap">SECTOR <span id="raceSector">1</span> · LAP <span id="raceLap">1</span>/10</div>
 
     <div class="race-stats">
       <div class="race-stat"><span class="race-stat-label">SPEED</span><span class="race-stat-val red" id="raceSpeed">241</span></div>
@@ -835,7 +984,7 @@ footer .g { color:var(--green); }
       <div class="race-stat"><span class="race-stat-label">RPM x1K</span><span class="race-stat-val" id="raceRpm">9.2</span></div>
       <div class="race-stat"><span class="race-stat-label">TYRE</span><span class="race-stat-val small tyre-soft" id="raceTyre">SOFT</span></div>
       <div class="race-stat"><span class="race-stat-label">POS</span><span class="race-stat-val small" id="racePos">P1</span></div>
-      <div class="race-stat"><span class="race-stat-label">LAP TIME</span><span class="race-stat-val small" id="raceLapTime">0:00.0</span></div>
+      <div class="race-stat"><span class="race-stat-label">GAP</span><span class="race-stat-val small" id="raceGap">+1.4s</span></div>
     </div>
     <div class="tele-bar-row">
       <div class="tele-bar-label">THROTTLE</div>
@@ -1060,56 +1209,101 @@ window.addEventListener('scroll',updateLap);updateLap();
   const speedEl=document.getElementById('raceSpeed'), gearEl=document.getElementById('raceGear');
   const rpmEl=document.getElementById('raceRpm'), lapTimeEl=document.getElementById('raceLapTime');
   const tyreEl=document.getElementById('raceTyre'), posEl=document.getElementById('racePos');
-  const lapEl=document.getElementById('raceLap');
+  const lapEl=document.getElementById('raceLap'), sectorEl=document.getElementById('raceSector'), gapEl=document.getElementById('raceGap');
   const pathEl=document.getElementById('trackPath'), carEl=document.getElementById('raceCar'), carEl2=document.getElementById('raceCar2');
+  const flashEl=document.getElementById('raceFlash'), drsG=document.getElementById('drsZoneG'), pitBox=document.getElementById('pitBox');
+  const s1=document.getElementById('sector1Path'), s2=document.getElementById('sector2Path'), s3=document.getElementById('sector3Path');
+  const overlayPaths = document.querySelectorAll('#trackPath, .race-track-wrap path:not(#sector1Path):not(#sector2Path):not(#sector3Path)');
+  const finishRect = document.getElementById('finishRect');
   if(!tFill || !pathEl || !carEl) return;
 
-  /* ---- 1. ONE-TIME TRACK MODEL: sample the path, compute curvature + a
-     physically-limited speed profile (forward accel pass, backward brake pass) ---- */
-  const totalLen = pathEl.getTotalLength();
+  const CIRCUITS = {
+    gp: {
+      d: "M40,190 L205,190 C232,190 250,178 250,158 C250,140 236,130 216,132 C198,134 197,150 212,155 C230,161 240,148 236,124 C233,100 250,84 274,80 C298,76 318,62 320,38 C321,18 302,6 283,12 C270,16 269,29 251,31 C234,33 231,19 213,16 L122,16 C92,16 66,21 56,37 C48,51 51,70 45,90 C40,108 29,118 27,138 C25,158 30,175 40,190 Z",
+      finish: {x:122,y:183}, pit: "translate(90,196) scale(1.3)", drs: "translate(0,0)"
+    },
+    street: {
+      d: "M40,175 L255,175 C275,175 290,160 290,140 L290,90 C290,68 275,55 253,55 L150,55 C128,55 113,68 113,88 L113,115 C113,132 100,142 82,140 C64,138 55,150 60,165 C64,177 50,180 40,175 Z",
+      finish: {x:44,y:168}, pit: "translate(50,178) scale(1.1)", drs: "translate(-98,3)"
+    }
+  };
+  let currentCircuit = 'gp';
+
+  function setCircuit(id){
+    const c = CIRCUITS[id]; if(!c) return;
+    currentCircuit = id;
+    document.querySelectorAll('#trackPath, .race-track-wrap svg > path').forEach(p=>p.setAttribute('d', c.d));
+    [s1,s2,s3].forEach(p=>p.setAttribute('d', c.d));
+    finishRect.setAttribute('x', c.finish.x); finishRect.setAttribute('y', c.finish.y);
+    pitBox.setAttribute('transform', c.pit);
+    drsG.setAttribute('transform', c.drs);
+    document.querySelectorAll('.race-track-wrap svg [data-circuit]').forEach(el=>{
+      el.style.display = el.getAttribute('data-circuit')===id ? '' : 'none';
+    });
+    document.querySelectorAll('.circuit-btn').forEach(b=>b.classList.toggle('active', b.dataset.circuit===id));
+    distanceTraveled = 0; lap = 1; pitting = false; nextPitLap = 4; lastSign = 1;
+    if(lapEl) lapEl.textContent = 1;
+    buildModel();
+  }
+  const selWrap = document.getElementById('circuitSelect');
+  if(selWrap) selWrap.addEventListener('click', e=>{
+    const btn = e.target.closest('.circuit-btn'); if(!btn) return;
+    setCircuit(btn.dataset.circuit);
+  });
+
+  // start lights sequence — 5 reds light up one at a time, hold, then "lights out" (F1-style go signal)
+  (function startLights(){
+    const wrap = document.getElementById('startLights');
+    if(!wrap) return;
+    const dots = wrap.querySelectorAll('.sl-dot');
+    dots.forEach((d,i)=>{ setTimeout(()=>d.classList.add('lit'), 500+i*550); });
+    const holdEnd = 500+dots.length*550+700;
+    setTimeout(()=>{ dots.forEach(d=>{ d.classList.remove('lit'); d.classList.add('go'); }); }, holdEnd);
+    setTimeout(()=>wrap.classList.add('done'), holdEnd+500);
+  })();
+
+  // pixel-art crowd: rows of tiny coloured blocks in grandstand groups
+  (function drawCrowd(){
+    const palette=['#e1001a','#3fd0ff','#ffd400','#f2f4f8','#2a5aff','#5a6884'];
+    const groups=[{id:'crowdTop',cols:26,rows:2},{id:'crowdRight',cols:8,rows:9},{id:'crowdBot',cols:20,rows:2},{id:'crowdHairpin',cols:8,rows:7},{id:'crowdLeft',cols:8,rows:9},{id:'crowdChicane',cols:14,rows:2},{id:'crowdFarLeft',cols:8,rows:6},{id:'crowdTopFar',cols:14,rows:2},{id:'crowdBotLeft',cols:12,rows:2},{id:'crowdBotRight',cols:16,rows:2},{id:'crowdUpperRight',cols:8,rows:5}];
+    groups.forEach(g=>{
+      const el=document.getElementById(g.id); if(!el) return;
+      const vertical = g.id==='crowdRight';
+      // roof / stand frame
+      const roof=document.createElementNS('http://www.w3.org/2000/svg','rect');
+      if(vertical){ roof.setAttribute('x',-2); roof.setAttribute('y',-2); roof.setAttribute('width',g.cols*2+4); roof.setAttribute('height',3); }
+      else { roof.setAttribute('x',-2); roof.setAttribute('y',-2); roof.setAttribute('width',g.cols*2+4); roof.setAttribute('height',2); }
+      roof.setAttribute('fill','#232c4a');
+      el.appendChild(roof);
+      for(let r=0;r<g.rows;r++){
+        for(let c=0;c<g.cols;c++){
+          const rect=document.createElementNS('http://www.w3.org/2000/svg','rect');
+          rect.setAttribute('class','crowd-px');
+          rect.setAttribute('width',1.6); rect.setAttribute('height',1.6);
+          rect.setAttribute('x', c*2); rect.setAttribute('y', r*2+1);
+          rect.setAttribute('fill', palette[Math.floor(Math.random()*palette.length)]);
+          rect.style.opacity = (0.55+Math.random()*0.45).toFixed(2);
+          el.appendChild(rect);
+        }
+      }
+      // gentle crowd flicker — cheap simulated movement
+      const cells=el.querySelectorAll('.crowd-px');
+      setInterval(()=>{
+        for(let k=0;k<3;k++){
+          const cell=cells[Math.floor(Math.random()*cells.length)];
+          cell.style.opacity=(0.4+Math.random()*0.6).toFixed(2);
+        }
+      }, 400);
+    });
+  })();
+
+  /* ---- 1. TRACK MODEL: sample the path, compute curvature + a
+     physically-limited speed profile (forward accel pass, backward brake pass).
+     Wrapped in buildModel() so a circuit switch can resample from scratch. ---- */
   const N = 240;
   const V_MAX = 380, V_MIN = 70;          // km/h bounds
   const ACCEL = 2800, DECEL = 8400;       // km/h^2-equivalent per track-unit — real cars brake roughly 3x harder than they accelerate
-  const pts = [];
-  for (let i=0;i<N;i++){ const p = pathEl.getPointAtLength((i/N)*totalLen); pts.push({x:p.x,y:p.y}); }
-
-  const dist = new Array(N);   // arc length between consecutive samples
-  for (let i=0;i<N;i++){
-    const a=pts[i], b=pts[(i+1)%N];
-    dist[i] = Math.hypot(b.x-a.x, b.y-a.y);
-  }
-  const angleRaw = new Array(N);  // tangent heading at each sample, degrees
-  for (let i=0;i<N;i++){
-    const a=pts[(i-1+N)%N], b=pts[(i+1)%N];
-    angleRaw[i] = Math.atan2(b.y-a.y, b.x-a.x) * 180/Math.PI;
-  }
-  // smooth the heading with a small circular moving average so the car doesn't snap-turn at polyline joins
-  const angle = new Array(N);
-  const AW = 1;
-  for (let i=0;i<N;i++){
-    let sx=0, sy=0;
-    for (let k=-AW;k<=AW;k++){ const a=angleRaw[(i+k+N)%N]*Math.PI/180; sx+=Math.cos(a); sy+=Math.sin(a); }
-    angle[i] = Math.atan2(sy,sx)*180/Math.PI;
-  }
-  const cornerSpeed = new Array(N); // max sustainable speed from curvature alone
-  for (let i=0;i<N;i++){
-    const prevA=angle[(i-1+N)%N], nextA=angle[(i+1)%N];
-    let dA = nextA - prevA;
-    while(dA>180) dA-=360; while(dA<-180) dA+=360;
-    const curvature = Math.abs(dA) / Math.max(1, dist[i]+dist[(i-1+N)%N]);
-    cornerSpeed[i] = Math.max(V_MIN, Math.min(V_MAX, 44/Math.sqrt(curvature+0.0013)));
-  }
-  const profile = cornerSpeed.slice();
-  for (let pass=0; pass<2; pass++){
-    for (let i=0;i<N*2;i++){ const j=i%N, k=(j+1)%N;
-      profile[k] = Math.min(profile[k], Math.sqrt(profile[j]*profile[j] + 2*ACCEL*dist[j]));
-    }
-    for (let i=0;i<N*2;i++){ const j=(N-1-(i%N)+N)%N, k=(j-1+N)%N;
-      profile[k] = Math.min(profile[k], Math.sqrt(profile[j]*profile[j] + 2*DECEL*dist[k]));
-    }
-  }
-  const cumDist = new Array(N); let acc=0;
-  for (let i=0;i<N;i++){ cumDist[i]=acc; acc+=dist[i]; }
+  let totalLen, pts, dist, angle, cornerSpeed, profile, cumDist;
 
   function targetSpeedAt(d){
     d = ((d % totalLen)+totalLen)%totalLen;
@@ -1132,6 +1326,50 @@ window.addEventListener('scroll',updateLap);updateLap();
     };
   }
 
+  function buildModel(){
+    totalLen = pathEl.getTotalLength();
+    pts = [];
+    for (let i=0;i<N;i++){ const p = pathEl.getPointAtLength((i/N)*totalLen); pts.push({x:p.x,y:p.y}); }
+
+    dist = new Array(N);
+    for (let i=0;i<N;i++){
+      const a=pts[i], b=pts[(i+1)%N];
+      dist[i] = Math.hypot(b.x-a.x, b.y-a.y);
+    }
+    const angleRaw = new Array(N);
+    for (let i=0;i<N;i++){
+      const a=pts[(i-1+N)%N], b=pts[(i+1)%N];
+      angleRaw[i] = Math.atan2(b.y-a.y, b.x-a.x) * 180/Math.PI;
+    }
+    angle = new Array(N);
+    const AW = 1;
+    for (let i=0;i<N;i++){
+      let sx=0, sy=0;
+      for (let k=-AW;k<=AW;k++){ const a=angleRaw[(i+k+N)%N]*Math.PI/180; sx+=Math.cos(a); sy+=Math.sin(a); }
+      angle[i] = Math.atan2(sy,sx)*180/Math.PI;
+    }
+    cornerSpeed = new Array(N);
+    for (let i=0;i<N;i++){
+      const prevA=angle[(i-1+N)%N], nextA=angle[(i+1)%N];
+      let dA = nextA - prevA;
+      while(dA>180) dA-=360; while(dA<-180) dA+=360;
+      const curvature = Math.abs(dA) / Math.max(1, dist[i]+dist[(i-1+N)%N]);
+      cornerSpeed[i] = Math.max(V_MIN, Math.min(V_MAX, 44/Math.sqrt(curvature+0.0013)));
+    }
+    profile = cornerSpeed.slice();
+    for (let pass=0; pass<2; pass++){
+      for (let i=0;i<N*2;i++){ const j=i%N, k=(j+1)%N;
+        profile[k] = Math.min(profile[k], Math.sqrt(profile[j]*profile[j] + 2*ACCEL*dist[j]));
+      }
+      for (let i=0;i<N*2;i++){ const j=(N-1-(i%N)+N)%N, k=(j-1+N)%N;
+        profile[k] = Math.min(profile[k], Math.sqrt(profile[j]*profile[j] + 2*DECEL*dist[k]));
+      }
+    }
+    cumDist = new Array(N); let acc=0;
+    for (let i=0;i<N;i++){ cumDist[i]=acc; acc+=dist[i]; }
+    displayAngle = null;
+  }
+
   /* ---- 2. RUNTIME STATE — driven purely by lookups against the precomputed model ---- */
   let distanceTraveled = 0, currentSpeed = V_MIN, throttle=60, brake=0, gear=1;
   let displayAngle = null;
@@ -1147,10 +1385,20 @@ window.addEventListener('scroll',updateLap);updateLap();
     release(){ manual=null; }
   };
 
+  // gap between car1 (leader baseline) and car2, as a fraction of lap length.
+  // slow sine drift crosses zero occasionally = a genuine overtake, sign tells us who's ahead.
+  let lastSign = 1, flashTimer = null;
+  function gapFraction(t){ return 0.34 + Math.sin(t*0.00005)*0.42; } // range approx -0.08 .. 0.76
+
+  // pit stop state for the trailing car
+  let pitting = false, pitStart = 0, nextPitLap = 4;
+  const PIT_DURATION = 2600; // ms
+
   // Real-world rates: a race car does 0–100km/h in ~2.4s (~42 km/h/s) under power,
   // but sheds speed far faster under braking (~5g, ~130 km/h/s) — that asymmetry
   // is what makes straights feel like a build-up and corner entry feel abrupt.
   const RUNTIME_ACCEL = 70, RUNTIME_DECEL = 170; // km/h per second — how fast actual speed chases the target
+  buildModel(); // initial sample of the default (GP) circuit
   function step(now){
     const dt = Math.min(0.05,(now-lastT)/1000); lastT = now;
     const target = manual==='accel' ? V_MAX : manual==='brake' ? V_MIN : targetSpeedAt(distanceTraveled);
@@ -1170,6 +1418,7 @@ window.addEventListener('scroll',updateLap);updateLap();
     if (distanceTraveled >= totalLen){
       distanceTraveled -= totalLen; lap++; if(lap>10) lap=0; lapEl.textContent = lap; lapStart = Date.now();
       if (lap%6===0){ const t=tyres[Math.floor(Math.random()*tyres.length)]; tyreEl.textContent=t[0]; tyreEl.className='race-stat-val small '+t[1]; }
+      if (lap===nextPitLap && !pitting){ pitting=true; pitStart=Date.now(); nextPitLap=lap+(4+Math.floor(Math.random()*3)); }
     }
     const pose = poseAt(distanceTraveled);
     if (displayAngle===null) displayAngle = pose.a;
@@ -1178,9 +1427,41 @@ window.addEventListener('scroll',updateLap);updateLap();
     displayAngle += da*0.35; // light damping — car tracks the road heading closely, no floaty lag
     carEl.setAttribute('transform', `translate(${pose.x},${pose.y}) rotate(${displayAngle})`);
 
+    // sector highlight — thirds of the lap, glow the active one
+    const frac = distanceTraveled/totalLen, sector = frac<0.333?1:frac<0.667?2:3;
+    sectorEl.textContent = sector;
+    s1.style.opacity = sector===1?'.9':'.3'; s2.style.opacity = sector===2?'.9':'.3'; s3.style.opacity = sector===3?'.9':'.3';
+
+    // DRS zone — active on the back straight stretch
+    drsG.classList.toggle('active', frac>0.44 && frac<0.52);
+
     if (carEl2){
-      const pose2 = poseAt(distanceTraveled - totalLen*0.34); // trailing car, fixed gap behind leader
-      carEl2.setAttribute('transform', `translate(${pose2.x},${pose2.y}) rotate(${pose2.a})`);
+      if (pitting){
+        const el = Date.now()-pitStart;
+        if (el < PIT_DURATION){
+          const pb = pitBox.getAttribute('transform').match(/-?\d+\.?\d*/g).map(Number);
+          carEl2.setAttribute('transform', `translate(${pb[0]+17},${pb[1]-2}) rotate(90) scale(.75)`);
+          pitBox.style.opacity = .55 + Math.sin(el*0.02)*0.2;
+        } else {
+          pitting = false; pitBox.style.opacity = 1;
+          const t = tyres[Math.floor(Math.random()*tyres.length)];
+          // pit stop refreshes the trailing car's tyres too — small flavour, no separate UI needed
+        }
+      } else {
+        const gap = gapFraction(now);
+        const pose2 = poseAt(distanceTraveled - totalLen*gap);
+        carEl2.setAttribute('transform', `translate(${pose2.x},${pose2.y}) rotate(${pose2.a})`);
+        const sign = gap>=0 ? 1 : -1;
+        if (sign !== lastSign && Math.abs(gap) < 0.1){
+          lastSign = sign;
+          flashEl.textContent = sign>0 ? '#3 VER RETAKES LEAD' : 'OVERTAKE — #16 LEC LEADS';
+          flashEl.classList.add('show');
+          clearTimeout(flashTimer);
+          flashTimer = setTimeout(()=>flashEl.classList.remove('show'), 1600);
+        }
+        posEl.textContent = sign>0 ? 'P1' : 'P2';
+        gapEl.textContent = '+' + (Math.abs(gap)*11).toFixed(1) + 's';
+      }
     }
 
     tFill.style.width = throttle.toFixed(0)+'%'; tPct.textContent = throttle.toFixed(0)+'%';
@@ -1192,7 +1473,7 @@ window.addEventListener('scroll',updateLap);updateLap();
 
     const el = Date.now()-lapStart;
     const m = Math.floor(el/60000), s = ((el%60000)/1000).toFixed(1).padStart(4,'0');
-    lapTimeEl.textContent = `${m}:${s}`;
+    if (lapTimeEl) lapTimeEl.textContent = `${m}:${s}`;
 
     requestAnimationFrame(step);
   }
