@@ -34,13 +34,19 @@
     #lap-progress-fill { height: 100%; width: 0%; background: linear-gradient(90deg, var(--accent), var(--accent2)); box-shadow: 0 0 8px rgba(225,6,0,.6); transition: width .1s linear; }
     @keyframes sweep { 0%,100%{ width: 20%; opacity: .7; } 50%{ width: 55%; opacity: 1; } }
     .tb-left { display: flex; gap: 14px; align-items: center; }
+    .mini-racecar { animation: mini-car-drive 2.6s ease-in-out infinite; }
+    @keyframes mini-car-drive { 0% { transform: translateX(0); } 45% { transform: translateX(10px); } 50% { transform: translateX(10px) scaleX(-1); } 95% { transform: translateX(0) scaleX(-1); } 100% { transform: translateX(0); } }
     .tb-dot { display: inline-block; width: 6px; height: 6px; border-radius: 50%; background: var(--accent); animation: blink 2s ease-in-out infinite; }
     @keyframes blink { 0%,100%{ opacity:1; box-shadow: 0 0 5px var(--accent); } 50%{ opacity:.2; box-shadow: none; } }
     .tb-right { display: flex; gap: 22px; align-items: center; }
-    .tb-link { color: var(--muted); text-decoration: none; letter-spacing: .12em; text-transform: uppercase; font-size: 10px; position: relative; transition: color .2s; }
+    .tb-link { color: var(--muted); text-decoration: none; letter-spacing: .12em; text-transform: uppercase; font-size: 10px; position: relative; transition: color .2s; padding:2px 4px; }
     .tb-link::after { content:''; position:absolute; bottom:-2px; left:0; right:0; height:1px; background:var(--accent); transform:scaleX(0); transition:transform .2s; transform-origin:left; }
-    .tb-link:hover { color: var(--accent); }
+    .tb-link::before { content:''; position:absolute; inset:-3px -6px; background:var(--accent); opacity:0; border-radius:2px; transition:opacity .08s; z-index:-1; }
+    .tb-link:hover { color: #fff; animation: pitlane-flash .5s steps(2,end) 1; }
     .tb-link:hover::after { transform: scaleX(1); }
+    .tb-link:hover::before { animation: pitlane-flash-bg .5s steps(2,end) 1; }
+    @keyframes pitlane-flash { 0%,100%{opacity:1} 50%{opacity:.35} }
+    @keyframes pitlane-flash-bg { 0%,100%{opacity:0} 50%{opacity:.5} }
     .tb-link.back { color: var(--accent); border: 1px solid rgba(225,6,0,.25); padding: 2px 10px; font-size: 9px; }
     .tb-link.back:hover { background: rgba(225,6,0,.08); }
     .tb-link.back::after { display: none; }
@@ -117,6 +123,7 @@
 <div class="cur-ring" id="curRing"></div>
 <nav class="topbar">
 <div class="tb-left">
+<svg class="mini-racecar" width="20" height="10" viewBox="0 0 20 10" style="margin-right:2px;"><rect x="1" y="3" width="2" height="4" fill="var(--accent)"/><rect x="3" y="1" width="10" height="8" fill="var(--accent)"/><rect x="13" y="2" width="4" height="6" fill="var(--accent)"/><rect x="6" y="0" width="4" height="2" fill="#111"/><rect x="4" y="7.5" width="2" height="1.5" fill="#0a0a0a"/><rect x="12" y="7.5" width="2" height="1.5" fill="#0a0a0a"/></svg>
 <span class="tb-dot"></span>
 <span id="clock">--:--:--</span>
 </div>
@@ -145,7 +152,7 @@
 <p>Dad's an electronics engineer. First memory I've got: watching him crack open his laptop, motherboard exposed, cables spilling out everywhere. Most kids wander off to find something shinier. I sat there staring at the guts of it, trying to figure out how the wires actually talked to each other. Took apart projector watches, Walkmans, tape recorders, tablets, whatever had screws in it. Had to see what's inside, every time. Dad's precision screwdriver set became mine by attrition, one borrowed screw at a time. Kept a drawer full of gears, motors, springs, loose screws, mystery mechanisms. I genuinely thought I'd need that stuff someday. Sometimes I did.</p>
 </div></div><div class="xsec" data-open="true" data-title="The Build-Up" id="sec-the-build-up"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">02</span><span class="xsec-title">The Build-Up</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 <p>Every Christmas I asked for a DJI Mavic. Never got one. Wanted to go to a proper robotics summer camp too. That fell through, so I talked my regular arts and crafts camp into running a robotics session and an RC car building competition instead. Built one car, learned to crimp RJ45 cable along the way. My car was slower than the kid I was up against, so I flipped his car over mid-race and drove to the finish line. Won.</p>
-<p>Mechanix kits came next, cars and linkages, anything that could move once you bolted it together. LEGO stop-motion films with a friend, badly lit Fast &amp; Furious knockoffs shot on a windowsill. An RC JCB I visited my cousins' exclusively for. A ride-on Audi I was way too obsessed with as a kid. Somewhere in there I also watched the Cars trilogy and the Transformers movies on repeat, which did substantial damage to how I think about machines.</p>Now</div></div></div>s
+<p>Mechanix kits came next, cars and linkages, anything that could move once you bolted it together. LEGO stop-motion films with a friend, badly lit Fast &amp; Furious knockoffs shot on a windowsill. An RC JCB I visited my cousins' exclusively for. A ride-on Audi I was way too obsessed with as a kid. Somewhere in there I also watched the Cars trilogy and the Transformers movies on repeat, which did substantial damage to how I think about machines.</p>Now</div></div>
       <p>I only started watching F1 recently, and I'm already a Verstappen fan, really digging into tyre degradation curves, battery regen zones, overtake mode, like I've been doing it for a decade. Same itch, bigger machines now. Arch Linux I've broken and rebuilt more times than I'd like to admit, just to understand why it broke. <code>CAN bus</code>, <code>UDS</code>, <code>ECUs</code>, secure <code>OTA</code>. Automotive cybersecurity is the projector watch, grown up and a lot more expensive to take apart.</p>
 <p>It was never really about cars, or any one machine. Just one question every time: how's this thing actually work, and can I make it work better?</p>
 </div>
