@@ -889,7 +889,7 @@ footer .g { color:var(--green); }
     <a href="./publications.html" class="tk-card">
       <div class="tk-cat"><span class="grid-pos">P4</span>Publications</div>
       <div style="font-size:14.5px;color:#a8bcdc;line-height:1.65;margin:8px 0 14px;">Research papers, whitepapers, technical reports.</div>
-      <div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:var(--green);font-size:13.5px;font-weight:600;"><span class="sdot"></span>2 Entries</div></div>
+      <div class="intel-row" style="border-bottom:none;"><div class="ir-val" style="color:var(--green);font-size:13.5px;font-weight:600;"><span class="sdot"></span>3 Entries</div></div>
     </a>
   </div>
 
@@ -1289,7 +1289,53 @@ function runHandshake(msg){
 }
 function handleSend(){
   const msg=termInput.value.trim();if(!msg)return;termInput.value='';
+  const cmd=msg.toLowerCase();
+  if(cmd==='facts'){runFacts(msg);return;}
+  if(cmd==='research'){runResearch(msg);return;}
+  if(cmd==='roadmap'){runRoadmap(msg);return;}
+  if(cmd==='ecu'){runEcu(msg);return;}
   runHandshake(msg);
+}
+function runFacts(msg){
+  termPrint(`<span class="to-green">❯</span> <span class="to-dim">${msg}</span>`);
+  termPrint(`<span class="to-amber">FACTS</span> <span class="to-dim">loading random.txt ...</span>`,300);
+  const facts=[
+    'Final-year Information Science student at RNS Institute of Technology, Bengaluru.',
+    'CGPA 8.95/10, expected graduation 2027.',
+    'TryHackMe top 4%. Winner, Escape and Exploit. Top 15, ZeroDay Arena CTF.',
+    'BOLT, CANARY, and WARDEN attack the same ECU security problem from three different angles.',
+    'EXCALIBUR found an unguarded attack surface in the calibration phase of adaptive CAN IDS.',
+    'Max Verstappen fan. No further commentary needed.',
+    'Favorite tracks: Zandvoort, Spa, Monaco.',
+    'Favorite dinosaur: Carnotaurus.'
+  ];
+  const f=facts[Math.floor(Math.random()*facts.length)];
+  termPrint(`<span class="to-dim">${f}</span>`,800);
+  termPrint(`<span class="to-dim">────────────────────────────────</span>`,1100);
+}
+function runResearch(msg){
+  termPrint(`<span class="to-green">❯</span> <span class="to-dim">${msg}</span>`);
+  termPrint(`<span class="to-blue">RESEARCH</span> <span class="to-dim">active threads</span>`,300);
+  termPrint(`<span class="to-dim">→ EXCALIBUR — lifecycle threat model, adaptive CAN IDS · case study complete</span>`,700);
+  termPrint(`<span class="to-dim">→ BICE — behavioral drift detection, IoT · 81.2% TPR, 0% FPR</span>`,1000);
+  termPrint(`<span class="to-dim">→ Simulyn — virtual engineering labs · in development</span>`,1300);
+  termPrint(`<span class="to-dim">────────────────────────────────</span>`,1600);
+}
+function runRoadmap(msg){
+  termPrint(`<span class="to-green">❯</span> <span class="to-dim">${msg}</span>`);
+  termPrint(`<span class="to-amber">ROADMAP</span> <span class="to-dim">next up</span>`,300);
+  termPrint(`<span class="to-dim">→ EXCALIBUR: reference pass, submission</span>`,700);
+  termPrint(`<span class="to-dim">→ Simulyn: sandboxed grading, close paper-to-code gaps</span>`,1000);
+  termPrint(`<span class="to-dim">→ portfolio: content depth audit across all pages</span>`,1300);
+  termPrint(`<span class="to-dim">────────────────────────────────</span>`,1600);
+}
+function runEcu(msg){
+  termPrint(`<span class="to-green">❯</span> <span class="to-dim">${msg}</span>`);
+  termPrint(`<span class="to-dim">pinging ECU bus...</span>`,300);
+  termPrint(`<span class="to-blue">CAN0</span> <span class="to-dim">up · 500 kbps</span>`,700);
+  termPrint(`<span class="to-blue">CAN1</span> <span class="to-dim">up · 500 kbps</span>`,1000);
+  termPrint(`<span class="to-green">STATUS</span> <span class="to-dim">no anomalies on bus ✓</span>`,1400);
+  termPrint(`<span class="to-dim">────────────────────────────────</span>`,1700);
 }
 termSend.addEventListener('click',handleSend);
 termInput.addEventListener('keydown',e=>{if(e.key==='Enter')handleSend();});
