@@ -169,7 +169,7 @@
 <a class="xjump" href="#sec-key-findings">Jump to Key Findings</a><div class="xsec" data-open="true" data-title="Research Question" id="sec-research-question"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">01</span><span class="xsec-title">Research Question</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 <div class="wu-body">
 <p>Most IoT intrusion detection looks at one moment at a time. A packet either trips a rule or it doesn't. That works fine for loud attacks. It does nothing for an attack that moves slowly enough to stay under every threshold, a device whose DNS pattern drifts a little more each day instead of changing all at once.</p>
-<p>So the question: can a detector learn what "normal" looks like for one specific device, and catch drift away from that baseline over time, without needing labeled attack data to train on in the first place?</p>
+<p>So the question is whether a detector can learn what "normal" looks like for one specific device, and catch drift away from that baseline over time, without needing labeled attack data to train on in the first place.</p>
 </div>
 </div></div><div class="xsec" data-open="true" data-title="Why I Started This" id="sec-why-i-started-this"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">02</span><span class="xsec-title">Why I Started This</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 <div class="wu-body">
@@ -178,7 +178,7 @@
 </div>
 </div></div><div class="xsec" data-open="true" data-title="Methodology" id="sec-methodology"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">03</span><span class="xsec-title">Methodology</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 <div class="wu-body">
-<p>Each device gets its own baseline built from normal operation, no attack traffic involved. Three features feed it: DNS query entropy, how many distinct destinations it contacts, and its port access pattern. Stats update online using Welford's method, so nothing has to be stored and nothing gets replayed from history.</p>
+<p>Each device gets its own baseline built from normal operation, no attack traffic involved. Three features feed it, DNS query entropy, how many distinct destinations it contacts, and its port access pattern. Stats update online using Welford's method, so nothing has to be stored and nothing gets replayed from history.</p>
 <p>Every tick, the device's current behavior gets scored against its own baseline. When the combined drift crosses a threshold, the device gets flagged and quarantined pending a human looking at it. Baseline updates freeze the moment an alert fires, so a slow attacker can't just drag the baseline along with them and erase their own trail.</p>
 <p>That's the shape of it. The actual scoring math, the aggregation choice, and the calibration process are in the paper, not here.</p>
 </div>
@@ -205,12 +205,12 @@
 <div class="note-box">
 <div class="note-label">the bugs that almost ruined it</div>
 <div class="wu-body">
-<p>Early pilot run, the model looked perfect: 0% false positives. Turned out a label bug had quietly reset every device to "benign" on every tick, so nothing was actually being checked. A perfect score for entirely the wrong reason, which is a special kind of embarrassing to catch yourself doing. Found a couple other harness gremlins after that, a sleep call throttling tick rate to uselessness, a tilde in a file path that silently failed to expand. None of them were the detection model's fault, but every single one would have made the final numbers meaningless if they'd shipped unnoticed.</p>
+<p>In an early pilot run, the model looked perfect, 0% false positives. Turned out a label bug had quietly reset every device to "benign" on every tick, so nothing was actually being checked. A perfect score for entirely the wrong reason, which is a special kind of embarrassing to catch yourself doing. Found a couple other harness gremlins after that, a sleep call throttling tick rate to uselessness, a tilde in a file path that silently failed to expand. None of them were the detection model's fault, but every single one would have made the final numbers meaningless if they'd shipped unnoticed.</p>
 </div>
 </div>
 </div></div><div class="xsec" data-open="true" data-title="Current Status" id="sec-current-status"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">05</span><span class="xsec-title">Current Status</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 <div class="wu-body">
-<p>Paper is complete: full evaluation, bug-fix history, and limitations documented. Preparing for arXiv submission.</p>
+<p>The paper is complete. I've written up the full evaluation, the bug-fix history, and the limitations, and I'm preparing it for arXiv submission.</p>
 </div>
 </div></div><div class="xsec" data-open="true" data-title="Limitations" id="sec-limitations"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">06</span><span class="xsec-title">Limitations</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 <div class="wu-body">
