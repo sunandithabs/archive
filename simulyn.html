@@ -155,12 +155,12 @@
 </div>
 <div class="wu-card reveal" data-num="02">
 <div class="wu-meta">
-<span class="wu-badge">Research Paper</span>
+<span class="wu-badge">Accepted · CSITSS 2026</span>
 <span class="wu-year">2026</span>
 </div>
 <h2 class="wu-title">Overview</h2>
 <div class="wu-body">
-<p>Simulyn is a virtual engineering lab platform trying to do three things in one architecture instead of stitching together three separate tools: run student code, watch for cheating without a webcam strapped to anyone's face, and keep students engaged enough to actually finish the lab. Prototype's validated, paper's drafted, still actively getting built out.</p>
+<p>I'm building Simulyn to do three things in one architecture instead of stitching together three separate tools. It runs student code, watches for cheating without a webcam strapped to anyone's face, and keeps students engaged enough to actually finish the lab. It's grown past prototype into a working monorepo, NestJS backend, Next.js frontend, Postgres in production. My paper on it has been accepted to CSITSS 2026, and the build has mostly caught up to it.</p>
 <p>This page is the summary, not the paper. No full architecture diagrams or evaluation tables here, that's for the actual submission.</p>
 </div>
 <a class="xjump" href="#sec-status">Jump to Status</a><div class="xsec" data-open="true" data-title="Problem Statement" id="sec-problem-statement"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">01</span><span class="xsec-title">Problem Statement</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
@@ -169,32 +169,33 @@
 </div>
 </div></div><div class="xsec" data-open="true" data-title="Approach" id="sec-approach"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">02</span><span class="xsec-title">Approach</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 <div class="wu-body">
-<p>One shared architecture instead of four duct-taped systems: a sandboxed code runner, a hint engine, a browser-side proctoring layer that watches tab switches and clipboard activity without needing a webcam or installed software, and a gamification layer so it doesn't feel purely like homework. All four components talk over one telemetry bus instead of writing to four logs nobody cross-references.</p>
-<p>The proctoring side is the part I find most interesting, honestly. It runs entirely in the browser, no kernel driver, no extension, just a state machine watching for tab switches, focus loss, and clipboard activity, with weighted violations that escalate toward a forced submission instead of an instant ban for one accidental alt-tab.</p>
+<p>I built one shared architecture instead of four duct-taped systems. There's a code runner for four languages, an AI mentor, a browser-side proctoring layer that watches tab switches and clipboard activity without needing a webcam or installed software, and a gamification layer so it doesn't feel purely like homework. Everything sits on one NestJS API talking over REST and a Socket.IO proctoring channel, instead of four services writing to four logs nobody cross-references.</p>
+<p>The proctoring side is still the part I find most interesting. It runs entirely in the browser, no kernel driver, no extension, just a state machine watching tab switches, focus loss, and clipboard activity. The clipboard part got more precise than I expected. Copying inside the exam paper is free, but pasting text that wasn't copied there gets caught and logged. Ten violations closes the attempt automatically, and a proctor watching live can remove or readmit a student by hand.</p>
 </div>
 </div></div><div class="xsec" data-open="true" data-title="Current Progress" id="sec-current-progress"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">03</span><span class="xsec-title">Current Progress</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 <div class="wu-body">
-<p>Working in prototype: the Python sandbox, the grading pipeline, a rule-based hint system, and a proctoring state machine that's been exercised with synthetic violations across multi-tab and multi-window setups. Electronics simulation with KVL/KCL circuit checking is built. The LLM-based assistance layer isn't, it's currently a well-defined interface waiting for a model behind it. The cloud backend is, generously, a browser pretending to be one via localStorage.</p>
+<p>It's working now, not just in prototype. I have code execution across Python, JavaScript, C++, and Java, with a Socratic AI mentor running on Ollama locally and falling back to a cloud model when needed. Auth, a real Postgres database, and full teacher and admin dashboards are built, so are timed exams, live proctoring, and gamification with XP, streaks, and badges. The thing that used to be a browser pretending to be a backend is now an actual NestJS API. I've backed it with 247 automated tests across five suites, though none of that is the same as a real classroom actually using it.</p>
 </div>
 </div></div><div class="xsec" data-open="true" data-title="Challenges" id="sec-challenges"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">04</span><span class="xsec-title">Challenges</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 <div class="wu-body">
-<p>Biggest one: browser-level proctoring genuinely cannot see a second phone sitting next to the laptop. That's a hardware problem, no amount of clever DOM-event logic gets around it, so I've been upfront that this covers opportunistic cheating, not a determined cheater with backup hardware.</p>
-<p>Second one: tuning violation weights without a real student cohort to test against is basically guessing responsibly. The numbers I picked are conservative on purpose, but "conservative and untested" is still untested.</p>
+<p>The biggest one, still. Browser-level proctoring genuinely cannot see a second phone sitting next to the laptop. That's a hardware problem, no amount of clever DOM-event logic gets around it, so I've stayed upfront that this covers opportunistic cheating, not a determined cheater with backup hardware.</p>
+<p>The second one. Student code still runs as a plain child process, not inside a real kernel sandbox. That's fine behind the containerized API in production, but it's not the same guarantee a proper sandbox gives, and I'd rather say that plainly than let "Docker" do the reassuring on its own.</p>
+<p>The third. I still picked the ten-violation threshold and the weighting behind it myself, not from a real exam cohort. Automated tests confirm the logic fires correctly. They can't tell me if ten is the right number.</p>
 </div>
 </div></div><div class="xsec" data-open="true" data-title="Future Directions" id="sec-future-directions"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">05</span><span class="xsec-title">Future Directions</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 <div class="wu-body">
-<p>Swap the rule-based hints for an actual LLM layer, run this against a real cohort instead of synthetic violation injection, and move it onto something resembling real cloud infrastructure instead of a browser's local storage doing its best Firestore impression. C and Java support for the code sandbox is also on the list, since that's most of what Indian engineering curricula actually run on.</p>
+<p>I want to run this against a real cohort instead of synthetic violation injection, which is the one thing no amount of test coverage substitutes for. I also want to move code execution into per-submission containers instead of bare child processes, and tune the violation thresholds against what an actual exam produces instead of what seemed reasonable at 2am. The infrastructure and language support that used to be future work are done, so what's left is mostly the part that needs real students in the room.</p>
 </div>
 </div></div><div class="xsec" data-open="true" data-title="Status" id="sec-status"><button aria-expanded="true" class="xsec-head"><span class="xsec-num">06</span><span class="xsec-title">Status</span><span class="xsec-chev">▾</span></button><div class="xsec-body">
 <div class="wu-body">
-<p>In development. Architecture and prototype hold up under functional testing. The parts that need real students, real load, and real cheating attempts haven't happened yet, and that's the honest gap between "this works" and "this is ready."</p>
+<p>I'd call it feature-complete as a build. Auth, execution, proctoring, exams, gamification, and 247 automated tests all hold up under functional testing. The parts that need real students, real load, and real cheating attempts still haven't happened, and that's the honest gap between "this works" and "this is ready."</p>
 </div>
 <div class="wu-tags">
 <span class="wu-tag">EdTech</span>
 <span class="wu-tag">Browser Proctoring</span>
 <span class="wu-tag">Virtual Labs</span>
-<span class="wu-tag">Sandboxed Execution</span>
-<span class="wu-tag">State Machine Design</span>
+<span class="wu-tag">Full-Stack</span>
+<span class="wu-tag">AI Mentor</span>
 </div>
 </div></div></div>
 </div>
